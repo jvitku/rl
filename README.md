@@ -9,7 +9,7 @@ About
 
 This is a part of Hybrid Artificial Neural Network Systems (HANNS) project (see: http://artificiallife.co.nf ). 
 
-Each node can be connected into a potentially heterogeneous network of nodes communicating via the ROS, potentially Nengoros ( nengoros.wordpress.com ). 
+Each node can be connected into a potentially heterogeneous network of nodes communicating via the ROS, potentially Nengoros ( http://nengoros.wordpress.com ). 
 
 This is ROS meta-package (currently without direct catkin support), a collection of ROS(java) nodes.
 

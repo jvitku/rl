@@ -1,4 +1,4 @@
-package ctu.hanns.logic.gates;
+package ctu.hanns.rl.sarsa;
 
 import org.apache.commons.logging.Log;
 import org.ros.concurrent.CancellableLoop;
@@ -11,11 +11,16 @@ import org.ros.node.topic.Subscriber;
 import std_msgs.Bool;
 
 /**
+ * 
+ * This class will represent a ROS node with configurable numbers of 
+ * inputs connections, config. connections and output connections.
+ * 
  * @author Jaroslav Vitku vitkujar@fel.cvut.cz
  * 
  */
-public abstract class SisoGate extends AbstractNodeMain {
+public abstract class Configurable<T> extends AbstractNodeMain {
 
+	
 	// node setup
 	private final boolean SEND = false;
 	private final int sleepTime = 1000;

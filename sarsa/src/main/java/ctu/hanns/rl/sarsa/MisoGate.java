@@ -1,4 +1,4 @@
-package ctu.hanns.logic.gates;
+package ctu.hanns.rl.sarsa;
 
 import org.apache.commons.logging.Log;
 import org.ros.concurrent.CancellableLoop;

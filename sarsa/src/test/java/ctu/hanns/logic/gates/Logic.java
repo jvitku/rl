@@ -4,12 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import ctu.hanns.logic.gates.impl.AND;
-import ctu.hanns.logic.gates.impl.NAND;
-import ctu.hanns.logic.gates.impl.NOT;
-import ctu.hanns.logic.gates.impl.OR;
-import ctu.hanns.logic.gates.impl.XOR;
-//import junit.framework.TestCase;
+import ctu.hanns.rl.sarsa.impl.AND;
+import ctu.hanns.rl.sarsa.impl.NAND;
+import ctu.hanns.rl.sarsa.impl.NOT;
+import ctu.hanns.rl.sarsa.impl.OR;
+import ctu.hanns.rl.sarsa.impl.XOR;
 
 
 /**

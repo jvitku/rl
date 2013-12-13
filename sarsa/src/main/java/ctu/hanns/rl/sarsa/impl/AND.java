@@ -1,8 +1,8 @@
-package ctu.hanns.logic.gates.impl;
+package ctu.hanns.rl.sarsa.impl;
 
 import org.ros.namespace.GraphName;
 
-import ctu.hanns.logic.gates.MisoGate;
+import ctu.hanns.rl.sarsa.MisoGate;
 
 public class AND extends MisoGate{
 

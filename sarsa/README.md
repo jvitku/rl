@@ -6,7 +6,7 @@ Author Jaroslav Vitku [vitkujar@fel.cvut.cz]
 About
 ------
 
-Project which should implement simple Step-Action-Response-Step-Action (**SARSA**) type of **Reinforcement Learning** (RL) algorithm. 
+Project which should implement simple Step-Action-Reward-Step-Action (**SARSA**) type of **Reinforcement Learning** (RL) algorithm. 
 
 This ROS node will be used mainly in Hybrid Artificial Neural Network Systems, used in the ROS network or the Nengoros simulator ( http://nengoros.wordpress.com ). 
 

@@ -40,11 +40,15 @@ repositories {
 
 // Define the version and name of my stack (ROS convention)
 version             = '0.0.0-SNAPSHOT'
-group               = 'ctu.hanns.logic'
+group               = 'ctu.hanns.rl'
 
 // This project depends on compilation of rosjava_core
 dependencies {
 	compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
 	testCompile 'junit:junit:4.10'
+	
+	compile 'ctu.nengoros:jroscore:0.0.3-SNAPSHOT' 
+    testCompile 'ctu.nengoros:jroscore:0.0.3-SNAPSHOT'
+	
 }
 

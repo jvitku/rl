@@ -1,5 +1,5 @@
 /**
- * Package for continuous Reinforcement Learning algorithms
+ * Package for discrete Reinforcement Learning algorithms
  */
 /**
  * @author Jaroslav Vitku

@@ -5,4 +5,4 @@
  * @author Jaroslav Vitku
  *
  */
-package org.hanns.rl.discrete.sarsa;
+package org.hanns.rl.discrete.learningAlgorithm.sarsa;

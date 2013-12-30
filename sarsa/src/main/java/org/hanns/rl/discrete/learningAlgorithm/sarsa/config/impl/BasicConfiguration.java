@@ -1,0 +1,45 @@
+package org.hanns.rl.discrete.learningAlgorithm.sarsa.config.impl;
+
+import org.hanns.rl.discrete.learningAlgorithm.sarsa.config.LearningAlgorithmConfig;
+
+/**
+ * Basic configuration of the SARSA learning algorithm.
+ * 
+ * @author Jaroslav Vitku
+ *
+ */
+public class BasicConfiguration implements LearningAlgorithmConfig{
+
+	// stochastic return predictor settings
+	private double alpha;
+	private double gamma;
+	
+	// eligibility settings
+	private int length;
+	private double lambda;
+
+	@Override
+	public void setAlpha(double alpha) { this.alpha = alpha; }
+	
+	@Override
+	public double getAlpha() { return alpha; }
+	
+	@Override
+	public void setGamma(double gamma) { this.gamma = gamma; }
+	
+	@Override
+	public double getGamma() {return gamma; }
+	
+	@Override
+	public void setLambda(double lambda) { this.lambda = lambda; }
+	
+	@Override
+	public double getLambda() { return lambda; }
+	
+	@Override
+	public void setEligibilityLength(int length) { this.length = length; }
+	
+	@Override
+	public int getEligibilityLength() { return length; }
+	
+}

@@ -29,10 +29,15 @@ group               = 'ctu.hanns.rl'
 
 // This project depends on compilation of rosjava_core
 dependencies {
+    
+    compile fileTree(dir: 'lib', include: '**/*.jar')
+ 	runtime fileTree(dir: 'lib', include: '**/*.jar')
+ 	testCompile fileTree(dir: 'lib', include: '**/*.jar')
+ 	
 	compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
 	testCompile 'junit:junit:4.10'
 	
-	compile 'ctu.nengoros:jroscore:0.0.5-SNAPSHOT' 
-    testCompile 'ctu.nengoros:jroscore:0.0.5-SNAPSHOT'
+	compile 'ctu.nengoros:jroscore:0.0.6-SNAPSHOT' 
+    testCompile 'ctu.nengoros:jroscore:0.0.6-SNAPSHOT'
 }
 

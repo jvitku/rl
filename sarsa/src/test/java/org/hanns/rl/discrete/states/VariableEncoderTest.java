@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.states;
 
 import static org.junit.Assert.*;
 
+import org.hanns.rl.discrete.states.impl.BasicStateVariable;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.junit.Test;
 
@@ -42,10 +43,25 @@ public class VariableEncoderTest {
 		assertTrue(enc.encode((float)0.99)==9);
 		assertTrue(enc.encode((float)1)==9);
 		
-		
-		
-		
 	}
 	
+	@Test
+	public void stateVariable(){
+		VariableEncoder enc = new BasicVariableEncoder(0,1,10);
+		
+		StateVariable v = new BasicStateVariable("name",enc);
+		
+		assertTrue(v.getName().equals("name"));
+		assertTrue(v.getVal() == 0);
+		
+		v.setRawValue((float) 0.1999);
+		assertTrue(v.getVal()==1);
+		
+		v.setRawValue((float) 1000000);
+		assertTrue(v.getVal()==9);
+		
+		v.setRawValue((float) -1000000);
+		assertTrue(v.getVal()==0);
+	}
 
 }

@@ -1,6 +1,6 @@
 package massim.shared;
 
-import massim.agent.mind.AgentsMap;
+//import massim.agent.mind.AgentsMap;
 import massim.agent.mind.harm.actions.Action;
 import massim.agent.mind.harm.actions.SomeSpaceWithVariables;
 import massim.agent.mind.harm.variables.Variable;

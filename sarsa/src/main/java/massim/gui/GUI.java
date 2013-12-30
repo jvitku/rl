@@ -25,11 +25,11 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import massim.agent.mind.Mind;
-import massim.agent.mind.harm.HarmSystem;
-import massim.agent.mind.intentions.ASimpleIntentions;
+//import massim.agent.mind.Mind;
+//import massim.agent.mind.harm.HarmSystem;
+//import massim.agent.mind.intentions.ASimpleIntentions;
 //import massim.agent.body.Body;
-import massim.agent.body.physiological.PhysiologicalStateSpace;
+//import massim.agent.body.physiological.PhysiologicalStateSpace;
 
 import massim.gui.lowLevel.BorderedJPanel;
 import massim.gui.lowLevel.SpringLayoutUtilities;
@@ -43,7 +43,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 
 
 	//private Body body;
-	private Mind mind;
+	//private Mind mind;
 
 	private static final long serialVersionUID = -2374475574410144355L;
 	// UI
@@ -59,7 +59,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 	private boolean[] ignoreSlider;
 
 	// reference to the agents physiological state space
-	PhysiologicalStateSpace state;
+	//PhysiologicalStateSpace state;
 	Timer GUIRefreshTimer;
 
 	// containers from the left to right (in the main window)
@@ -70,19 +70,19 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 
 	JTextArea console;
 	SharedData shared;
-	private HarmSystem harm;
+	//private HarmSystem harm;
 
 	// how often to refresh GUI
 	public final long refreshDelay= 300;                   // 5 seconds delay   700
 	public final long startDelay = 500;
 
 	public GUIDecisionSpace guiII;
-	public GUINeuralNet guiNN;
-	public GUIPlanner guiPlan;
+	//public GUINeuralNet guiNN;
+	//public GUIPlanner guiPlan;
 
 	public ManualControl manualPanel;
 
-	public final ASimpleIntentions ints;
+	//public final ASimpleIntentions ints;
 
 
 	private final int T = 0;
@@ -93,16 +93,16 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 	private ArrayList<Boolean> ignoreIntSlider;
 	private JPanel compInts;
 
-	public GUI(SharedData shared, /*Body */ int b, Mind m) {
+	public GUI(SharedData shared, /*Body */ int b /*Mind m*/) {
 		super("Agent's mind and body");
 
 		//this.body = b;
-		this.mind = m;
+		//this.mind = m;
 		this.shared = shared;
 
 		//this.state = this.body.space;
-		this.harm = this.mind.harm;
-		this.ints = m.ints;
+		//this.harm = this.mind.harm;
+		//this.ints = m.ints;
 	}
 
 
@@ -111,7 +111,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 
 		this.descriptWindow = new WorldLabelDescription(this.shared);
 
-		guiII = new GUIDecisionSpace(this.descriptWindow, this.harm, this.shared);
+		//guiII = new GUIDecisionSpace(this.descriptWindow, this.harm, this.shared);
 
 		/*if(this.mind.neuralSystem.isUsed())
 			guiNN = new GUINeuralNet(this.shared, this.body, this.mind);*/
@@ -140,6 +140,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 	 */
 	private void refreshDisplay(){
 
+		/*
 		// for all physiological sliders, if the agent changed the value, change and ignore event
 		for(int i=0; i<state.size(); i++){
 			// if some of the sliders has not been initialized so far, return 
@@ -153,6 +154,8 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 				this.ignoreSlider[i] = true;
 			}    		
 		}
+		*/
+		/*
 		// some intention added?
 		if(this.ints.isUsed()){
 
@@ -174,13 +177,15 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 					this.ignoreIntSlider.set(i, true);
 				}   
 			}
-		}
+		}*/
+		/*
 
 
 		if(harm.root != null && this.descriptWindow != null){	
 			//this.descriptWindow.writeSpaceStats();
 			this.guiII.updateData();
 		}
+		*/
 
 		/*if(this.mind.neuralSystem.isUsed())
     		this.guiNN.updateData();
@@ -221,14 +226,14 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 		// height of the physiological sliders
 		ca.add(Box.createRigidArea(new Dimension(200, 20)));
 
-		ca.setMaximumSize(new Dimension(35,30000));
+		/*ca.setMaximumSize(new Dimension(35,30000));
 
 		///////////// intentions
 		if(this.ints.isUsed()){
 
 			// create physiological JPanel and add all sliders in it
 			compInts = BorderedJPanel.create("Intentional state space",
-					60,90/*intentionalSliders.size()*/);	// x, and y dimensions
+					60,90intentionalSliders.size());	// x, and y dimensions
 
 			// add rigid area (empty intentions)
 			compInts.add(Box.createRigidArea(new Dimension(200, 2)));
@@ -238,24 +243,26 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 
 			// add all known sliders to the list and GUI
 			this.initIntentionalSliders();
-		}
+		}*/
+	
 	}
 
 	private void initIntentionalSliders(){
 
 		this.intentionalSliders = new ArrayList<JSlider>();
 		this.ignoreIntSlider = new ArrayList<Boolean>();
-		this.tryToAddNewSliders();
+		//this.tryToAddNewSliders();
 
 	}
 
+	/*
 	private void tryToAddNewSliders(){
 		this.mypl("Last knwon size of intensions is: "+this.intentionalSliders.size()+
 				" and actual is: "+this.ints.size());
 
-		int start = this.intentionalSliders.size();/*
+		int start = this.intentionalSliders.size();
     	if(start>0)
-    		start = start-1;*/
+    		start = start-1;
 
 		for(int i=start; i<ints.size(); i++){
 
@@ -265,7 +272,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 			// create new slider for it	
 			tmp.setBorder(BorderFactory.createTitledBorder(ints.getName(i)));
 
-			tmp.setMajorTickSpacing(1/*(int)state.getCenter(i)*/); //?
+			tmp.setMajorTickSpacing(1(int)state.getCenter(i)); //?
 			tmp.setMinorTickSpacing(1);
 			tmp.setPaintTicks(true);
 			tmp.setPaintLabels(true);
@@ -278,8 +285,8 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 
 			compInts.add(tmp);
 		}
-	}
-
+	}*/
+	
 	/**
 	 * interactive monitor of agents mind 
 	 */
@@ -304,7 +311,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 	 */
 	private void addColumnD(){
 		cd.setLayout(new BoxLayout(cd,BoxLayout.PAGE_AXIS));
-		manualPanel = new ManualControl(harm, shared);
+		//manualPanel = new ManualControl(harm, shared);
 		cd.add(manualPanel.getMainPanel());
 
 	}
@@ -344,7 +351,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 	 * initialize the physiological sliders and their listeners
 	 */
 	private void initPhysiologicalSliders(){
-
+/*
 		this.physiologicalSliders = new JSlider[state.size()];
 		this.ignoreSlider = new boolean[state.size()];
 
@@ -365,7 +372,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 			physiologicalSliders[i].addChangeListener(this);
 
 			ignoreSlider[i] = false;
-		}
+		}*/
 	}
 
 
@@ -383,7 +390,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 					return;
 				}
 				System.out.println("setting! to this: "+this.physiologicalSliders[i].getValue());
-				state.setVal(i, this.physiologicalSliders[i].getValue());
+				//state.setVal(i, this.physiologicalSliders[i].getValue());
 				this.ignoreSlider[i] = true;
 				return;
 			}
@@ -397,7 +404,7 @@ public class GUI extends JFrame implements Runnable, ChangeListener{
 				}
 				this.mypl("setting intention! to this: "+this.intentionalSliders.get(i).getValue());
 
-				this.ints.setVal(i, this.intentionalSliders.get(i).getValue());
+				//this.ints.setVal(i, this.intentionalSliders.get(i).getValue());
 				this.ignoreIntSlider.set(i, true);
 				return;
 			}

@@ -1,7 +1,5 @@
 /**
- * Set of discrete actions for the agent. This will define set of (domain independent) primitive actions.
- * 
- *  EpsilonGreedyConfig input defines how many actions will the algorithm work with. 
+ * This will define set of (domain independent) primitive actions. The purpose is to convert actions to numbers and back.
  */
 /**
  * @author Jaroslav Vitku

@@ -68,7 +68,7 @@ public class ActionVariableFilter {
 			v = vars.get(i);
 			v.vals.get(v.actual).usedInStep = this.step;	// save that this value is set now
 			
-			log.pl(LEV+10, "Variable: "+v.getName()+" value seen now: "+
+			log.pl(LEV+10, "StateVariable: "+v.getName()+" value seen now: "+
 					v.vals.get(v.actual).getStringVal());
 		}
 		

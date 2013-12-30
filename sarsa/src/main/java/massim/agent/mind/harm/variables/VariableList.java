@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class VariableList {
 	
 	public ArrayList<Variable> variables;
-	//public ArrayList<Variable> constants;
+	//public ArrayList<StateVariable> constants;
 	
 	public VariableList(ArrayList<Variable> vrs){
 		this.variables = vrs;
@@ -20,7 +20,7 @@ public class VariableList {
 	
 	public VariableList(){
 		this.variables = new ArrayList<Variable>();
-		//this.constants = new ArrayList<Variable>();
+		//this.constants = new ArrayList<StateVariable>();
 	}
 	
 	public ArrayList<Variable> getArray(){ return this.variables; }

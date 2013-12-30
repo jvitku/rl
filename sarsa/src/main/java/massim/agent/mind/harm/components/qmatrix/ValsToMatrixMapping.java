@@ -406,7 +406,7 @@ public class ValsToMatrixMapping {
 		int index;
 		
 		if((index = this.variableNameToIndex(var.getName())) == -1){
-			log.err(cn, "delete Variable: variable not found in the map!" );
+			log.err(cn, "delete StateVariable: variable not found in the map!" );
 			return;
 		}
 		m.deleteDimension(index);

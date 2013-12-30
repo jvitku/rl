@@ -79,6 +79,8 @@ Node configuration is defined on two main levels:
 		
 	* The configuration is **final** for now
 	* This configuration (also) **determines number of inputs** (Nengoros)
+	
+	The sampling resolution can be set the same for all inputs or for each one separately (different size of Q-learning matrix)
 
 #### Algorithm parameters
 

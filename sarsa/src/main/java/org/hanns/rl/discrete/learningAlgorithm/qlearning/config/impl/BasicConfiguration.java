@@ -10,6 +10,8 @@ import org.hanns.rl.discrete.learningAlgorithm.qlearning.config.QLearningConfig;
  */
 public class BasicConfiguration implements QLearningConfig{
 
+	private boolean learningEnabled = true;
+	
 	// stochastic return predictor settings
 	private double alpha;
 	private double gamma;
@@ -41,5 +43,11 @@ public class BasicConfiguration implements QLearningConfig{
 	
 	@Override
 	public int getEligibilityLength() { return length; }
+
+	@Override
+	public void setLearningEnabled(boolean enable) { this.learningEnabled = enable; }
+
+	@Override
+	public boolean getLearningEnabled() { return this.learningEnabled; }
 	
 }

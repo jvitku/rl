@@ -175,7 +175,7 @@ public class Variable {
 	 */
 	public void flipVal(){
 		if(this.vals.size() > 2)
-			System.err.println("Variable: flipVal: variable is not binary!! ");
+			System.err.println("StateVariable: flipVal: variable is not binary!! ");
 		else{
 			if(this.temp == 0)
 				this.temp = 1;

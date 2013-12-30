@@ -1,14 +1,14 @@
-package org.hanns.rl.discrete.learningAlgorithm.sarsa.config.impl;
+package org.hanns.rl.discrete.learningAlgorithm.qlearning.config.impl;
 
-import org.hanns.rl.discrete.learningAlgorithm.sarsa.config.LearningAlgorithmConfig;
+import org.hanns.rl.discrete.learningAlgorithm.qlearning.config.QLearningConfig;
 
 /**
- * Basic configuration of the SARSA learning algorithm.
+ * Basic configuration of the Q-learning learning algorithm.
  * 
  * @author Jaroslav Vitku
  *
  */
-public class BasicConfiguration implements LearningAlgorithmConfig{
+public class BasicConfiguration implements QLearningConfig{
 
 	// stochastic return predictor settings
 	private double alpha;

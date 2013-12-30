@@ -1,4 +1,6 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy;
+package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config;
+
+import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethodConfig;
 
 /**
  * Entire configuration of the algorithm.
@@ -6,7 +8,7 @@ package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy;
  * @author Jaroslav Vitku
  *
  */
-public interface ActionSelectionConfig {
+public interface EpsilonGreedyConfig extends ActionSelectionMethodConfig {
 
 	/**
 	 * <p>This ensures balance between exploitation of learned knowledge

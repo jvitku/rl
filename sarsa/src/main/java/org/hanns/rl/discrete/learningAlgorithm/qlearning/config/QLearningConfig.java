@@ -1,12 +1,14 @@
-package org.hanns.rl.discrete.learningAlgorithm.sarsa.config;
+package org.hanns.rl.discrete.learningAlgorithm.qlearning.config;
+
+import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 
 /**
- * ActionSelectionConfig of learning algorithm.
+ * Configuration of the Q-learning algorithm.
  * 
  * @author Jaroslav Vitku
  *
  */
-public interface LearningAlgorithmConfig {
+public interface QLearningConfig extends LearningConfiguration{
 	
 	/**
 	 * Learning rate.

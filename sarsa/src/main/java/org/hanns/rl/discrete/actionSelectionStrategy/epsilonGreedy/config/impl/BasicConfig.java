@@ -1,6 +1,6 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.impl;
+package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.impl;
 
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.ActionSelectionConfig;
+import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.EpsilonGreedyConfig;
 
 /**
  * Basic configuration of epsilon-greedy algorithm. 
@@ -8,7 +8,7 @@ import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.ActionSelecti
  * @author Jaroslav Vitku
  *
  */
-public class BasicConfig implements ActionSelectionConfig {
+public class BasicConfig implements EpsilonGreedyConfig {
 
 	private double minEpsilon = 0;
 

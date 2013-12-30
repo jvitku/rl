@@ -1,28 +1,13 @@
-// made by Jaroslav Vitku
-// based on the rosjava tutorial: http://docs.rosjava.googlecode.com/hg/rosjava_core/html/getting_started.html
+// @author Jaroslav Vitku
 
-// this is default gradle configuration file for creating the rosnode project in Java
-// [code] marks the corresponding command, first create the wrapper
-
-
-// java support for gradle [no command]
-apply plugin: 'java'
-
-// task to create gradle wrapper (used only once) [gradle wrapper]
 task wrapper(type: Wrapper) {
 	gradleVersion      = '1.7'
 }
-
-// Create the Java (jar) library from this project. [./gradlew install]
+apply plugin: 'java'
 apply plugin: 'maven'
-
-// create the Eclipse project [./gradlew eclipse]
 apply plugin: 'eclipse'
-
-// Create the runnable application from this project into build/lib/bin.. ? [./gradlew installApp]
 apply plugin: 'application'
 mainClassName       = 'org.ros.RosRun'
-//mainClassName     = 'org.ros.tests.MyShare'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
@@ -47,8 +32,7 @@ dependencies {
 	compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
 	testCompile 'junit:junit:4.10'
 	
-	compile 'ctu.nengoros:jroscore:0.0.3-SNAPSHOT' 
-    testCompile 'ctu.nengoros:jroscore:0.0.3-SNAPSHOT'
-	
+	compile 'ctu.nengoros:jroscore:0.0.5-SNAPSHOT' 
+    testCompile 'ctu.nengoros:jroscore:0.0.5-SNAPSHOT'
 }
 

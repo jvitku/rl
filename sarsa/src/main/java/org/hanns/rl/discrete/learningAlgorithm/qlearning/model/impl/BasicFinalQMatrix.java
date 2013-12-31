@@ -3,12 +3,13 @@ package org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl;
 import java.util.Random;
 
 import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.FinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.MultiDimensionMatrix;
 
 public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 
 	private int[] dimensionSizes;
 
-	private Dimension<Double> d;
+	private MultiDimensionMatrix<Double> d;
 
 	private Double defValue = 0.0;
 	private Double minRand = 0.0, range = 1.0;
@@ -36,8 +37,20 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		// the last dimension represents actions
 		this.dimensionSizes[this.dimensionSizes.length-1] = numActions;
 		
+		int numofcells = numActions;
+		for(int i=0; i<numVariables; i++){
+			numofcells = numofcells * this.varRanges[i];
+		}
+		
+		// TODO add structure with dynamic memory allocation (allocate only if necessary)
+		if(numofcells > 5000000){
+			System.err.println("BasicFInalQMatrix: WARNING: number of cells you are"
+					+ "trying to instantly allocate is "+numofcells+
+					" this might take a while if is allocated at once..");
+		}
+		
 		// initialize the main data structure with the default value
-		d = new Dimension<Double>(dimensionSizes, 0, this.defValue);
+		d = new StaticMultiDimension<Double>(dimensionSizes, 0, this.defValue);
 	}
 
 	@Override
@@ -68,7 +81,8 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 			this.randomizeDimension(startInds, 0);
 			
 		}else{
-			d.setAllVals(this.defValue);
+			if(d instanceof StaticMultiDimension)
+				((StaticMultiDimension<Double>)d).setAllVals(this.defValue);
 		}
 	}
 
@@ -149,136 +163,7 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		}
 	}
 	
-	/**
-	 * Multidimensional class with definable final number of dimensions
-	 * and dimension sizes. The dimension sizes are defined as an array of
-	 * integer values. The parameter index is used internally, so 
-	 * the constructor should be called with index=0. 
-	 *  
-	 * @author Jaroslav Vitku
-	 *
-	 * @param <E> initial value that is stored on all places of the matrix 
-	 */
-	private class Dimension<E>{
 
-		private E val;
-		private Dimension<E>[] childs;
-
-		/**
-		 * Call this to initialize the class
-		 * @param sizes integer array of dimension sizes
-		 * @param index used for recursion, call with value of 0!
-		 * @param initVal initial value that is stored in entire matrix
-		 */
-		@SuppressWarnings("unchecked")
-		public Dimension(int[] sizes, int index, E initVal){
-
-			//System.out.println("--- hi level "+index);
-			// if not the last dimension, make array of childs and recurse
-			if(index<sizes.length){
-
-				int numChilds = sizes[index];
-				//System.out.println("------creating this no of childs: "+numChilds);
-
-				childs = new Dimension[numChilds];
-				for(int i=0; i<numChilds; i++){
-					childs[i] = new Dimension<E>(sizes,index+1,initVal);
-				}
-			}else{
-				//System.out.println("STOP, setting my value to!"+initVal);
-				this.val = initVal;
-			}
-		}
-
-		/**
-		 * Set given value on given coordinates 
-		 * @param coords coordinates in the matrix
-		 * @param value value to be set
-		 */
-		public void setValue(int[] coords, E value){
-			this.setVal(coords, 0, value);
-		}
-
-		/**
-		 * Read the value from the matrix from the given coordinates
-		 * @param coords array of integer values - coordinates from which to read
-		 * @return value stored on given coordinates
-		 */
-		public E readValue(int[] coords){
-			return this.readValue(coords, 0);
-		}
-		
-		/**
-		 * Replace all values in the matrix with a given value
-		 * @param value
-		 */
-		public void setAllVals(E value){
-			// recursion done?
-			if(childs == null){
-				this.val = value;
-				return;
-			}
-			// set values of all childs
-			for(int i=0; i<childs.length; i++){
-				childs[i].setAllVals(value);
-			}
-		}
-
-		/**
-		 * Recursive call which sets given value on given coordinates
-		 * @param coords indexes in the matrix
-		 * @param depth current depth in the recursion (call with value of 0)
-		 * @param value value to be set in the matrix on given coordinates
-		 */
-		private void setVal(int[] coords, int depth, E value){
-			// traversing recursively across the coordinates
-			if(depth<coords.length){
-				//System.out.println("rolling deepere "+depth);
-
-				this.checkDims(coords, depth);
-				childs[coords[depth]].setVal(coords, depth+1, value);
-
-				// we are in the place (all coordinates applied)
-			}else{
-				//System.out.println("SETTING this value "+value.toString());
-				this.val = value;
-			}
-		}
-
-		/**
-		 * Used in recursion
-		 * @param coords coordinates to be read
-		 * @param depth current depth in the recursion
-		 * @return value that is read
-		 */
-		private E readValue(int[] coords, int depth){
-			if(depth<coords.length){
-				//System.out.println("rolling deepere "+depth);
-				this.checkDims(coords, depth);
-				return (E) childs[coords[depth]].readValue(coords, depth+1);
-			}else{
-				//System.out.println("READING this value "+val.toString());
-				return val;
-			}
-		}
-
-		/**
-		 * Check whether given coordinates are valid
-		 * @param coords
-		 * @param depth
-		 */
-		private boolean checkDims(int [] coords, int depth){
-			if(coords[depth]<0){
-				System.err.println("Dimension: negative index ");
-				return false;
-			}
-			if(coords[depth]>=this.childs.length){
-				System.err.println("Dimension: index out of range, this one: "+coords[depth]);
-				return false;
-			}
-			return true;
-		}
-	}
 
 }
 

@@ -2,6 +2,8 @@ package org.hanns.rl.discrete.q;
 
 import static org.junit.Assert.*;
 
+import ctu.nengoros.util.SystemInfo;
+
 import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl.BasicFinalQMatrix;
 import org.junit.Test;
 
@@ -57,6 +59,7 @@ public class QMatrixTests {
 		assertTrue(q.get(new int[]{1,1,1})==def);
 		assertTrue(q.get(new int[]{1,2,3})==def);
 		assertTrue(q.get(new int[]{1,2,4})==def);
+		SystemInfo.infoMb();
 	}
 	
 	/**
@@ -67,17 +70,28 @@ public class QMatrixTests {
 	public void hardReset(){
 		
 		int numActions = 5;	// 5 actions
-		int numVars = 7;	// 2 state variables
+		int numVars = 6;	// 2 state variables
 		int vs = 10; 
 		int[] stateSizes = new int[numVars];
 		
 		for(int i=0; i<numVars; i++){
 			stateSizes[i] = vs;
 		}
+		SystemInfo.infoMb();
 		
 		System.out.println("start");
 		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
 		System.out.println("end");
+		
+		
+		SystemInfo.infoMb();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		double def = q.getDefaultValue();
 		
 		int [] coords = this.initCoors(numVars);
@@ -105,5 +119,6 @@ public class QMatrixTests {
 		}
 		return coords;
 	}
+
 
 }

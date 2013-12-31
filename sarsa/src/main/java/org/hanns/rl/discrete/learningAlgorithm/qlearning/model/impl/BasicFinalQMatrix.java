@@ -173,19 +173,19 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		@SuppressWarnings("unchecked")
 		public Dimension(int[] sizes, int index, E initVal){
 
-			System.out.println("--- hi level "+index);
+			//System.out.println("--- hi level "+index);
 			// if not the last dimension, make array of childs and recurse
 			if(index<sizes.length){
 
 				int numChilds = sizes[index];
-				System.out.println("------creating this no of childs: "+numChilds);
+				//System.out.println("------creating this no of childs: "+numChilds);
 
 				childs = new Dimension[numChilds];
 				for(int i=0; i<numChilds; i++){
 					childs[i] = new Dimension<E>(sizes,index+1,initVal);
 				}
 			}else{
-				System.out.println("STOP, setting my value to!"+initVal);
+				//System.out.println("STOP, setting my value to!"+initVal);
 				this.val = initVal;
 			}
 		}
@@ -214,13 +214,13 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		 */
 		public void setAllVals(E value){
 			// recursion done?
-			if(childs==null){
+			if(childs == null){
 				this.val = value;
 				return;
 			}
 			// set values of all childs
 			for(int i=0; i<childs.length; i++){
-				this.setAllVals(value);
+				childs[i].setAllVals(value);
 			}
 		}
 
@@ -233,14 +233,14 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		private void setVal(int[] coords, int depth, E value){
 			// traversing recursively across the coordinates
 			if(depth<coords.length){
-				System.out.println("rolling deepere "+depth);
+				//System.out.println("rolling deepere "+depth);
 
 				this.checkDims(coords, depth);
 				childs[coords[depth]].setVal(coords, depth+1, value);
 
 				// we are in the place (all coordinates applied)
 			}else{
-				System.out.println("SETTING this value "+value.toString());
+				//System.out.println("SETTING this value "+value.toString());
 				this.val = value;
 			}
 		}
@@ -253,11 +253,11 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		 */
 		private E readValue(int[] coords, int depth){
 			if(depth<coords.length){
-				System.out.println("rolling deepere "+depth);
+				//System.out.println("rolling deepere "+depth);
 				this.checkDims(coords, depth);
 				return (E) childs[coords[depth]].readValue(coords, depth+1);
 			}else{
-				System.out.println("READING this value "+val.toString());
+				//System.out.println("READING this value "+val.toString());
 				return val;
 			}
 		}

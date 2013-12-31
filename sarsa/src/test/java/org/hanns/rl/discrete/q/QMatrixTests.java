@@ -57,7 +57,53 @@ public class QMatrixTests {
 		assertTrue(q.get(new int[]{1,1,1})==def);
 		assertTrue(q.get(new int[]{1,2,3})==def);
 		assertTrue(q.get(new int[]{1,2,4})==def);
+	}
+	
+	/**
+	 * Create bigger matrix, try to set values, reset it,
+	 * read, randomize, read, set, read..
+	 */
+	@Test
+	public void hardReset(){
 		
+		int numActions = 5;	// 5 actions
+		int numVars = 7;	// 2 state variables
+		int vs = 10; 
+		int[] stateSizes = new int[numVars];
+		
+		for(int i=0; i<numVars; i++){
+			stateSizes[i] = vs;
+		}
+		
+		System.out.println("start");
+		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
+		System.out.println("end");
+		double def = q.getDefaultValue();
+		
+		int [] coords = this.initCoors(numVars);
+		assertTrue(q.get(coords)==def);
+		
+		coords[1] = 1;	// accesses {0,5,0,...0}
+		q.set(coords, -12.3);
+		assertTrue(q.get(coords)==-12.3);
+		/*
+		// delete all values and try again
+		q.hardReset(false);
+		
+		assertTrue(def == q.getDefaultValue());
+		assertTrue(q.get(new int[]{0,0,0})==def);
+		assertTrue(q.get(new int[]{1,1,1})==def);
+		assertTrue(q.get(new int[]{1,2,3})==def);
+		assertTrue(q.get(new int[]{1,2,4})==def);
+		*/
+	}
+	
+	private int[] initCoors(int numVars){
+		int []coords = new int[numVars+1];
+		for(int i=0; i<numVars+1; i++){
+			coords[i] = 0;
+		}
+		return coords;
 	}
 
 }

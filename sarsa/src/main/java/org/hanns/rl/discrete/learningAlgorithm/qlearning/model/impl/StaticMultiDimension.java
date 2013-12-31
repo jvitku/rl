@@ -99,7 +99,9 @@ import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.MultiDimensionMat
 			if(depth<coords.length){
 				//System.out.println("rolling deepere "+depth);
 
-				this.checkDims(coords, depth);
+				if(!this.checkDims(coords, depth))
+					return;
+				
 				childs[coords[depth]].setVal(coords, depth+1, value);
 
 				// we are in the place (all coordinates applied)
@@ -118,7 +120,8 @@ import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.MultiDimensionMat
 		private E readValue(int[] coords, int depth){
 			if(depth<coords.length){
 				//System.out.println("rolling deepere "+depth);
-				this.checkDims(coords, depth);
+				if(!this.checkDims(coords, depth))
+					return null;
 				return (E) childs[coords[depth]].readValue(coords, depth+1);
 			}else{
 				//System.out.println("READING this value "+val.toString());

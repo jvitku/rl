@@ -70,49 +70,101 @@ public class QMatrixTests {
 	public void hardReset(){
 		
 		int numActions = 5;	// 5 actions
-		int numVars = 6;	// 2 state variables
+		int numVars = 5;	// 2 state variables
 		int vs = 10; 
 		int[] stateSizes = new int[numVars];
 		
 		for(int i=0; i<numVars; i++){
 			stateSizes[i] = vs;
 		}
+		System.out.println("============== starting to allocate the structure");
 		SystemInfo.infoMb();
 		
-		System.out.println("start");
+
 		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
-		System.out.println("end");
-		
-		
+		System.out.println("============== structure allocated, stats:");
 		SystemInfo.infoMb();
+		System.out.println("");
 		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		
 		double def = q.getDefaultValue();
 		
-		int [] coords = this.initCoors(numVars);
+		int [] coords = this.initCoords(numVars);
 		assertTrue(q.get(coords)==def);
 		
-		coords[1] = 1;	// accesses {0,5,0,...0}
+		coords[1] = 1;	// accesses {0,1,0,...0}
 		q.set(coords, -12.3);
 		assertTrue(q.get(coords)==-12.3);
-		/*
+		
 		// delete all values and try again
 		q.hardReset(false);
+		assertTrue(q.get(coords)==def);
+		
+		coords[3] = 6;
 		
 		assertTrue(def == q.getDefaultValue());
-		assertTrue(q.get(new int[]{0,0,0})==def);
-		assertTrue(q.get(new int[]{1,1,1})==def);
-		assertTrue(q.get(new int[]{1,2,3})==def);
-		assertTrue(q.get(new int[]{1,2,4})==def);
-		*/
+		assertTrue(q.get(coords)==def);
+		assertTrue(q.get(new int[]{1,1,1})==null);
+		
+		coords[5] = 5;						// out of range for actions
+		assertTrue(q.get(coords)==null);
+		q.get(coords);						// just prints out an error
+		coords[5] = 4;						// in range
+		assertTrue(q.get(coords)==def);
+		coords[4] = 9;						// in range
+		assertTrue(q.get(coords)==def);
+		coords[4] = 10;						// out of range for state var.
+		assertTrue(q.get(coords)==null);
 	}
 	
-	private int[] initCoors(int numVars){
+	/**
+	 * Check randomization
+	 */
+	public void hardResetRandomize(){
+		int numActions = 5;	// 5 actions
+		int numVars = 5;	// 5 state variables
+		int vs = 10; 		// 	.. each with 10 values
+		int[] stateSizes = new int[numVars];
+		
+		for(int i=0; i<numVars; i++){
+			stateSizes[i] = vs;
+		}
+		System.out.println("============== starting to allocate the structure");
+		SystemInfo.infoMb();
+		
+
+		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
+		System.out.println("============== structure allocated, stats:");
+		SystemInfo.infoMb();
+		System.out.println("");
+		
+		double def = q.getDefaultValue();
+		double []r =q.getRandomizeRange();
+		
+		int [] coords = this.initCoords(numVars);
+		assertTrue(q.get(coords)==def);
+		
+		coords[1] = 1;	// accesses {0,1,0,...0}
+		q.set(coords, -12.3);
+		assertTrue(q.get(coords)==-12.3);
+		
+		q.hardReset(true);
+		assertTrue(this.inRange(r,q.get(coords)));
+		
+		coords[0] = 1;
+		assertTrue(this.inRange(r,q.get(coords)));
+		
+		coords[5] = 2;
+		assertTrue(this.inRange(r,q.get(coords)));
+		assertFalse(q.get(coords)==def);
+	}
+	
+	private boolean inRange(double [] range, double d){
+		return d>=range[0] && d<(range[0]+range[1]);
+	}
+
+	
+	private int[] initCoords(int numVars){
 		int []coords = new int[numVars+1];
 		for(int i=0; i<numVars+1; i++){
 			coords[i] = 0;

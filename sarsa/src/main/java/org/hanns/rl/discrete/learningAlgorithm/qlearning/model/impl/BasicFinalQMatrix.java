@@ -93,6 +93,10 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 
 	@Override
 	public Double get(int[] coordinates) {
+		if(coordinates.length!=this.numDimensions){
+			System.err.println("BasicFinalWMatrix: wrong number of dimensions!");
+			return null;
+		}
 		return d.readValue(coordinates);
 	}
 

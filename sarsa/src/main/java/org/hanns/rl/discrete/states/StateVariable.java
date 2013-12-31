@@ -13,7 +13,7 @@ public interface StateVariable {
 	/**
 	 * Name should be final.
 	 * 
-	 * @return name of the variable (used for finding it in the StateSet)
+	 * @return name of the variable (used for finding it in the ModifiableStateSet)
 	 */
 	public String getName();
 	

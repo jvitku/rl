@@ -63,5 +63,7 @@ public class VariableEncoderTest {
 		v.setRawValue((float) -1000000);
 		assertTrue(v.getVal()==0);
 	}
+	
+	
 
 }

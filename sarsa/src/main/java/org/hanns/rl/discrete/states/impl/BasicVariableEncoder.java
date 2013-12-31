@@ -4,7 +4,7 @@ import org.hanns.rl.discrete.states.VariableEncoder;
 
 /**
  * Basic state variable encoder which samples specified range of input data 
- * into specified number of samples. 
+ * into specified number of samples. No need to make new instance for each variable. 
  *  
  * @author Jaroslav Vitku
  *

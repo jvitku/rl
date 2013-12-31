@@ -1,5 +1,8 @@
 package org.hanns.rl.discrete.states;
 
+import org.hanns.rl.exceptions.MessageFormatException;
+
+
 /**
  * This is list of state variables with final number of variables and their 
  * dimensions.
@@ -23,6 +26,13 @@ public interface FInalStateSet {
 	 */
 	public int[] getDimensionsSizes();
 	
+	/**
+	 * Return the variable of the specified name
+	 * @param name name of the var.
+	 * @return StateVariable of the specified name
+	 */
+	public StateVariable getVarByName(String name);
+	
 
 	/**
 	 * Get the current values of the state variables.
@@ -32,26 +42,26 @@ public interface FInalStateSet {
 	 */
 	public int[] getValues();
 	
-
 	/**
-	 * Set the current state of the world. For each variable (dimension) set
-	 * its value from the range specified by the {@link #getDimensionsSizes()}.
-	 * @param vals values of all variables
-	 * @see #getValues()
+	 * Set raw data to the variables. 
+	 * @param values array of received raw values to be set 
+	 * @throws MessageFormatException if the message has incorrect format (wrong size of array)
 	 */
-	public void setValues(int[] vals);
+	public void setRawData(float[] values) throws MessageFormatException;
 	
-	/**
-	 * Set the value of state variable with the specified index.
-	 * @param index index of the variable 
-	 * @param value value of the variable
-	 */
-	public void setValueOf(int index, int value);
 	
 	/**
 	 * Get value of variable by index
 	 * @param index
+	 * @return encoded value of the sate variable
 	 */
-	public void getValueOf(int index);
+	public int getValueOf(int index);
+	
+	/**
+	 * return the value of a variable specified by name
+	 * @param name name of the variable
+	 * @return encoded value of the state variable
+	 */
+	public int getValueOf(String name);
 	
 }

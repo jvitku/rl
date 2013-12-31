@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.actions;
 
-import org.hanns.rl.exceptions.FinalParamException;
+import org.hanns.rl.common.exceptions.FinalParamException;
 
 /**
  * List of actions that can be undertaken by the action selection algorithm.

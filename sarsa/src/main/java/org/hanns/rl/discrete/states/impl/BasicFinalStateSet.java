@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.hanns.rl.discrete.states.FInalStateSet;
 import org.hanns.rl.discrete.states.StateVariable;
-import org.hanns.rl.exceptions.MessageFormatException;
+import org.hanns.rl.common.exceptions.MessageFormatException;
 
 /**
  * Unmodifiable set of variables.

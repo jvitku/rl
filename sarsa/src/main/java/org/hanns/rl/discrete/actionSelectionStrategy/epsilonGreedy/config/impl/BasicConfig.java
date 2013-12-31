@@ -26,3 +26,4 @@ public class BasicConfig implements EpsilonGreedyConfig {
 	public boolean getExplorationEnabled() { return this.explorationEnabled; }
 
 }
+

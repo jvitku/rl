@@ -146,14 +146,14 @@ public class QMatrix<E>/*<Integer>*/ {
 	public void removeIndexOfAction(int which){
 		if(this.dim==1){///new + dole
 			if(which<0 || which>=this.vals.size()){
-				System.err.println("QMatrix: removeIndexOfAction: index not accepted: "+which
+				System.err.println("FinalQMatrix: removeIndexOfAction: index not accepted: "+which
 						+" size of first dimension is: "+this.vals.size());
 				return;
 			}	
 		}
 		
 		if(which<0 || which>=this.subMtr.size()){
-			System.err.println("QMatrix: removeIndexOfAction: index not accepted: "+which
+			System.err.println("FinalQMatrix: removeIndexOfAction: index not accepted: "+which
 					+" size of first dimension is: "+this.subMtr.size());
 			return;
 		}
@@ -312,21 +312,21 @@ public class QMatrix<E>/*<Integer>*/ {
 	public boolean checkDimensionSizes(int[] inds){
 		int[] sizes = this.getDimensionSizes();
 		if(sizes.length!=inds.length){
-			System.err.println("QMatrix: checkDimensionSizes: incorrect num of variables!!!!!!!!!!  "+
+			System.err.println("FinalQMatrix: checkDimensionSizes: incorrect num of variables!!!!!!!!!!  "+
 					" dimension sizes are: ["+this.dimSizes(sizes)+"] , but you are indexing with: ["+
 					this.dimSizes(inds)+"]");
 			return false;
 		}
 		//for(int i=0; i<inds.length; i++){
 			if(inds[0] >= sizes[0]){
-				System.err.println("QMatrix: checkDimensionSizes: incorrect indexing! "+
+				System.err.println("FinalQMatrix: checkDimensionSizes: incorrect indexing! "+
 						" dimension sizes are: ["+this.dimSizes(sizes)+"] , but you are indexing with: ["+
 						this.dimSizes(inds)+ "]   ..(problem with actions!! )");
 				return false;
 			}
 		//}
 		/*
-		System.out.println("QMatrix: checkDimensionSizes: dimension sizes are: ["+this.dimSizes(sizes)+
+		System.out.println("FinalQMatrix: checkDimensionSizes: dimension sizes are: ["+this.dimSizes(sizes)+
 				"] , and you are indexing with: ["+ this.dimSizes(inds)+ "] ");
 				*/
 		return true;	
@@ -461,7 +461,7 @@ public class QMatrix<E>/*<Integer>*/ {
 			return;
 		// deal with the zeros dimension 
 		}else if(which ==0){
-			System.out.println("QMatrix: deleteDImension: will not delete the dimension 0 = action set");
+			System.out.println("FinalQMatrix: deleteDImension: will not delete the dimension 0 = action set");
 				return;
 		}else{
 			int[] sizes = this.getDimensionSizes();
@@ -663,7 +663,7 @@ public class QMatrix<E>/*<Integer>*/ {
 		
 		// for all values in the vector list(0)
 		if(depth != sizes.length-1)
-			System.err.println("QMatrix: sumLastDim: shpould sum last dim, but the depth is incorrect !!");
+			System.err.println("FinalQMatrix: sumLastDim: shpould sum last dim, but the depth is incorrect !!");
 		
 		for(int i=0; i<sizes[depth]; i++){
 			

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.exceptions.DecoderException;
-import org.hanns.rl.exceptions.FinalParamException;
+import org.hanns.rl.common.exceptions.DecoderException;
+import org.hanns.rl.common.exceptions.FinalParamException;
 import org.junit.Test;
 
 public class EncoderAndActionSet {

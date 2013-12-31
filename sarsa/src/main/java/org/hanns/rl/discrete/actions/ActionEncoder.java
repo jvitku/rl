@@ -1,7 +1,6 @@
 package org.hanns.rl.discrete.actions;
 
-import org.hanns.rl.exceptions.DecoderException;
-
+import org.hanns.rl.common.exceptions.DecoderException;
 
 
 /**

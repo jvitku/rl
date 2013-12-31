@@ -1,12 +1,11 @@
 package org.hanns.rl.discrete.states;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
-import org.hanns.rl.exceptions.MessageFormatException;
+import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.junit.Test;
 
 /**

@@ -1,19 +1,19 @@
-package org.hanns.rl.exceptions;
+package org.hanns.rl.common.exceptions;
 
 /**
- * ROS message received has wrong format (e.g. dimensionality of data)  
- *  
+ * Thrown if the message could not be decoded. 
+ * 
  * @author Jaroslav Vitku
  *
  */
-public class MessageFormatException extends Exception {
-
+public class DecoderException extends Exception{
+	
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param message Text explanation of the exception. 
 	 */
-	public MessageFormatException(String message) {
+	public DecoderException(String message) {
 		super(message);
 	}
 
@@ -21,7 +21,7 @@ public class MessageFormatException extends Exception {
 	 * @param cause Another throwable that indicates a problem underlying this 
 	 * 		exception.  
 	 */
-	public MessageFormatException(Throwable cause) {
+	public DecoderException(Throwable cause) {
 		super(cause); 
 	}
 
@@ -30,7 +30,8 @@ public class MessageFormatException extends Exception {
 	 * @param cause Another throwable that indicates a problem underlying this 
 	 * 		exception.  
 	 */
-	public MessageFormatException(String message, Throwable cause) {
+	public DecoderException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

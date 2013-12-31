@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.states;
 
-import org.hanns.rl.exceptions.MessageFormatException;
+import org.hanns.rl.common.exceptions.MessageFormatException;
 
 
 /**

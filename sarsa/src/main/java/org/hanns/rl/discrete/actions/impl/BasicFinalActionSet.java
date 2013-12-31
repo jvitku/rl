@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.actions.impl;
 
 import org.hanns.rl.discrete.actions.ActionSet;
-import org.hanns.rl.exceptions.FinalParamException;
+import org.hanns.rl.common.exceptions.FinalParamException;
 
 /**
  * Basic action set with the final number of actions.

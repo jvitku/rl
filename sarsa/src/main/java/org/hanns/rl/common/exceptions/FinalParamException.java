@@ -1,4 +1,4 @@
-package org.hanns.rl.exceptions;
+package org.hanns.rl.common.exceptions;
 
 /**
  * The exception can be thrown during the attempt of changing the final  

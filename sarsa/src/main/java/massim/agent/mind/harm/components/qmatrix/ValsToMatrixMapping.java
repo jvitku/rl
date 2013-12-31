@@ -282,7 +282,7 @@ public class ValsToMatrixMapping {
 	public synchronized int[] getIndexes(VariableList vars, Action a, boolean previous){
 		
 		if((vars.size()+1) != m.getDim())
-			log.err(cn,"getIndexes: number of variables+1 is not the same as dimension of QMatrix");
+			log.err(cn,"getIndexes: number of variables+1 is not the same as dimension of FinalQMatrix");
 		
 		ValToIndexMapping mp;
 		

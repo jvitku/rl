@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.actions.impl;
 
 import org.hanns.rl.discrete.actions.ActionEncoder;
 import org.hanns.rl.discrete.actions.ActionSet;
-import org.hanns.rl.exceptions.DecoderException;
+import org.hanns.rl.common.exceptions.DecoderException;
 
 /**
  * Implements 1ofN encoding. Action is represented by the vector of float values, where 

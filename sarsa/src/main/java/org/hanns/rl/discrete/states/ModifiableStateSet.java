@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.states;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import org.hanns.rl.exceptions.FinalParamException;
+import org.hanns.rl.common.exceptions.FinalParamException;
 
 /**
  * This holds set of state variables. This set describes state

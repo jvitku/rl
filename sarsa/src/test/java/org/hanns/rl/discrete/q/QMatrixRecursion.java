@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.q;
 
 import static org.junit.Assert.*;
 
+//import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.FinalQMatrix.Dimension;
 import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl.Dimension;
 import org.junit.Test;
 

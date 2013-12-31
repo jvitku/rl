@@ -9,5 +9,20 @@ import org.hanns.rl.common.Resettable;
  *
  */
 public interface QMatrixManager extends Resettable{
+	
+	public double[] getActionQValsForState(int[] stateVals);
+	
+	/**
+	 * Values in the previous stae of the environment
+	 * @return
+	 */
+	public double[] getActionQValsForPreviousState();
+	
+	public double[] getActionQValsForCurrentState();
+	
+	
+	public double[] getMaxActionValForCurrentState();
+	
+	///TOOD
 
 }

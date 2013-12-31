@@ -28,7 +28,7 @@ import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 public interface FinalQMatrix extends Resettable{
 
 	// TODO this should be in the constructor
-	public void init(BasicFinalActionSet aSet, BasicFinalStateSet sSet);
+	//public void init(BasicFinalActionSet aSet, BasicFinalStateSet sSet);
 	
 
 	

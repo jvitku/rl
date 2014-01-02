@@ -8,8 +8,6 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfig
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearning;
 import org.junit.Test;
 
-import ctu.nengoros.util.SL;
-
 /**
  * Tests the FinalModelQLearning class.
  * 
@@ -17,7 +15,16 @@ import ctu.nengoros.util.SL;
  *
  */
 public class FinalQLearning {
-
+	/**
+	 * Test a simple mobile agent learning navigation in a simple grid environment:
+	 * <ul>
+	 * <li>Agent can navigate by means of four actions: [0,1,2,3] ~ left, right, up, down</li>
+	 * <li>Environment is represented by a reward map: 2D array with values of reward</li>
+	 * <li>If the agent steps on a tale with nonzero reward, reward is received</li>
+	 * <li>The agent should learn how to navigate towards the reward</li>
+	 * <li>Action selection is pure random</li>
+	 *  </ul>
+	 */
 	@Test
 	public void basic(){
 		Random r = new Random();

@@ -27,7 +27,7 @@ public class FinalQLearning {
 
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
-		config.setGamma(1);	// more towards immediate reward
+		config.setGamma(0.7);	// more towards immediate reward
 
 		//new FinalModelQlearning(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
@@ -78,7 +78,8 @@ public class FinalQLearning {
 				actionvals = q.getActionValsInState(state);
 				best = this.getMaxInd(actionvals);
 				if(vals){
-					line = line+"\t"+Math.round(actionvals[best]);
+					line = line+"\t"+round(actionvals[best],1000);
+					//line = line+"\t"+actionvals[best];
 				}else{
 					line = line+"\t"+best;
 				}
@@ -86,6 +87,12 @@ public class FinalQLearning {
 			line = line + "\n";
 		}
 		return line;
+	}
+	
+	private double round(double what, int how){
+		int rd = (int)(what*how);
+		double d = (double)rd;
+		return d/how;
 	}
 
 	private String vis(float[][] map){

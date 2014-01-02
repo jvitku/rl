@@ -20,16 +20,16 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 	Random r;
 	ActionSet acitons;
 	EpsilonGreedyConfig config;
-	
+
 	public EpsilonGreedy(ActionSet actions, EpsilonGreedyConfig config){
 		r = new Random();
 		this.acitons = actions;
 		this.config = config;
 	}
-	
+
 	@Override
 	public int selectAction(E[] actionValues) {
-		if(actionValues.length!=acitons.getNumOfActions()){
+		if(actionValues.length != acitons.getNumOfActions()){
 			System.err.println("ERROR: incorrect size of actionValues array!");
 			return -1;
 		}
@@ -39,17 +39,24 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 				return r.nextInt(actionValues.length);
 			}
 		}
+		// if all actions have equal value, select randomly
+		if(this.allEqual(actionValues)){
+			int ind = r.nextInt(acitons.getNumOfActions());
+			return ind;
+		}
 		int ind = 0;
 		for(int i=1; i<actionValues.length; i++){
-			if(this.better(actionValues[ind], actionValues[i])){
+			if(this.better(actionValues[i], actionValues[ind])){
 				ind = i;
 			}
 		}
 		return ind;
 	}
-
-	protected abstract boolean better(E a, E b);
 	
+	protected abstract boolean allEqual(E[] actionVals);
+	
+	protected abstract boolean better(E a, E b);
+
 	@Override
 	public void setActionSet(ActionSet actions) { this.acitons = actions;	}
 

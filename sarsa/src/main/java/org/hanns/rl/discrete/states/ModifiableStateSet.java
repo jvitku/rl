@@ -22,7 +22,8 @@ public interface ModifiableStateSet {
 	public int getNumVariables();
 	
 	/**
-	 * The same as {@link #getValues()}, but these values are mapped to the StateVariable names
+	 * The same as {@link #getVariables()}, but these values are mapped to the 
+	 * {@link StateVariable} names.
 	 * @return map mapping variable names to their current values
 	 */
 	public HashMap<String, StateVariable> getVariableMap();

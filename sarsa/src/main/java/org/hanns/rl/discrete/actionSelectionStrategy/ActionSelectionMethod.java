@@ -8,5 +8,5 @@ package org.hanns.rl.discrete.actionSelectionStrategy;
  */
 public interface ActionSelectionMethod {
 
-	public void getSelectAction();	// TODO return action
+	public int selectAction();	// TODO return action
 }

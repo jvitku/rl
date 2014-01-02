@@ -4,9 +4,17 @@ import java.util.Random;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.MultiDimensionMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.StaticMultiDimension;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
 
-public class BasicFinalQMatrix implements FinalQMatrix<Double>{
+/**
+ * An implementation of the QMatrix. This one uses 
+ * {@link org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension} 
+ * to store the data, therefore calling the constructor with specified too big 
+ * state-action space can be computationally expensive.
+ * 
+ * @author Jaroslav Vitku
+ */
+public class PreAllocatedFinalQMatrix implements FinalQMatrix<Double>{
 
 	private int[] dimensionSizes;
 
@@ -15,6 +23,8 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 	private Double defValue = 0.0;
 	private Double minRand = 0.0, range = 1.0;
 	
+	private int[] tmp;
+	
 	private final int[] varRanges;
 	private final int numActions;
 	private final int numVariables;
@@ -22,12 +32,13 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 	
 	final Random r = new Random();
 	
-	public BasicFinalQMatrix(int[] stateVariableRanges, int numActions){
+	public PreAllocatedFinalQMatrix(int[] stateVariableRanges, int numActions){
 		
 		this.varRanges = stateVariableRanges.clone();
 		this.numActions = numActions;
 		this.numVariables =this.varRanges.length;
 		this.numDimensions = this.varRanges.length+1;
+		tmp = new int[numDimensions];
 		
 		this.dimensionSizes = new int[this.numDimensions];
 		
@@ -51,7 +62,7 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		}
 		
 		// initialize the main data structure with the default value
-		d = new StaticMultiDimension<Double>(dimensionSizes, 0, this.defValue);
+		d = new PreAllocatedMultiDimension<Double>(dimensionSizes, 0, this.defValue);
 	}
 
 	@Override
@@ -82,8 +93,8 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 			this.randomizeDimension(startInds, 0);
 			
 		}else{
-			if(d instanceof StaticMultiDimension)
-				((StaticMultiDimension<Double>)d).setAllVals(this.defValue);
+			if(d instanceof PreAllocatedMultiDimension)
+				((PreAllocatedMultiDimension<Double>)d).setAllVals(this.defValue);
 		}
 	}
 
@@ -101,6 +112,31 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 		return d.readValue(coordinates);
 	}
 
+	@Override
+	public void set(int[] state, int action, Double value) {
+		this.check(state, action);
+		for(int i=0; i<state.length; i++)
+			tmp[i] = state[i];
+		tmp[tmp.length-1] = action;
+		this.set(tmp, value);
+	}
+
+	@Override
+	public Double get(int[] state, int action) {
+		this.check(state, action);
+		for(int i=0; i<state.length; i++)
+			tmp[i] = state[i];
+		tmp[tmp.length-1] = action;
+		return this.get(tmp);
+	}
+
+	private void check(int[] state, int action){
+		if(state.length!=this.numVariables)
+			System.err.println("BasicFinalWMatrix: wrong number of dimensions of state variable!");
+		if(action < -1 || action >= this.numActions)
+			System.err.println("BasicFinalWMatrix: wrong index of action!");
+	}
+	
 	/**
 	 * Note: this could be implemented in a more elegant way:
 	 * method in {@link #d} for recursive call to the last dimension and then 
@@ -110,7 +146,7 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 	public Double[] getActionValsInState(int[] states) {
 		
 		if(states.length!=this.numDimensions-1){
-			System.err.println("BasicFinalQMatrix: iincorrect length" +
+			System.err.println("PreAllocatedFinalQMatrix: iincorrect length" +
 					"of index array!");
 			return null;
 		}
@@ -137,7 +173,7 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 	@Override
 	public void setRandomizationParameters(Double minValue, Double maxValue) {
 		if(minValue>=maxValue){
-			System.err.println("BasicFinalQMatrix: incorrect definition of min,max values");
+			System.err.println("PreAllocatedFinalQMatrix: incorrect definition of min,max values");
 			return;
 		}
 		this.minRand = minValue;
@@ -167,6 +203,7 @@ public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 			this.randomizeDimension(tmp, depth+1);
 		}
 	}
+
 	
 
 

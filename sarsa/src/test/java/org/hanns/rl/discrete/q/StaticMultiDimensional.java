@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.q;
 
 import static org.junit.Assert.*;
 
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.StaticMultiDimension;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
 import org.junit.Test;
 
 public class StaticMultiDimensional {
@@ -12,7 +12,7 @@ public class StaticMultiDimensional {
 
 		int []dims = new int[]{2,3,4};
 
-		StaticMultiDimension<Double> dd = new StaticMultiDimension<Double>(dims,0,new Double(-2));
+		PreAllocatedMultiDimension<Double> dd = new PreAllocatedMultiDimension<Double>(dims,0,new Double(-2));
 
 		int[] coords = new int[]{0,2,3};
 		dd.setValue(coords, new Double(7));

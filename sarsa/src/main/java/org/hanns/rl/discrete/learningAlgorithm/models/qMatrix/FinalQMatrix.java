@@ -3,13 +3,13 @@ package org.hanns.rl.discrete.learningAlgorithm.models.qMatrix;
 import org.hanns.rl.common.Resettable;
 
 /**
- * QMatrix which expects final set of state variables and final state of actions. The 
- * dimensionality of the matrix is therefore un-modifiable.
+ * <p>QMatrix which expects final set of state variables and final state of actions. The 
+ * dimensionality of the matrix is therefore un-modifiable.</p>
  * 
- * The Q(s,a) matrix maps the space of s (states) and a (actions) to real values.
+ * <p>The Q(s,a) matrix maps the space of s (states) and a (actions) to real values.
  * The number on the particular position defines expected sum future outcomes if 
  * the agent takes a given action in a given state. So the higher value means
- * the better outcome.
+ * the better outcome.</p>
  * 
  * The following requirements are posed to the QMatrix:
  * <ul>
@@ -47,7 +47,7 @@ public interface FinalQMatrix<E> extends Resettable{
 	 * variable and range in which the values are generated.
 	 * Therefore all randomly generated values in the matrix
 	 * by the method {@link #hardReset(boolean)} are from range
-	 * of <min,min+range>
+	 * of [min,min+range]
 	 * @return two values, min and range of randomly generated values
 	 */
 	public double[] getRandomizeRange();
@@ -69,16 +69,34 @@ public interface FinalQMatrix<E> extends Resettable{
 	public void set(int[] coordinates, E value);
 	
 	/**
+	 * The same as {@link #set(int[], Object)}, but here, the state and action
+	 * are set separate.
+	 * @param state representation of an observed state
+	 * @param action index of action (to be) performed
+	 * @param value value to be set
+	 */
+	public void set(int[] state, int action, E value);
+	
+	/**
 	 * Get value from the specified coordinates in the matrix
 	 * @param coordinates array of coordinates if size states.length+1 (actions)
-	 * @return
+	 * @return value stored on a given coordinates
 	 */
 	public E get(int[] coordinates);
+	
+	/**
+	 * The same as {@link #get(int[])}, but here, the action and state is defined
+	 * separately.
+	 * @param state representation of an observed state
+	 * @param action index of action (to be) performed
+	 * @return the value in the matrix
+	 */
+	public E get(int[] state, int action);
 
 	/**
 	 * Get array of Q(s,a) values for all actions in a given state 
 	 * @param states array of coordinates describing the current state of the world (states.length)
-	 * @return
+	 * @return array of Q(s,a) values in given state for all available actions
 	 */
 	public E[] getActionValsInState(int[] states);
 
@@ -96,8 +114,8 @@ public interface FinalQMatrix<E> extends Resettable{
 	 * randomize set to true, uniformly distributed random variables 
 	 * from the specified range will be set to the matrix. 
 	 * 
-	 * @param minValue lower boundary of random values (inclusive) 
-	 * @param minValue upper boundary of random values (exclisive)
+	 * @param minValue lower boundary of random values  
+	 * @param maxValue upper boundary of random values 
 	 */
 	public void setRandomizationParameters(E minValue,E maxValue);
 }

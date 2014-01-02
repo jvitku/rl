@@ -4,15 +4,15 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.Mult
 
 
 	/**
-	 * Multidimensional class with definable final number of dimensions
+	 * <p>Multidimensional class with definable final number of dimensions
 	 * and dimension sizes. The dimension sizes are defined as an array of
 	 * integer values. The parameter index is used internally, so 
-	 * the constructor should be called with index=0. 
+	 * the constructor should be called with index=0.</p> 
 	 * 
-	 * Note that memory for entire structure is allocated in the constructor. 
+	 * <p>Note that memory for entire structure is allocated in the constructor. 
 	 * The size of state space (faster for Q(s,a) space) grows exponentially, 
 	 * so even for small number of variables and actions, the constructor can
-	 * run really long. 
+	 * run really long.</p> 
 	 * 
 	 * TODO: add dynamically allocated structure
 	 *  
@@ -20,10 +20,10 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.Mult
 	 *
 	 * @param <E> initial value that is stored on all places of the matrix 
 	 */
-	public class StaticMultiDimension<E> implements MultiDimensionMatrix<E>{
+	public class PreAllocatedMultiDimension<E> implements MultiDimensionMatrix<E>{
 
 		private E val;
-		private StaticMultiDimension<E>[] childs;
+		private PreAllocatedMultiDimension<E>[] childs;
 		
 		private final boolean dynamicallyAllocated = false;	 
 
@@ -34,7 +34,7 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.Mult
 		 * @param initVal initial value that is stored in entire matrix
 		 */
 		@SuppressWarnings("unchecked")
-		public StaticMultiDimension(int[] sizes, int index, E initVal){
+		public PreAllocatedMultiDimension(int[] sizes, int index, E initVal){
 
 			//System.out.println("--- hi level "+index);
 			// if not the last dimension, make array of childs and recurse
@@ -43,9 +43,9 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.Mult
 				int numChilds = sizes[index];
 				//System.out.println("------creating this no of childs: "+numChilds);
 
-				childs = new StaticMultiDimension[numChilds];
+				childs = new PreAllocatedMultiDimension[numChilds];
 				for(int i=0; i<numChilds; i++){
-					childs[i] = new StaticMultiDimension<E>(sizes,index+1,initVal);
+					childs[i] = new PreAllocatedMultiDimension<E>(sizes,index+1,initVal);
 				}
 			}else{
 				//System.out.println("STOP, setting my value to!"+initVal);

@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import ctu.nengoros.util.SystemInfo;
 
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.BasicFinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
 import org.junit.Test;
 
 /**
@@ -25,7 +25,7 @@ public class QMatrixTests {
 		stateSizes[0] = 2;	// var 0 can have two states
 		stateSizes[1] = 3;	// var 1 can have three states
 
-		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
+		PreAllocatedFinalQMatrix q = new PreAllocatedFinalQMatrix(stateSizes, numActions);
 		
 		// this should result in a QMatrix of dimension: 2x3x5
 		assertTrue(q.getNumActions()==5);
@@ -81,7 +81,7 @@ public class QMatrixTests {
 		SystemInfo.infoMb();
 		
 
-		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
+		PreAllocatedFinalQMatrix q = new PreAllocatedFinalQMatrix(stateSizes, numActions);
 		System.out.println("============== structure allocated, stats:");
 		SystemInfo.infoMb();
 		System.out.println("");
@@ -133,7 +133,7 @@ public class QMatrixTests {
 		SystemInfo.infoMb();
 		
 
-		BasicFinalQMatrix q = new BasicFinalQMatrix(stateSizes, numActions);
+		PreAllocatedFinalQMatrix q = new PreAllocatedFinalQMatrix(stateSizes, numActions);
 		System.out.println("============== structure allocated, stats:");
 		SystemInfo.infoMb();
 		System.out.println("");
@@ -163,6 +163,11 @@ public class QMatrixTests {
 		return d>=range[0] && d<(range[0]+range[1]);
 	}
 
+	
+	@Test
+	public void testGetActionValues(){
+		// TODO: test the method which returns values of actions in a given state
+	}
 	
 	private int[] initCoords(int numVars){
 		int []coords = new int[numVars+1];

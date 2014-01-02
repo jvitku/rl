@@ -33,6 +33,7 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 			System.err.println("ERROR: incorrect size of actionValues array!");
 			return -1;
 		}
+		// if can explore, can choose randomly with p=epsilon 
 		if(config.getExplorationEnabled()){
 			if(r.nextDouble() <= config.getEpsilon()){
 				return r.nextInt(actionValues.length);

@@ -20,6 +20,18 @@ public interface EpsilonGreedyConfig extends ActionSelectionMethodConfig {
 	 * 
 	 * @param min minimum probability of randomizing.
 	 */
+	public void setEpsilon(double value);
+	
+	/**
+	 * Get the value of epsilon parameter
+	 * @return current value of the parameter
+	 */
+	public double getEpsilon();
+	
+	/**
+	 * For the future use in some adaptive epsilon value
+	 * @param min
+	 */
 	public void setMinEpsilon(double min);
 	public double getMinEpsilon(double min);
 

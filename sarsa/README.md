@@ -110,3 +110,9 @@ After launching the node:
 * if the data sample is received, this is considered as a simulation step, which means:
 	* one algorithm step is made and output values are updated
 
+## TODO
+
+* Implement Q-matrix which is dynamically allocated
+* Add also the NOOP action everywhere (index is -1)
+* 
+

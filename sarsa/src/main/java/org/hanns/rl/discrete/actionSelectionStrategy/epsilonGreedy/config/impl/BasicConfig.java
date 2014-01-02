@@ -10,6 +10,7 @@ import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.Epsilo
  */
 public class BasicConfig implements EpsilonGreedyConfig {
 
+	private double epsilon = 0;
 	private double minEpsilon = 0;
 	private boolean explorationEnabled = true;
 
@@ -24,6 +25,12 @@ public class BasicConfig implements EpsilonGreedyConfig {
 
 	@Override
 	public boolean getExplorationEnabled() { return this.explorationEnabled; }
+
+	@Override
+	public void setEpsilon(double value) { this.epsilon = value;	}
+
+	@Override
+	public double getEpsilon() { return this.epsilon; }
 
 }
 

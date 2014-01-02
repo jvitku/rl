@@ -7,6 +7,8 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
+import ctu.nengoros.util.SL;
+
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
@@ -14,10 +16,6 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
  *
  */
 public class FinalModelQlearning implements FinalModelLearningAlgorithm{
-
-	private final String mess = "FinalModelQLearning:" +
-			" incorrect dimenion sizes for "+this.numActions+
-			" actions and "+this.stateSizes.length+" states";
 	
 	private int numActions;
 	private int[] stateSizes;
@@ -25,7 +23,10 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 	private FinalQMatrix<Double> q;
 	
 	private int[] prevState;
-	private int prevAction;
+	
+	private final String mess = "FinalModelQLearning:" +
+			" incorrect dimenion sizes";
+	// for "+this.numActions+" actions and "+this.stateSizes.length+" states";
 	
 	/**
 	 * Get the number of actions available, array defining how many values
@@ -43,28 +44,30 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 	}
 	
 	@Override
-	public void performLearningStep(int action, float reward, int[] state) {
+	public void performLearningStep(int action, float reward, int[] newState) {
 		if(!this.config.getLearningEnabled())
 			return;
 		
 		if(this.prevState == null)
-			this.init(state);
+			this.init(newState);
 
-		// TODO Auto-generated method stub
-		this.config.getAlpha();
-		this.config.getGamma();
+		double prevVal = q.get(prevState, action);	// we were there and made the action
+		Double[] currentActions  = q.getActionValsInState(newState);	// action values available now
+		double maxActionVal = this.maxInd(currentActions);	// value of the best available action now
 		
-		double prev = q.get(prevState, prevAction); 
-		double current = q.get(state, action);
-		
-		//TODO
-		double newVal = prev+this.config.getAlpha();
-		
-//		double maxAction = this.maxInd(q.getActionValsInState(state));
-		
-		prevState = state;	// update last state
-		
+		// compute the learning equation
+		double learned =prevVal+this.config.getAlpha()*
+				(reward+this.config.getGamma()*maxActionVal-prevVal);
 
+		/*
+		SL.sinfol("----learning: \naction taken: "+action+
+				"\nreward: " +reward+
+				"\nprevState "+SL.toStr(prevState)+
+				"\nnew state "+SL.toStr(newState)+
+				"\ncurrent actionVals "+SL.toStr(currentActions));
+		*/
+		q.set(prevState, action, learned);	// store the value
+		prevState = newState.clone();	// update last state and action
 	}
 	
 	@Override
@@ -119,5 +122,24 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 						". dimension no. "+i+" has incorrect size.");
 		}
 	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		this.prevState = null;
+		q.softReset(randomize);
+	}
+
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
+		q.hardReset(randomize);
+	}
 	
+	private int maxInd(Double[] actionVals){
+		int ind = 0;
+		for(int i=0; i<actionVals.length; i++)
+			if(actionVals[i]>actionVals[ind])
+				ind = i;
+		return ind;
+	}
 }

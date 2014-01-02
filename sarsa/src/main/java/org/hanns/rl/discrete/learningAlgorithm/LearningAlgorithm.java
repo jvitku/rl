@@ -1,5 +1,6 @@
 package org.hanns.rl.discrete.learningAlgorithm;
 
+import org.hanns.rl.common.Resettable;
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
@@ -9,7 +10,7 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
  * @author Jaroslav Vitku
  *
  */
-public interface LearningAlgorithm {
+public interface LearningAlgorithm extends Resettable {
 	
 	/**
 	 * Retrieve the action performed, reward obtained and observation of the current

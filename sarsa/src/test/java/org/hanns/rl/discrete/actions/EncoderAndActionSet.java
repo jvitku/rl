@@ -31,16 +31,16 @@ public class EncoderAndActionSet {
 		float[] ff = ae.encode(1);	// action 1
 		assertTrue(ff[0]==OneOfNEncoder.nonselected && ff[1]==OneOfNEncoder.selected);
 
-		ff = ae.encode(0);		// action 0
+		ff = ae.encode(0);			// action 0
 		assertTrue(ff[0]==OneOfNEncoder.selected && ff[1]==OneOfNEncoder.nonselected);
 
-		ff = ae.encode(-1); // no action
+		ff = ae.encode(-1); 		// no action
 		assertTrue(ff[0]==OneOfNEncoder.nonselected && ff[1]==OneOfNEncoder.nonselected);
 
-		ff = ae.encode(-2);	// incorrect
+		ff = ae.encode(-2);			// incorrect
 		assertTrue(ff[0]==OneOfNEncoder.nonselected && ff[1]==OneOfNEncoder.nonselected);
 
-		ff = ae.encode(2);  // out of range
+		ff = ae.encode(2);  		// out of range
 		assertTrue(ff[0]==OneOfNEncoder.nonselected && ff[1]==OneOfNEncoder.nonselected);
 	}
 

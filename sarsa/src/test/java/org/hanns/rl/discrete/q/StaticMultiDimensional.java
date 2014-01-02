@@ -5,6 +5,12 @@ import static org.junit.Assert.*;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
 import org.junit.Test;
 
+/**
+ * Basic test of QMatrix data structure
+ * 
+ * @author Jaroslav Vitku
+ *
+ */
 public class StaticMultiDimensional {
 
 	@Test

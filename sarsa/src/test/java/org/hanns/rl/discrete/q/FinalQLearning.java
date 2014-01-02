@@ -8,6 +8,10 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfig
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearning;
 import org.junit.Test;
 
+import sun.tools.tree.ThisExpression;
+
+import ctu.nengoros.util.SL;
+
 /**
  * Tests the FinalModelQLearning class.
  * 
@@ -27,12 +31,12 @@ public class FinalQLearning {
 
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
-		config.setGamma(0.7);	// more towards immediate reward
+		config.setGamma(0.6);	// more towards immediate reward
 
 		//new FinalModelQlearning(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
 
-		float[][] map = this.simpleRewardMap(sx, sy, new int[]{7,7}, 15);
+		float[][] map = this.simpleRewardMap(sx, sy, new int[]{7,7}, 10);
 		System.out.println("map generated is: \n"+this.vis(map));
 
 		int[] pos = new int[]{2,2};	// agents position on the map
@@ -47,9 +51,17 @@ public class FinalQLearning {
 			pos = this.makeStep(sx, sy, action, pos);		// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
 			ql.performLearningStep(action, reward, pos);	// learn about it
-			System.out.println(this.visqm(q, true));
+
+			if(i%100==0){
+				System.out.println(i);
+			//	System.out.println(this.visqm(q, true));
+			}
 
 		}
+		System.out.println(this.visqm(q, true));
+		System.out.println(this.visqm(q, false));
+		System.out.println(this.vis(map));
+
 	}
 
 	/**
@@ -76,17 +88,36 @@ public class FinalQLearning {
 			for(int j=0; j<dimsizes[1]; j++){
 				state[1] = j;
 				actionvals = q.getActionValsInState(state);
+				SL.sinfo(SL.toStr(actionvals));
 				best = this.getMaxInd(actionvals);
 				if(vals){
-					line = line+"\t"+round(actionvals[best],1000);
-					//line = line+"\t"+actionvals[best];
+					if(best<0){
+						line = line+"\t"+best;
+						//SL.sinfol("--1 coords: "+SL.toStr(state));
+					}
+					else
+						line = line+"\t"+round(actionvals[best],1000);
 				}else{
-					line = line+"\t"+best;
+					//line = line+"\t"+best;
+					line = line+"\t"+toAction(best);
 				}
 			}
 			line = line + "\n";
 		}
 		return line;
+	}
+
+	private String toAction(int action){
+		if(action==0){
+			return "<";
+		}else if(action==1){
+			return ">";
+		}else if(action==2){
+			return "^";
+		}else if(action==3){
+			return "v";
+		}
+		return "?";
 	}
 	
 	private double round(double what, int how){
@@ -108,10 +139,16 @@ public class FinalQLearning {
 
 	private int getMaxInd(Double[] actions){
 		int ind = 0;
+		boolean found = false;
 		for(int i=0; i<actions.length; i++){
-			if(actions[ind]<actions[i])
+			if(actions[ind]>0)
+				found = true;
+			if(actions[ind]<actions[i]){
 				ind = i;
+			}
 		}
+		if(!found)
+			return -1;
 		return ind;
 	}
 
@@ -135,7 +172,7 @@ public class FinalQLearning {
 			if(current[0] > 0){
 				coords[0] = current[0]-1;
 			}
-		}else if(action==1){ 			// left
+		}else if(action==1){ 			// right
 			if(current[0] < sx-1){
 				coords[0] = current[0]+1;
 			}

@@ -60,6 +60,32 @@ public class QMatrixTests {
 		assertTrue(q.get(new int[]{1,2,3})==def);
 		assertTrue(q.get(new int[]{1,2,4})==def);
 		SystemInfo.infoMb();
+		
+		q.hardReset(false);
+		int[] dimsizes = q.getDimensionSizes();
+		int[] last = new int[]{dimsizes[0]-1, dimsizes[1]-1, dimsizes[2]-1};
+		
+		this.check(q, last, 11.11, def);
+		last[0] = 0;
+		this.check(q, last, 11.11, def);
+		last[1] = 0;
+		this.check(q, last, 11.11, def);
+		last[2] = 0;
+		this.check(q, last, 11.11, def);
+
+		
+		last = new int[]{dimsizes[0]-1, dimsizes[1]-1, dimsizes[2]-1};
+		last[1] = 0;
+		this.check(q, last, 11.11, def);
+		last = new int[]{dimsizes[0]-1, dimsizes[1]-1, dimsizes[2]-1};
+		last[2] = 0;
+		this.check(q, last, 11.11, def);
+	}
+	
+	private void check(PreAllocatedFinalQMatrix q, int[] coords, double val, double def){
+		assertTrue(q.get(coords)==def);
+		q.set(coords, val);
+		assertTrue(q.get(coords)==val);
 	}
 
 	/**

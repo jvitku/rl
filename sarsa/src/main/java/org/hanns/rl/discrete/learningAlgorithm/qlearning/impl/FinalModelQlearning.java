@@ -50,24 +50,17 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 		
 		if(this.prevState == null)
 			this.init(newState);
-
+		
 		double prevVal = q.get(prevState, action);	// we were there and made the action
 		Double[] currentActions  = q.getActionValsInState(newState);	// action values available now
-		double maxActionVal = this.maxInd(currentActions);	// value of the best available action now
+		double maxActionVal = currentActions[this.maxInd(currentActions)];	// value of the best available action now
 		
 		// compute the learning equation
-		double learned =prevVal+this.config.getAlpha()*
+		double learned =prevVal + this.config.getAlpha()*
 				(reward+this.config.getGamma()*maxActionVal-prevVal);
 
-		/*
-		SL.sinfol("----learning: \naction taken: "+action+
-				"\nreward: " +reward+
-				"\nprevState "+SL.toStr(prevState)+
-				"\nnew state "+SL.toStr(newState)+
-				"\ncurrent actionVals "+SL.toStr(currentActions));
-		*/
 		q.set(prevState, action, learned);	// store the value
-		prevState = newState.clone();	// update last state and action
+		prevState = newState.clone();		// update last state and action
 	}
 	
 	@Override
@@ -137,9 +130,10 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 	
 	private int maxInd(Double[] actionVals){
 		int ind = 0;
-		for(int i=0; i<actionVals.length; i++)
-			if(actionVals[i]>actionVals[ind])
+		for(int i=0; i<actionVals.length; i++){
+			if(actionVals[i] > actionVals[ind])
 				ind = i;
+		}
 		return ind;
 	}
 }

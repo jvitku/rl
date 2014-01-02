@@ -7,8 +7,6 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
-import ctu.nengoros.util.SL;
-
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
@@ -56,7 +54,7 @@ public class FinalModelQlearning implements FinalModelLearningAlgorithm{
 		double maxActionVal = currentActions[this.maxInd(currentActions)];	// value of the best available action now
 		
 		// compute the learning equation
-		double learned =prevVal + this.config.getAlpha()*
+		double learned = prevVal + this.config.getAlpha()*
 				(reward+this.config.getGamma()*maxActionVal-prevVal);
 
 		q.set(prevState, action, learned);	// store the value

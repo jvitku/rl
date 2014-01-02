@@ -8,8 +8,6 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfig
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearning;
 import org.junit.Test;
 
-import sun.tools.tree.ThisExpression;
-
 import ctu.nengoros.util.SL;
 
 /**
@@ -25,25 +23,26 @@ public class FinalQLearning {
 		Random r = new Random();
 
 		int sx = 10;
-		int sy = 10;
+		int sy = 7;
 		int[] stateSizes = new int[]{sx,sy}; 
 		int numActions = 4;		// left, right, up, down
 
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
-		config.setGamma(0.6);	// more towards immediate reward
+		config.setGamma(0.3);	// more towards immediate reward
 
 		//new FinalModelQlearning(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
 
-		float[][] map = this.simpleRewardMap(sx, sy, new int[]{7,7}, 10);
+		float[][] map = this.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
 		System.out.println("map generated is: \n"+this.vis(map));
 
 		int[] pos = new int[]{2,2};	// agents position on the map
-		int numsteps = 100000;
+		int numsteps = 50000;
 		int action;
 		float reward;
 
+		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
 
 		for(int i=0; i<numsteps; i++){
@@ -52,14 +51,14 @@ public class FinalQLearning {
 			reward = map[pos[0]][pos[1]];					// read reward
 			ql.performLearningStep(action, reward, pos);	// learn about it
 
-			if(i%100==0){
-				System.out.println(i);
-			//	System.out.println(this.visqm(q, true));
+			if(i%1000==0){
+				System.out.println("step "+i);
 			}
 
 		}
-		System.out.println(this.visqm(q, true));
-		System.out.println(this.visqm(q, false));
+		System.out.println(this.visqm(q, 0));
+		System.out.println(this.visqm(q, 1));
+		System.out.println(this.visqm(q, 2));
 		System.out.println(this.vis(map));
 
 	}
@@ -71,8 +70,16 @@ public class FinalQLearning {
 	 * if false the index of best action will be displayed 
 	 * @return string visualizing the matrix
 	 */
-	private String visqm(FinalQMatrix<Double> q, boolean vals){
-		String line = "===================================\n";
+	private String visqm(FinalQMatrix<Double> q, int what){
+		String w = "";
+		if(what==0){
+			w = "best-action values for the state:";
+		}else if(what==1){
+			w = "best action in the state:";
+		}else{
+			w = "best action in the state| graphically:";
+		}
+		String line = "==================================="+w+"\n";
 
 		int[] dimsizes = q.getDimensionSizes();
 		int[] state = new int[]{0,0};
@@ -82,23 +89,22 @@ public class FinalQLearning {
 		if(dimsizes.length != 3)
 			System.err.println("only 2 variables supported, not "+dimsizes.length);
 
-		for(int i=0; i<dimsizes[0]; i++){
-			state[0] = i;
+		for(int i=dimsizes[1]-1; i>=0; i--){
+			state[1] = i;
 
-			for(int j=0; j<dimsizes[1]; j++){
-				state[1] = j;
+			for(int j=0; j<dimsizes[0]; j++){
+				state[0] = j;
 				actionvals = q.getActionValsInState(state);
-				SL.sinfo(SL.toStr(actionvals));
 				best = this.getMaxInd(actionvals);
-				if(vals){
+				if(what==0){
 					if(best<0){
 						line = line+"\t"+best;
-						//SL.sinfol("--1 coords: "+SL.toStr(state));
-					}
-					else
+					}else
 						line = line+"\t"+round(actionvals[best],1000);
+				}else if(what==1){
+					line = line+"\t"+best;
+					//line = line+"\t"+toAction(best);
 				}else{
-					//line = line+"\t"+best;
 					line = line+"\t"+toAction(best);
 				}
 			}
@@ -119,18 +125,24 @@ public class FinalQLearning {
 		}
 		return "?";
 	}
-	
+
 	private double round(double what, int how){
 		int rd = (int)(what*how);
 		double d = (double)rd;
 		return d/how;
 	}
 
+	/**
+	 * Visualize the map, axes are as usual, x is horizontal increasing to the right,
+	 * y is vertical increasing towards up. 
+	 * @param map array of reward values
+	 * @return String representing the map
+	 */
 	private String vis(float[][] map){
 		String line = "------------------------------------\n";
-		for(int i=0; i<map.length; i++){
-			for(int j=0; j<map[0].length; j++){
-				line = line + "\t "+map[i][j];
+		for(int i=map[0].length-1; i>=0; i--){
+			for(int j=0; j<map.length; j++){
+				line = line + "\t "+map[j][i];
 			}
 			line = line+"\n";
 		}
@@ -176,7 +188,7 @@ public class FinalQLearning {
 			if(current[0] < sx-1){
 				coords[0] = current[0]+1;
 			}
-		}else if(action==2){ 			// up
+		}else if(action==2){ 			// up 
 			if(current[1] < sy-1){
 				coords[1] = current[1]+1;
 			}

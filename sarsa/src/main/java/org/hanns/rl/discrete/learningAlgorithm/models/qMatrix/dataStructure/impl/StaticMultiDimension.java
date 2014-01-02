@@ -1,6 +1,7 @@
-package org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl;
+package org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl;
 
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.MultiDimensionMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.MultiDimensionMatrix;
+
 
 	/**
 	 * Multidimensional class with definable final number of dimensions

@@ -16,7 +16,7 @@ public interface ActionSet {
 	 * @param actions number of actions
 	 * @throws FinalParamException if tried to change the final parameter
 	 */
-	public void getNoActions(int actions) throws FinalParamException;
+	public void setNoActions(int actions) throws FinalParamException;
 	
 	public int getNumOfActions();
 	

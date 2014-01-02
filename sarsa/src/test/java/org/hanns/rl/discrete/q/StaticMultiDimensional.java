@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.q;
 
 import static org.junit.Assert.*;
 
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl.StaticMultiDimension;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.StaticMultiDimension;
 import org.junit.Test;
 
 public class StaticMultiDimensional {

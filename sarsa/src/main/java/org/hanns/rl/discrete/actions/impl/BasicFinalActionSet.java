@@ -7,7 +7,6 @@ import org.hanns.rl.common.exceptions.FinalParamException;
  * Basic action set with the final number of actions.
  * 
  * @author Jaroslav Vitku
- *
  */
 public class BasicFinalActionSet implements ActionSet {
 
@@ -26,7 +25,7 @@ public class BasicFinalActionSet implements ActionSet {
 	}
 	
 	@Override
-	public void getNoActions(int actions) throws FinalParamException {
+	public void setNoActions(int actions) throws FinalParamException {
 		throw new FinalParamException("BasicFinalActionSet does not allow changing the number of actions!");
 	}
 

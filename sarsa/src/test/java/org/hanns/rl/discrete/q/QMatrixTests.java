@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import ctu.nengoros.util.SystemInfo;
 
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl.BasicFinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.BasicFinalQMatrix;
 import org.junit.Test;
 
 /**
@@ -70,7 +70,7 @@ public class QMatrixTests {
 	public void hardReset(){
 		
 		int numActions = 5;	// 5 actions
-		int numVars = 5;	// 2 state variables
+		int numVars = 5;	// 5 state variables
 		int vs = 10; 
 		int[] stateSizes = new int[numVars];
 		

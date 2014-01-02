@@ -1,9 +1,10 @@
-package org.hanns.rl.discrete.learningAlgorithm.qlearning.model.impl;
+package org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl;
 
 import java.util.Random;
 
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.model.MultiDimensionMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.MultiDimensionMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.StaticMultiDimension;
 
 public class BasicFinalQMatrix implements FinalQMatrix<Double>{
 

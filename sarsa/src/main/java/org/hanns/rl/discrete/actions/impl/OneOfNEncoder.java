@@ -9,7 +9,6 @@ import org.hanns.rl.common.exceptions.DecoderException;
  * only one value has value of 1, representing the selected (index of) action. 
  * 
  * @author Jaroslav Vitku
- *
  */
 public class OneOfNEncoder implements ActionEncoder{
 
@@ -61,5 +60,4 @@ public class OneOfNEncoder implements ActionEncoder{
 		for(int i=0; i<input.length; i++)
 			input[i] = nonselected;
 	}
-
 }

@@ -5,4 +5,4 @@
  * @author Jaroslav Vitku
  *
  */
-package org.hanns.rl.discrete.learningAlgorithm.qlearning.model;
+package org.hanns.rl.discrete.learningAlgorithm.models.qMatrix;

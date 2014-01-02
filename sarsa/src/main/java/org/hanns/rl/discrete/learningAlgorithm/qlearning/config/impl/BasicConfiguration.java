@@ -1,6 +1,6 @@
-package org.hanns.rl.discrete.learningAlgorithm.qlearning.config.impl;
+package org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl;
 
-import org.hanns.rl.discrete.learningAlgorithm.qlearning.config.QLearningConfig;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
 /**
  * Basic configuration of the Q-learning learning algorithm.

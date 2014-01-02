@@ -18,7 +18,7 @@ public class EncoderAndActionSet {
 		assertTrue(a.getNumOfActions() == 2);
 
 		try {
-			a.getNoActions(100);
+			a.setNoActions(100);
 			fail();
 		} catch (FinalParamException e) {}
 	}

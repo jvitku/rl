@@ -1,9 +1,7 @@
 package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
-import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
-import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
+import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepEligibilityTraceConfig;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 
@@ -28,26 +26,27 @@ import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
  * @author Jaroslav Vitku
  *
  */
-public class FinalModelSarsaLambda implements FinalModelLearningAlgorithm{
+public class FinalModelSarsaLambda extends AbstractFinalRL{
 
-	private int[] prevState;
 	double delta;				// one step error
 
 	private double[] decays;	// pre-computed decays (gammaT) for traces
 	private StateTrace trace;	
 	
-	private FinalQMatrix<Double> q;
-	private final NStepEligibilityTraceConfig conf;
+	private NStepEligibilityTraceConfig conf;
 	
-	public FinalModelSarsaLambda(NStepEligibilityTraceConfig conf){
+	public FinalModelSarsaLambda(int[] stateSizes, int numActions, 
+			NStepEligibilityTraceConfig conf){
+		super(stateSizes, numActions);
+		
 		this.conf = conf;
-		this.q = null; // TODO add this to abstract class
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());
 		this.computeDecays();
 	}
 
 	@Override
 	public void performLearningStep(int action, float reward, int[] newState) {
+		
 		if(this.prevState == null)
 			this.prevState = newState.clone();
 		
@@ -66,12 +65,6 @@ public class FinalModelSarsaLambda implements FinalModelLearningAlgorithm{
 		}
 		
 		prevState = newState.clone();		// update last state and action
-	}
-
-	@Override
-	public void softReset(boolean randomize) {
-		this.prevState = null;
-		this.trace.softReset(randomize);
 	}
 
 	/**
@@ -93,57 +86,39 @@ public class FinalModelSarsaLambda implements FinalModelLearningAlgorithm{
 		}
 	}
 	
-	private int maxInd(Double[] actionVals){
-		int ind = 0;
-		for(int i=0; i<actionVals.length; i++){
-			if(actionVals[i] > actionVals[ind])
-				ind = i;
-		}
-		return ind;
+	@Override
+	public void softReset(boolean randomize) {
+		super.softReset(randomize);
+		
+		this.computeDecays();	
+		this.trace.softReset(randomize);
 	}
 	
 	@Override
 	public void hardReset(boolean randomize) {
-		this.softReset(randomize);
+		super.hardReset(randomize);
+		
 		this.computeDecays();
 		this.trace.hardReset(randomize);
 	}
 
 	@Override
 	public void init(int[] state) {
-		// TODO Auto-generated method stub
-		
+		super.init(state);
+		this.trace.softReset(false);	// delete all traced states
 	}
 
 	@Override
 	public void setConfig(LearningConfiguration config) {
-		// TODO Auto-generated method stub
-		
+		if(!(config instanceof NStepEligibilityTraceConfig)){
+			System.err.println("FinalModelSarsa: ERROR: expected " +
+					"NStepEligibilityTraceConfig congiguration!");
+			return;
+		}
+		this.conf = (NStepEligibilityTraceConfig)config;
 	}
 
 	@Override
-	public LearningConfiguration getConfig() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public LearningConfiguration getConfig() { return this.conf; }
 
-	@Override
-	public void setMatrix(FinalQMatrix<?> model)
-			throws IncorrectDimensionsException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public FinalQMatrix<?> getMatrix() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setModel(FinalQMatrix<?> mode, int numActions, int[] stateSizes)
-			throws IncorrectDimensionsException {
-		// TODO Auto-generated method stub
-		
-	}
 }

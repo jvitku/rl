@@ -50,7 +50,6 @@ public class StateTraceImpl implements StateTrace{
 		return states.get(i);
 	}
 
-
 	@Override
 	public int getCapacity() { return this.n; }
 

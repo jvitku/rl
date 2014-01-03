@@ -4,6 +4,13 @@ import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
 
+/**
+ * Abstract class which implements common tasks for Reinforcement Learning
+ * over model with finite number of dimensions and dimension sizes.
+ *    
+ * @author Jaroslav Vitku
+ *
+ */
 public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 
 	protected FinalQMatrix<Double> q;
@@ -22,6 +29,9 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 	}
 
 	@Override
+	public abstract void performLearningStep(int action, float reward, int[] newState);
+	
+	@Override
 	public void init(int[] state) { 
 		this.prevState = state.clone();
 	}
@@ -39,7 +49,6 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 		q = (FinalQMatrix<Double>) model;
 	}
 
-
 	@Override
 	public FinalQMatrix<?> getMatrix() { return q; }
 
@@ -50,7 +59,6 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 		this.stateSizes = stateSizes;
 		this.setMatrix(mode);
 	}
-
 
 	@Override
 	public void softReset(boolean randomize) {

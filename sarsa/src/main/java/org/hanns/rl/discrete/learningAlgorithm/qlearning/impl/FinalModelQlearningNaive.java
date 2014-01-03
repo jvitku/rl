@@ -7,15 +7,16 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
- * Compared to classical definition of the Q-learning algorithm, this 
- * computes the equation with the new state-action pair based on (the current state and)
- * the greedy-selected new action. The action selected by the ASM to be executed 
- * (may or may not be greedy - optimal) is ignored.  
+ * This is naive version of Q-learning algorithm, for learning, use always the optimal
+ * state-action pair (the one with the highest utility ~ greedy selection), no matter
+ * which action will be executed (by e.g. epsilon-greedy ASM).
+ * 
+ * @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">Eligibility Traces</a>
  * 
  * @author Jaroslav Vitku
  *
  */
-public class FinalModelQlearningGreedy extends AbstractFinalRL /*implements FinalModelLearningAlgorithm*/{
+public class FinalModelQlearningNaive extends AbstractFinalRL /*implements FinalModelLearningAlgorithm*/{
 
 	private QLearningConfig config;
 
@@ -26,12 +27,17 @@ public class FinalModelQlearningGreedy extends AbstractFinalRL /*implements Fina
 	 * variable can have
 	 * @param numActions number of actions available to the agent
 	 */
-	public FinalModelQlearningGreedy(int[] stateSizes, int numActions, QLearningConfig config){
+	public FinalModelQlearningNaive(int[] stateSizes, int numActions, QLearningConfig config){
 		super(stateSizes, numActions);
 
 		this.config = config;
 	}
 
+	/**
+	 * Here, the parameter futureAction is ignored and the learning computes with the 
+	 * optimal policy (best action in the current state), no matter which action 
+	 * has been chosen for execution.
+	 */
 	@Override
 	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
 		if(!this.config.getLearningEnabled())

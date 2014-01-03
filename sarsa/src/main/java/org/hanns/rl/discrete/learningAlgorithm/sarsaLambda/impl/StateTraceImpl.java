@@ -20,11 +20,20 @@ public class StateTraceImpl implements StateTrace{
 		states = new LinkedList<int[]>();
 	}
 
-	public void push(int[] state){
+	@Override
+	public void push(int[] state, int action){
 		if(states.size()==n){
 			states.remove(states.size()-1);	// drop the last one if necessary
 		}
-		states.push(state.clone());			// push the new one
+		states.push(this.buildCoords(state, action));			// push the new one
+	}
+	
+	private int[] buildCoords(int[] state, int action){
+		int[] coords = new int[state.length+1];
+		for(int i=0; i<state.length; i++)
+			coords[i] = state[i];
+		coords[coords.length-1] = action;
+		return coords;
 	}
 
 	@Override
@@ -55,6 +64,7 @@ public class StateTraceImpl implements StateTrace{
 
 	@Override
 	public void setCapacity(int n) { this.n = n; }
+
 
 
 }

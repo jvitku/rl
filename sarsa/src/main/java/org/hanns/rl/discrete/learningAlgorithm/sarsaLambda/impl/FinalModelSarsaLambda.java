@@ -13,7 +13,8 @@ import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
  *  The decay for updating the past state-action values is specified by the parameter lambda, 
  *  if the lambda is too big, the learning convergence can become unstable.</p>  
  *    
- * <p>Note: Here, compared to the algorithm in the doc folder, the greedy action value 
+ * <p>This is Naive Q(lambda) (or called McGovern's): here, compared to other versions of
+ * the algorithm, the value of optimal action (highest utility in a given state)
  * is selected always (the action selection can select different action). 
  * This corresponds to computing: "what is the best action that can be made from 
  * this state after last action a and reward r?".</p>   
@@ -55,19 +56,19 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 		// action values available now
 		Double[] newActions  = q.getActionValsInState(newState);	
 		// value of the best available action now
-		double maxNewActionVal = newActions[this.maxInd(newActions)];	
-
+		//double maxNewActionVal = newActions[this.maxInd(newActions)];//naive	
+		double maxNewActionVal = newActions[newAction];//naive
+		
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
 		
-		trace.push(newState);	// visiting the new state: remember it
+		trace.push(prevState,prevAction);	// store the previous state-action pair
 		
 		// apply knowledge update to all states stored in the trace 
 		for(int i=0; i<trace.size(); i++){
 			
-			// TODO here
-			//double valuevtm =  
-			//double val = conf.getAlpha()*decays[i]*trace.get(i);
+			// apply the eligibility trace to n previously visited state-aciton pairs 
+			q.set(trace.get(i), q.get(trace.get(i))*conf.getdecays()[i]); 
 		}
 		
 		prevState = newState.clone();		// update last state and action

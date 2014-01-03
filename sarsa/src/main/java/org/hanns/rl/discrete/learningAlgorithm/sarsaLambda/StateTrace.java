@@ -3,7 +3,9 @@ package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda;
 import org.hanns.rl.common.Resettable;
 
 /**
- * Simple memory for recently visited environment states.
+ * Simple memory for recently visited environment state-action pairs in the Q-matrix.
+ * The used pushes state, action pair, the StateTrace concatenates these, thus
+ * creating the coordinates in the Q-matrix which can be used. 
  * 
  * @author Jaroslav Vitku
  *
@@ -14,8 +16,9 @@ public interface StateTrace extends Resettable{
 	 * Remember new state, if memory exceeded, delete the 
 	 * oldest one and push this on the top.
 	 * @param stae state that has been just visited
+	 * @param action action executed in the state 
 	 */
-	public void push(int[] stae);
+	public void push(int[] stae, int action);
 	
 	/**
 	 * Return the current size of state trace, 

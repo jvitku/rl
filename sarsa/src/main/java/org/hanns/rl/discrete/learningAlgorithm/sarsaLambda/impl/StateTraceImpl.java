@@ -1,8 +1,8 @@
-package org.hanns.rl.discrete.learningImprovement.impl;
+package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
 import java.util.LinkedList;
 
-import org.hanns.rl.discrete.learningImprovement.StateTrace;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 
 /**
  * Simple memory for just visited world states.

@@ -1,10 +1,12 @@
-package org.hanns.rl.discrete.learningImprovement.impl;
+package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
+import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
+import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
-import org.hanns.rl.discrete.learningImprovement.NStepEligibilityTrace;
-import org.hanns.rl.discrete.learningImprovement.StateTrace;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepEligibilityTraceConfig;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 
 /**
  * 
@@ -19,28 +21,21 @@ import org.hanns.rl.discrete.learningImprovement.StateTrace;
  * @author Jaroslav Vitku
  *
  */
-public class NStepEligibilityImpl implements NStepEligibilityTrace{
+public class NStepEligibilityImpl implements FinalModelLearningAlgorithm{
 
-	private int n;
-	private double lambda;
-	
-	private final QLearningConfig conf;
-	FinalQMatrix<Double> q;
-	
 	private int[] prevState;
 	double delta;				// one step error
-	private int stepsTaken;		// number of steps from the beginning of the simulation
 
 	private double[] decays;	// pre-computed decays (gammaT) for traces
 	private StateTrace trace;	
 	
-	public NStepEligibilityImpl(int n, double lambda, QLearningConfig lc, FinalQMatrix<Double> q){
-		this.setN(n);	
-		this.setLamda(lambda);
-		this.conf = lc;
-		this.stepsTaken = 0;
-		this.q = q;
-		trace = new StateTraceImpl(this.n);	// place for storing states
+	private FinalQMatrix<Double> q;
+	private final NStepEligibilityTraceConfig conf;
+	
+	public NStepEligibilityImpl(NStepEligibilityTraceConfig conf){
+		this.conf = conf;
+		this.q = null; // TODO add this to abstract class
+		trace = new StateTraceImpl(this.conf.getEligibilityLength());
 		this.computeDecays();
 	}
 
@@ -57,6 +52,7 @@ public class NStepEligibilityImpl implements NStepEligibilityTrace{
 		trace.push(newState);
 		
 		for(int i=0; i<trace.size(); i++){
+			
 			// TODO here
 			//double valuevtm =  
 			//double val = conf.getAlpha()*decays[i]*trace.get(i);
@@ -64,43 +60,10 @@ public class NStepEligibilityImpl implements NStepEligibilityTrace{
 		
 		prevState = newState.clone();		// update last state and action
 	}
-	
-	@Override
-	public void setN(int n) {
-		if(n<1){
-			System.err.println("Eligibility, ERROR: N has to be non-" +
-					"negative number, not "+n+", setting trace length to 1");
-			this.n = 0;
-		}else{
-			this.n = n;
-		}
-	}
-
-	@Override
-	public int getN() { return this.n; }
-
-	@Override
-	public void setLamda(double lambda) {
-		if(this.lambda<0){
-			System.err.println("Eligibility: ERROR: labda has to be in " +
-					"range of <0,1>, not "+lambda+", setting to 0");
-			this.lambda = 0;
-		}else if(this.lambda>1){
-			System.err.println("Eligibility: ERROR: labda has to be in " +
-					"range of <0,1>, not "+lambda+", setting to 1");
-			this.lambda = 1;
-		}else{
-			this.lambda = lambda;
-		}
-	}
-
-	@Override
-	public double getLabda() { return this.lambda; }
 
 	@Override
 	public void softReset(boolean randomize) {
 		this.prevState = null;
-		this.stepsTaken = 0;
 		this.trace.softReset(randomize);
 	}
 
@@ -115,11 +78,11 @@ public class NStepEligibilityImpl implements NStepEligibilityTrace{
 	 * The actual time-step is on the index 0.
 	 */
 	private void computeDecays(){
-		this.decays = new double[this.n];
+		this.decays = new double[this.conf.getEligibilityLength()];
 		double gamma = this.conf.getGamma();
-		decays[0] = gamma*lambda;
-		for(int i=1; i<this.n; i++){
-			decays[i] = decays[i-1]*gamma*lambda;
+		decays[0] = gamma*this.conf.getLabda();
+		for(int i=1; i<this.conf.getEligibilityLength(); i++){
+			decays[i] = decays[i-1]*gamma*this.conf.getLabda();
 		}
 	}
 	
@@ -137,5 +100,43 @@ public class NStepEligibilityImpl implements NStepEligibilityTrace{
 		this.softReset(randomize);
 		this.computeDecays();
 		this.trace.hardReset(randomize);
+	}
+
+	@Override
+	public void init(int[] state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setConfig(LearningConfiguration config) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public LearningConfiguration getConfig() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setMatrix(FinalQMatrix<?> model)
+			throws IncorrectDimensionsException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public FinalQMatrix<?> getMatrix() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setModel(FinalQMatrix<?> mode, int numActions, int[] stateSizes)
+			throws IncorrectDimensionsException {
+		// TODO Auto-generated method stub
+		
 	}
 }

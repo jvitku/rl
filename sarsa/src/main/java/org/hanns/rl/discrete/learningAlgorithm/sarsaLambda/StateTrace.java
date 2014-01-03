@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.learningImprovement;
+package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda;
 
 import org.hanns.rl.common.Resettable;
 

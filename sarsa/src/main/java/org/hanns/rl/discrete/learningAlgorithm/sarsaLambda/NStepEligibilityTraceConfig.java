@@ -1,27 +1,32 @@
-package org.hanns.rl.discrete.learningImprovement;
+package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda;
+
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
 /**
- * This implements backward SARSA(lambda) eligibility trace for state-action pairs, 
- * for more information, visit e.g. @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">
+ * 
+ * This is configuration of the backward SARSA(lambda) eligibility trace for state-action pairs. 
+ * This algorithm is an improvement of Q-learning algorithm by means of learning multiple steps
+ * backwards.
+ * For more information, visit e.g. @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">
  * Eligibility Traces</a>.
- *   
  *  
  * @author Jaroslav Vitku
  *
  */
-public interface NStepEligibilityTrace extends LearningAlgorithmImprovement{
+public interface NStepEligibilityTraceConfig extends QLearningConfig{
 	
 	/**
 	 * Set the length of eligibility trace, how many state-action pairs to update each step
 	 * @param n number of states visited in the past
 	 */
-	public void setN(int n);
-	
+	public void setEligibilityLength(int length);
+
 	/**
 	 * Get he length of eligibility trace.
 	 * @return how many state-action pairs is updated during each step
 	 */
-	public int getN();
+	public int getEligibilityLength();
+
 
 	/**
 	 * Set the Lambda parameter of eligibility trace. Lambda defines decay 

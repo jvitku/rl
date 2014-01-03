@@ -15,10 +15,6 @@ public class BasicConfiguration implements QLearningConfig{
 	// stochastic return predictor settings
 	private double alpha;
 	private double gamma;
-	
-	// eligibility settings
-	private int length;
-	private double lambda;
 
 	@Override
 	public void setAlpha(double alpha) { this.alpha = alpha; }
@@ -31,18 +27,6 @@ public class BasicConfiguration implements QLearningConfig{
 	
 	@Override
 	public double getGamma() {return gamma; }
-	
-	@Override
-	public void setLambda(double lambda) { this.lambda = lambda; }
-	
-	@Override
-	public double getLambda() { return lambda; }
-	
-	@Override
-	public void setEligibilityLength(int length) { this.length = length; }
-	
-	@Override
-	public int getEligibilityLength() { return length; }
 
 	@Override
 	public void setLearningEnabled(boolean enable) { this.learningEnabled = enable; }

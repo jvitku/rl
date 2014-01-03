@@ -4,24 +4,31 @@ import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepEligibilityTraceConfig;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 
 /**
  * 
- * TODO delete this:-)
- * The difference here can be in obtaining the Q(s,a) value compared to the link. 
- * Here, the greedy action value is selected always (the action selection can 
- * select different action). This corresponds to computing: "what is the best action
- * that can be made from this state after last action a and reward r?".   
+ * <p>The difference between backward SARSA(lambda) eligibility trace for state-action pairs
+ *  compared to the Q-learning algorithm is that here, the agent learns multiple past
+ *  state-action values simultaneously. This can speed-up the learning process significantly.
+ *  The decay for updating the past state-action values is specified by the parameter lambda, 
+ *  if the lambda is too big, the learning convergence can become unstable.</p>  
+ *    
+ * <p>Note: Here, compared to the algorithm in the doc folder, the greedy action value 
+ * is selected always (the action selection can select different action). 
+ * This corresponds to computing: "what is the best action that can be made from 
+ * this state after last action a and reward r?".</p>   
+ *  
+ *  <p>Note: the final model means that the algorithm can be used only for Q-matrix
+ *  with finite number of dimension and dimension sizes</p>
  *  
  * @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">page 24 - Sarsa(lambda)</a>
  *  
  * @author Jaroslav Vitku
  *
  */
-public class NStepEligibilityImpl implements FinalModelLearningAlgorithm{
+public class FinalModelSarsaLambda implements FinalModelLearningAlgorithm{
 
 	private int[] prevState;
 	double delta;				// one step error
@@ -32,7 +39,7 @@ public class NStepEligibilityImpl implements FinalModelLearningAlgorithm{
 	private FinalQMatrix<Double> q;
 	private final NStepEligibilityTraceConfig conf;
 	
-	public NStepEligibilityImpl(NStepEligibilityTraceConfig conf){
+	public FinalModelSarsaLambda(NStepEligibilityTraceConfig conf){
 		this.conf = conf;
 		this.q = null; // TODO add this to abstract class
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());

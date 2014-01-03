@@ -9,7 +9,7 @@ package org.hanns.rl.discrete.learningImprovement;
  * @author Jaroslav Vitku
  *
  */
-public interface NStepEligibilityTrace {
+public interface NStepEligibilityTrace extends LearningAlgorithmImprovement{
 	
 	/**
 	 * Set the length of eligibility trace, how many state-action pairs to update each step

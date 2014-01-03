@@ -31,7 +31,7 @@ public class NStepEligibilityTraceConf extends BasicConfiguration implements NSt
 	}
 
 	@Override
-	public void setLamda(double lambda) { 
+	public void setLambda(double lambda) { 
 		if(lambda<0){
 			System.err.println("NStepEligibilityTraceConf: ERROR: lambda has to " +
 					"be from interval of <0,1>, not "+lambda);

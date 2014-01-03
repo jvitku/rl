@@ -30,15 +30,15 @@ import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 public class FinalModelSarsaLambda extends AbstractFinalRL{
 
 	double delta;				// one step error
-	
+
 	private StateTrace trace;	
-	
+
 	private NStepEligibilityTraceConfig conf;
-	
+
 	public FinalModelSarsaLambda(int[] stateSizes, int numActions, 
 			NStepEligibilityTraceConfig conf){
 		super(stateSizes, numActions);
-		
+
 		this.conf = conf;
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());
 	}
@@ -47,10 +47,10 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
 		if(!this.conf.getLearningEnabled())
 			return;
-		
+
 		if(this.prevState == null)
 			this.prevState = newState.clone();
-		
+
 		// we were there and made the action
 		double prevVal = q.get(prevState, prevAction);	
 		// action values available now
@@ -58,33 +58,36 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 		// value of the best available action now
 		//double maxNewActionVal = newActions[this.maxInd(newActions)];//naive	
 		double maxNewActionVal = newActions[newAction];//naive
-		
+
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
-		
+
 		trace.push(prevState,prevAction);	// store the previous state-action pair
-		
+
+		double value;
+
 		// apply knowledge update to all states stored in the trace 
 		for(int i=0; i<trace.size(); i++){
-			
-			// apply the eligibility trace to n previously visited state-aciton pairs 
-			q.set(trace.get(i), q.get(trace.get(i))*conf.getdecays()[i]); 
+
+			// apply the eligibility trace to n previously visited state-aciton pairs
+			value = q.get(trace.get(i))+conf.getdecays()[i]*delta*conf.getAlpha();
+			// add to old value
+			q.set(trace.get(i), value); 
 		}
-		
 		prevState = newState.clone();		// update last state and action
 	}
 
 	@Override
 	public void softReset(boolean randomize) {
 		super.softReset(randomize);
-		
+
 		this.trace.softReset(randomize);
 	}
-	
+
 	@Override
 	public void hardReset(boolean randomize) {
 		super.hardReset(randomize);
-		
+
 		this.trace.hardReset(randomize);
 	}
 

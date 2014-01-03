@@ -10,7 +10,7 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
  * @author Jaroslav Vitku
  *
  */
-public class GrodWorld {
+public class GridWorld {
 	/**
 	 * Visualize the data in the QMatrix.
 	 * @param q Q(s,a) matrix
@@ -43,7 +43,7 @@ public class GrodWorld {
 			for(int j=0; j<dimsizes[0]; j++){
 				state[0] = j;
 				actionvals = q.getActionValsInState(state);
-				best = GrodWorld.getMaxInd(actionvals);
+				best = GridWorld.getMaxInd(actionvals);
 				if(what==0){
 					if(best<0){
 						line = line+"\t"+best;

@@ -35,10 +35,10 @@ public interface NStepEligibilityTraceConfig extends QLearningConfig{
 	 * is projected into the past, but also better stability of learning convergence.    
 	 * @param lambda set decay of projection information into the past. Choose values between 0 and 1. 
 	 */
-	public void setLamda(double lambda);
+	public void setLambda(double lambda);
 	
 	/**
-	 * Get the lambda parameter, for more information, see {@link #setLamda(double)}
+	 * Get the lambda parameter, for more information, see {@link #setLambda(double)}
 	 * @return value of lambda
 	 */
 	public double getLambda();

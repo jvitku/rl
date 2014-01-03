@@ -54,8 +54,8 @@ public class FinalQLearningCommon {
 		//new FinalModelQlearningNaive(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
 
-		float[][] map = GrodWorld.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
-		System.out.println("map generated is: \n"+GrodWorld.vis(map));
+		float[][] map = GridWorld.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
+		System.out.println("map generated is: \n"+GridWorld.vis(map));
 
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
@@ -64,22 +64,22 @@ public class FinalQLearningCommon {
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = GrodWorld.generateAction(r, numActions);	// select first action
+		prevAction = GridWorld.generateAction(r, numActions);	// select first action
 		
 		for(int i=0; i<numsteps; i++){
-			pos = GrodWorld.makeStep(sx, sy, prevAction, pos);	// move agent
+			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			action = GrodWorld.generateAction(r, numActions);	// select the future action
+			action = GridWorld.generateAction(r, numActions);	// select the future action
 			ql.performLearningStep(prevAction, reward, pos, action);	// learn about it
 			prevAction = action;
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
 		}
-		System.out.println(GrodWorld.visqm(q, 0));
-		System.out.println(GrodWorld.visqm(q, 1));
-		System.out.println(GrodWorld.visqm(q, 2));
-		System.out.println(GrodWorld.vis(map));
+		System.out.println(GridWorld.visqm(q, 0));
+		System.out.println(GridWorld.visqm(q, 1));
+		System.out.println(GridWorld.visqm(q, 2));
+		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
 		this.navigate(q, 4, sx+sy, map, new int[]{0,0});	// corner
@@ -106,8 +106,8 @@ public class FinalQLearningCommon {
 		int sy = 7;
 		int[] stateSizes = new int[]{sx,sy}; 
 		int numActions = actions.getNumOfActions();
-		float[][] map = GrodWorld.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
-		System.out.println("map generated is: \n"+GrodWorld.vis(map));
+		float[][] map = GridWorld.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
+		System.out.println("map generated is: \n"+GridWorld.vis(map));
 		
 		/**
 		 * Configure ASM
@@ -141,7 +141,7 @@ public class FinalQLearningCommon {
 		for(int i=0; i<numsteps; i++){
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
 			action = asm.selectAction(vals);				// select action 
-			pos = GrodWorld.makeStep(sx, sy, prevAction, pos);	// move agent
+			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
 			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
 			prevAction = action;							// prepare action to be executed
@@ -150,10 +150,10 @@ public class FinalQLearningCommon {
 				System.out.println("step "+i);
 			}
 		}
-		System.out.println(GrodWorld.visqm(q, 0));
-		System.out.println(GrodWorld.visqm(q, 1));
-		System.out.println(GrodWorld.visqm(q, 2));
-		System.out.println(GrodWorld.vis(map));
+		System.out.println(GridWorld.visqm(q, 0));
+		System.out.println(GridWorld.visqm(q, 1));
+		System.out.println(GridWorld.visqm(q, 2));
+		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
 		this.navigate(q, 4, 4, map, new int[]{5,5}); // not entire map is explored
@@ -184,7 +184,7 @@ public class FinalQLearningCommon {
 		for(int i=0; i<numSteps; i++){
 			Double[] actionVals = q.getActionValsInState(pos);			// read action utilities
 			action = asm.selectAction(actionVals);						// select the best one
-			pos = GrodWorld.makeStep(map.length, map[0].length, action, pos);// move agent
+			pos = GridWorld.makeStep(map.length, map[0].length, action, pos);// move agent
 			System.out.println("Selected action is: "+action+", my position is now: "+SL.toStr(pos));
 			reward = map[pos[0]][pos[1]];
 			if(reward>0.0){

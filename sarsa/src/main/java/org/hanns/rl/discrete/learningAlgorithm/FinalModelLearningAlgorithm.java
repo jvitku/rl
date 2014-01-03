@@ -2,7 +2,6 @@ package org.hanns.rl.discrete.learningAlgorithm;
 
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.QMatrix;
 
 /**
  * Learning algorithm with a final model of the world. 
@@ -16,7 +15,7 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.QMatrix;
 public interface FinalModelLearningAlgorithm extends LearningAlgorithm{
 	
 	/**
-	 * Similar to the {@link #setMatrix(QMatrix)}, but this setups entire 
+	 * Similar to the {@link #setMatrix(FinalQMatrix)}, but this setups entire 
 	 * model of the algorithm, that is:
 	 * <ul>
 	 * <li>Q(s,a) matrix, which may contain data already</li>

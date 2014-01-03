@@ -30,4 +30,11 @@ public interface ActionSelectionMethod<E> {
 	 */
 	public ActionSet getActionSet();
 	
+	/**
+	 * Return true if the last action selected by the ASM was greedy.
+	 * This can be used by e.g. the eligibility traces. 
+	 * @return true if the last action was greedy
+	 */
+	public boolean actionWasGreedy();
+	
 }

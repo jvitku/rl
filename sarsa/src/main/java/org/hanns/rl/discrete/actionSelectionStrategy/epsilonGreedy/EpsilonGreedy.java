@@ -17,6 +17,7 @@ import org.hanns.rl.discrete.actions.ActionSet;
  */
 public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
+	private boolean wasgreedy;
 	Random r;
 	ActionSet acitons;
 	EpsilonGreedyConfig config;
@@ -25,23 +26,27 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 		r = new Random();
 		this.acitons = actions;
 		this.config = config;
+		this.wasgreedy = false;
 	}
 
 	@Override
 	public int selectAction(E[] actionValues) {
 		if(actionValues.length != acitons.getNumOfActions()){
 			System.err.println("ERROR: incorrect size of actionValues array!");
+			this.wasgreedy = false;
 			return -1;
 		}
 		// if can explore, can choose randomly with p=epsilon 
 		if(config.getExplorationEnabled()){
 			if(r.nextDouble() <= config.getEpsilon()){
+				this.wasgreedy = false;
 				return r.nextInt(actionValues.length);
 			}
 		}
 		// if all actions have equal value, select randomly
 		if(this.allEqual(actionValues)){
 			int ind = r.nextInt(acitons.getNumOfActions());
+			this.wasgreedy = false;
 			return ind;
 		}
 		int ind = 0;
@@ -50,6 +55,7 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 				ind = i;
 			}
 		}
+		this.wasgreedy = true;
 		return ind;
 	}
 	
@@ -66,4 +72,7 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 	public EpsilonGreedyConfig getConfig(){ return this.config; }
 
 	public void setConfig(EpsilonGreedyConfig config){ this.config = config; }
+	
+	@Override
+	public boolean actionWasGreedy() { return this.wasgreedy; }
 }

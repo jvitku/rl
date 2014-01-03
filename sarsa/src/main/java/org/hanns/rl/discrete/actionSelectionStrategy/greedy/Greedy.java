@@ -14,22 +14,26 @@ import org.hanns.rl.discrete.actions.ActionSet;
  */
 public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 
+	private boolean wasgreedy;
 	private Random r;
 	private ActionSet actions;
 
 	public Greedy(ActionSet actions){
 		this.actions = actions;
 		r = new Random();
+		wasgreedy = false;
 	}
 
 	@Override
 	public int selectAction(E[] actionValues) {
 		if(actionValues.length!=actions.getNumOfActions()){
 			System.err.println("ERROR: incorrect size of actionValues array!");
+			this.wasgreedy = false;
 			return -1;
 		}
 		// if all actions have equal value, select randomly
 		if(this.allEqual(actionValues)){
+			this.wasgreedy = false;
 			return r.nextInt(actions.getNumOfActions());
 		}
 
@@ -39,6 +43,7 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 				ind = i;
 			}
 		}
+		this.wasgreedy = true;
 		return ind;
 	}
 
@@ -62,4 +67,7 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 
 	@Override
 	public ActionSet getActionSet() { return this.actions; }
+
+	@Override
+	public boolean actionWasGreedy() { return this.wasgreedy; }
 }

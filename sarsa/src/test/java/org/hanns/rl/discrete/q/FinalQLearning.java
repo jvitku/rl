@@ -19,7 +19,6 @@ import ctu.nengoros.util.SL;
 import static org.junit.Assert.fail;
 
 
-
 /**
  * Tests the FinalModelQLearning class.
  * 

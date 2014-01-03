@@ -29,7 +29,8 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 	}
 
 	@Override
-	public abstract void performLearningStep(int action, float reward, int[] newState);
+	public abstract void performLearningStep(int prevAction, float reward, 
+			int[] newState, int newAction);
 	
 	@Override
 	public void init(int[] state) { 

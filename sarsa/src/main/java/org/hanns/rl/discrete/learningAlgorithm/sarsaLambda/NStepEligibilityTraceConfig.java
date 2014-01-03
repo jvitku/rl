@@ -41,5 +41,15 @@ public interface NStepEligibilityTraceConfig extends QLearningConfig{
 	 * Get the lambda parameter, for more information, see {@link #setLamda(double)}
 	 * @return value of lambda
 	 */
-	public double getLabda();
+	public double getLambda();
+	
+	/**
+	 * Return the array of pre-computed decays for particular states stored in
+	 * the eligibility trace. 
+	 * @return array of double values computed according to: 
+	 * decay(t) = power(gamma*lambda,t)
+	 */
+	public double[] getdecays();
 }
+
+

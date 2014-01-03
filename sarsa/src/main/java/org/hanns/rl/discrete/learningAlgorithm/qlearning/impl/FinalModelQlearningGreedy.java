@@ -7,10 +7,15 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
+ * Compared to classical definition of the Q-learning algorithm, this 
+ * computes the equation with the new state-action pair based on (the current state and)
+ * the greedy-selected new action. The action selected by the ASM to be executed 
+ * (may or may not be greedy - optimal) is ignored.  
+ * 
  * @author Jaroslav Vitku
  *
  */
-public class FinalModelQlearning extends AbstractFinalRL /*implements FinalModelLearningAlgorithm*/{
+public class FinalModelQlearningGreedy extends AbstractFinalRL /*implements FinalModelLearningAlgorithm*/{
 
 	private QLearningConfig config;
 
@@ -21,29 +26,32 @@ public class FinalModelQlearning extends AbstractFinalRL /*implements FinalModel
 	 * variable can have
 	 * @param numActions number of actions available to the agent
 	 */
-	public FinalModelQlearning(int[] stateSizes, int numActions, QLearningConfig config){
+	public FinalModelQlearningGreedy(int[] stateSizes, int numActions, QLearningConfig config){
 		super(stateSizes, numActions);
 
 		this.config = config;
 	}
 
 	@Override
-	public void performLearningStep(int action, float reward, int[] newState) {
+	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
 		if(!this.config.getLearningEnabled())
 			return;
 
 		if(this.prevState == null)
 			this.init(newState);
 
-		double prevVal = q.get(prevState, action);	// we were there and made the action
-		Double[] currentActions  = q.getActionValsInState(newState);	// action values available now
-		double maxActionVal = currentActions[this.maxInd(currentActions)];	// value of the best available action now
+		// we were there and made the action
+		double prevVal = q.get(prevState, prevAction);	
+		// action values available now
+		Double[] newActions  = q.getActionValsInState(newState);	
+		// value of the best available action now
+		double maxNewActionVal = newActions[this.maxInd(newActions)];	
 
 		// compute the learning equation
 		double learned = prevVal + this.config.getAlpha()*
-				(reward+this.config.getGamma()*maxActionVal-prevVal);
+				(reward+this.config.getGamma()*maxNewActionVal-prevVal);
 
-		q.set(prevState, action, learned);	// store the value
+		q.set(prevState, prevAction, learned);	// store the value
 		prevState = newState.clone();		// update last state and action
 	}
 

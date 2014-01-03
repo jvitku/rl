@@ -11,7 +11,7 @@ import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfiguration;
-import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearning;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearningGreedy;
 import org.junit.Test;
 
 import ctu.nengoros.util.SL;
@@ -50,26 +50,27 @@ public class FinalQLearning {
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
 
-		//new FinalModelQlearning(int[] stateSizes, int numActions, QLearningConfig config){
-		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
+		//new FinalModelQlearningGreedy(int[] stateSizes, int numActions, QLearningConfig config){
+		FinalModelLearningAlgorithm ql = new FinalModelQlearningGreedy(stateSizes, numActions, config);
 
 		float[][] map = this.simpleRewardMap(sx, sy, new int[]{7,4}, 1);
 		System.out.println("map generated is: \n"+this.vis(map));
 
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int action;
+		int action, prevAction;
 		float reward;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-
+		prevAction = this.generateAction(r, numActions);	// select first action
+		
 		for(int i=0; i<numsteps; i++){
-			action = this.generateAction(r, numActions);	// select action 
-			pos = this.makeStep(sx, sy, action, pos);		// move agent
+			pos = this.makeStep(sx, sy, prevAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			ql.performLearningStep(action, reward, pos);	// learn about it
-
+			action = this.generateAction(r, numActions);	// select the future action
+			ql.performLearningStep(prevAction, reward, pos, action);	// learn about it
+			prevAction = action;
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
@@ -122,26 +123,28 @@ public class FinalQLearning {
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
 		
-		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
+		FinalModelLearningAlgorithm ql = new FinalModelQlearningGreedy(stateSizes, numActions, config);
 
 		/**
 		 * Configure the simulation
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int action;
+		int action, prevAction;
 		float reward;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-
+		prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		
 		for(int i=0; i<numsteps; i++){
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
 			action = asm.selectAction(vals);				// select action 
-			pos = this.makeStep(sx, sy, action, pos);		// move agent
+			pos = this.makeStep(sx, sy, prevAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			ql.performLearningStep(action, reward, pos);	// learn about it
-
+			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
+			prevAction = action;							// prepare action to be executed
+			
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}

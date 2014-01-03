@@ -114,5 +114,5 @@ After launching the node:
 
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)
-* 
+
 

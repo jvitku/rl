@@ -14,13 +14,18 @@ public interface LearningAlgorithm extends Resettable {
 	
 	/**
 	 * Retrieve the action performed, reward obtained and observation of the current
-	 * world state. The algorithm remembers 
+	 * world state. The algorithm remembers the previous state. The algorithm
+	 * receives action that was executed in the previous state (which potentially resulted
+	 * in a reward), current state, and the futureAction (selected by the ASM) that 
+	 * is going to be executed by the agent. 
 	 *   
-	 * @param action index of action that was performed
-	 * @param reward value of reward received from the environment (architecture) 
-	 * @param state state observed on inputs
+	 * @param previousAction index of action that has just been executed by the agent
+	 * @param reward value of reward received from the environment (or the rest of an architecture) 
+	 * @param currentState state that is being currently observed on inputs
+	 * @param futureAction index of action that has been selected by the ASM and is going
+	 * to be executed by the agent this step  
 	 */
-	public void performLearningStep(int action, float reward, int[] state);	
+	public void performLearningStep(int previousAction, float reward, int[] currentState, int futureAction);	
 	
 	/**
 	 * Initialize the algorithm. Mainly set the starting state of the environment.

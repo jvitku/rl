@@ -29,8 +29,7 @@ import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
 public class FinalModelSarsaLambda extends AbstractFinalRL{
 
 	double delta;				// one step error
-
-	private double[] decays;	// pre-computed decays (gammaT) for traces
+	
 	private StateTrace trace;	
 	
 	private NStepEligibilityTraceConfig conf;
@@ -41,22 +40,29 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 		
 		this.conf = conf;
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());
-		this.computeDecays();
 	}
 
 	@Override
-	public void performLearningStep(int action, float reward, int[] newState) {
+	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
+		if(!this.conf.getLearningEnabled())
+			return;
 		
 		if(this.prevState == null)
 			this.prevState = newState.clone();
 		
-		double prevVal = q.get(prevState, action);	// we were there and made the action
-		Double[] currentActions  = q.getActionValsInState(newState);	// action values available now
-		double maxActionVal = currentActions[this.maxInd(currentActions)];	// value of the best available action now
+		// we were there and made the action
+		double prevVal = q.get(prevState, prevAction);	
+		// action values available now
+		Double[] newActions  = q.getActionValsInState(newState);	
+		// value of the best available action now
+		double maxNewActionVal = newActions[this.maxInd(newActions)];	
 
-		delta = reward+ conf.getGamma()*maxActionVal - prevVal;
-		trace.push(newState);
+		// here goes the learning equation
+		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
 		
+		trace.push(newState);	// visiting the new state: remember it
+		
+		// apply knowledge update to all states stored in the trace 
 		for(int i=0; i<trace.size(); i++){
 			
 			// TODO here
@@ -67,30 +73,10 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 		prevState = newState.clone();		// update last state and action
 	}
 
-	/**
-	 * Computes decays for trace of length n with 
-	 * a current values of alpha and error. We will define error at 
-	 * the current time step as: 
-	 * err(s,a)t = gammaT*lambdaT*err(s,a)t. 
-	 * 
-	 * So the value of gammaT*lambdaT is pre-computed
-	 * in the array {@link #decays} for each time step. 
-	 * The actual time-step is on the index 0.
-	 */
-	private void computeDecays(){
-		this.decays = new double[this.conf.getEligibilityLength()];
-		double gamma = this.conf.getGamma();
-		decays[0] = gamma*this.conf.getLabda();
-		for(int i=1; i<this.conf.getEligibilityLength(); i++){
-			decays[i] = decays[i-1]*gamma*this.conf.getLabda();
-		}
-	}
-	
 	@Override
 	public void softReset(boolean randomize) {
 		super.softReset(randomize);
 		
-		this.computeDecays();	
 		this.trace.softReset(randomize);
 	}
 	
@@ -98,7 +84,6 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 	public void hardReset(boolean randomize) {
 		super.hardReset(randomize);
 		
-		this.computeDecays();
 		this.trace.hardReset(randomize);
 	}
 
@@ -120,5 +105,6 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 
 	@Override
 	public LearningConfiguration getConfig() { return this.conf; }
+
 
 }

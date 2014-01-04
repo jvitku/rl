@@ -24,7 +24,6 @@ public class VariableEncoderTest {
 		assertTrue(enc.encode(-10)==0);		// check out of range
 		assertTrue(enc.encode(100)==9);
 		
-		
 		assertTrue(enc.encode((float)0)==0);	// boundaries
 		assertTrue(enc.encode((float)1)==9);
 		

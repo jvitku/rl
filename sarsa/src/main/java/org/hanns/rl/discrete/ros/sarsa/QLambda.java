@@ -34,7 +34,7 @@ public class QLambda extends AbstractNodeMain {
 	public static final String name = "QLambda";
 	public final String me = "["+name+"] ";
 	public static final String s = "/";
-	public static final String ns = name+s;		// namespace for configuration parameters
+	public static final String ns = name+s;			// namespace for configuration parameters
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
 
@@ -62,7 +62,7 @@ public class QLambda extends AbstractNodeMain {
 	 */
 	public static final String lambdaConf = "lambda";
 	public static final String topicLambda = ns+lambdaConf;
-	
+
 	public static final double DEF_LAMBDA = 0.4;
 	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 20;
@@ -81,7 +81,7 @@ public class QLambda extends AbstractNodeMain {
 	 * Number of actions that can be performed by the RL ASM (coding 1ofN)
 	 */
 	public static final String noOutputsConf = "noOutputsConf";
-	public static final int DEF_NOACTIONS = 2;
+	public static final int DEF_NOACTIONS = 4;
 
 	/**
 	 * Default sampling parameters, TODO: customize each variable sampling independently
@@ -91,11 +91,6 @@ public class QLambda extends AbstractNodeMain {
 	 */
 	public static final String sampleMinConf="sampleMin",
 			sampleMaxConf="sampleMax", sampleCountConf="sampleCount";
-	/*
-	public static final String topicSampleMin= ns+sampleMinConf,			// ROS topics
-			topicSampleMax = ns+sampleMaxConf, 
-			topicSampleCount = ns+sampleCountConf;*/
-
 
 	public static final double DEF_MIN=0, DEF_MAX=1;
 	public static final int DEF_COUNT=5;
@@ -106,6 +101,10 @@ public class QLambda extends AbstractNodeMain {
 	public static final String epsilonConf="epsilon";
 	public static final String topicEpsilon = ns+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
+
+	public static final int DEF_LOGPERIOD =10;			// how often to log, each 10 sim steps? 
+	public static final String logPeriodConf = "logPeriod";
+	private int logPeriod; 
 
 	/**
 	 * ROS node configuration
@@ -130,6 +129,8 @@ public class QLambda extends AbstractNodeMain {
 
 	private int prevAction;					// index of the last action executed
 
+	private int step = 0;
+
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
@@ -147,7 +148,6 @@ public class QLambda extends AbstractNodeMain {
 		this.buildDataIO(connectedNode);
 
 		myLog(me+"Node configured and ready now!");
-
 	}
 
 	private void performSARSAstep(float reward, float[] state){
@@ -156,15 +156,17 @@ public class QLambda extends AbstractNodeMain {
 		try {
 			states.setRawData(state);
 		} catch (MessageFormatException e) {
+			log.error(me+"ERROR: Could not encode state description into state variables");
 			e.printStackTrace();
-			log.error(me+"Could not encode state description into state variables");
 		}
 		// select action, perform learning step
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
-		log.info(me+"responding with the following action: "+action);
-		
+		if((step++)%logPeriod==0) 
+			log.info(me+"Step: "+step+"-> responding with the following action: "
+					+SL.toStr(actionEncoder.encode(action)));
+
 		// publish action selected by the ASM
 		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
 		fl.setData(actionEncoder.encode(action));								
@@ -180,6 +182,7 @@ public class QLambda extends AbstractNodeMain {
 	private void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
 		willLog = r.getMyBoolean(shouldLog, DEF_LOG);
+		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
 
 		this.myLog(me+"parsing parameters");
 
@@ -190,7 +193,7 @@ public class QLambda extends AbstractNodeMain {
 		int len = r.getMyInteger(traceLenConf, DEF_TRACELEN);
 		double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
 
-		// dimensionality of the rl task 
+		// dimensionality of the RL task 
 		int noStateVars = r.getMyInteger(noInputsConf, DEF_STATEVARS);
 		int noActions = r.getMyInteger(noOutputsConf, DEF_NOACTIONS);
 
@@ -199,7 +202,7 @@ public class QLambda extends AbstractNodeMain {
 		double sampleMx = r.getMyDouble(sampleMaxConf, DEF_MAX);
 		int sampleC = r.getMyInteger(sampleCountConf, DEF_COUNT);
 
-		this.myLog(me+"creating data structures");
+		this.myLog(me+"Creating data structures.");
 
 		/**
 		 *  build variable set (each variable has own encoder (shared for now))
@@ -242,7 +245,6 @@ public class QLambda extends AbstractNodeMain {
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
 
-
 	private void buildDataIO(ConnectedNode connectedNode){
 		/**
 		 * Action publisher
@@ -265,8 +267,9 @@ public class QLambda extends AbstractNodeMain {
 							(states.getNumVariables()+1));
 				else{
 					// here, the state description is decoded and one SARSA step executed
-					myLog(me+"-"+topicDataIn+" Received new reinforcement & state description "+SL.toStr(data));
-					//myLog(me+"-"+topicDataIn+" Received new reinforcement & state description ");
+					if(step%logPeriod==0)
+						myLog(me+"<-"+topicDataIn+" Received new reinforcement & state description "+SL.toStr(data));
+
 					// decode data (first value is reinforcement..
 					// ..the rest are values of state variables
 					float reward = data[0];

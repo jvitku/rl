@@ -1,19 +1,9 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
-import java.util.Random;
 
 import org.apache.commons.logging.Log;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
-import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
-import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
-import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
-import org.hanns.rl.discrete.states.impl.BasicStateVariable;
-import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
+import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -49,6 +39,7 @@ public class GridWorldNode extends AbstractNodeMain{
 	private float[][] map;		// map of rewards
 	private int sizex, sizey;	// default dimensions of the map
 	private int logPeriod;		// how often to log
+	private int[] state;		// current state
 
 	private final int noActions = 4;	// 4 actions -> {<,>,^,v}
 	private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
@@ -60,6 +51,8 @@ public class GridWorldNode extends AbstractNodeMain{
 	public static final int DEF_LOGPERIOD =10;			// how often to log, each 10 sim steps? 
 	public static final String logPeriodConf = "logPeriod";
 
+	// whether some message from an agent received in the past 1000ms
+	private boolean dataExchanged = false;	
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -81,18 +74,45 @@ public class GridWorldNode extends AbstractNodeMain{
 		this.registerROSCommunication(connectedNode);
 
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, 15);
-
-
+		state = new int[]{(int)sizex/2, (int)sizey/2};	// start in the center
+		System.out.println("state "+state[0]+" "+state[1]);
+		
+/*
 		// publish action selected by the ASM
 		std_msgs.Float32MultiArray fl = statePublisher.newMessage();
-		fl.setData(new float[]{0,0,1});								
+		fl.setData(new float[]{0,0,1});
 		statePublisher.publish(fl);
-		statePublisher.publish(fl);
-		statePublisher.publish(fl);
+*/
 		
 		log.info(me+"Node configured and ready to provide simulator services!");
+		this.waitForConnections(connectedNode);
 	}
-
+	
+	/**
+	 * This method is used for waiting for receiving communication.
+	 * The node publishes current state of the environment, if in the 
+	 * last second no message with action received. Newly connected agents 
+	 * will respond with their action to this message.  
+	 * 
+	 * @param connectedNode
+	 */
+	private void waitForConnections(ConnectedNode connectedNode){
+		connectedNode.executeCancellableLoop(new CancellableLoop() {
+			@Override
+			protected void setup() {}
+			@Override
+			protected void loop() throws InterruptedException {
+				Thread.sleep(1000);
+				if(!dataExchanged){
+					log.info(me+"No agent detected, publishing the current state"+SL.toStr(state));
+					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
+					fl.setData(new float[]{0,state[0],state[1]});// TODO not this
+					statePublisher.publish(fl);
+				}
+				dataExchanged = false;
+			}
+		});
+	}
 
 	private void registerROSCommunication(ConnectedNode connectedNode){
 
@@ -111,27 +131,25 @@ public class GridWorldNode extends AbstractNodeMain{
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
-				if(data.length != noActions)
+				if(data.length != noActions){
 					log.error(me+"Received action description has" +
 							"unexpected length of"+data.length+"! Expected number "
 							+ "of actions (coding 1ofN) is "+noActions);
-				else{
-
-					log.info(me+"Received gents action, this one: "+SL.toStr(data));
+					log.info(me+" data: "+data[0]+" "+data[1]);
+				}else{
+					dataExchanged = true;
+					log.info(me+"Received agents action, this one: "+SL.toStr(data));
 
 					// TODO, process action and response
-					
 
 					// publish action selected by the ASM
 					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
 					fl.setData(new float[]{0,0,1});								
 					statePublisher.publish(fl);
 					log.info(me+"Node configured and ready to provide simulator services!");
-					
 				}
 			}
 		});
-
 	}
 
 	private void parseParameters(ConnectedNode connectedNode){
@@ -139,10 +157,8 @@ public class GridWorldNode extends AbstractNodeMain{
 
 		// parse size of the map 
 		sizex = r.getMyInteger(sizexConf, DEF_SIZEX);
-		sizex = r.getMyInteger(sizeyConf, DEF_SIZEY);
+		sizey = r.getMyInteger(sizeyConf, DEF_SIZEY);
 
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
-
 	}
-
 }

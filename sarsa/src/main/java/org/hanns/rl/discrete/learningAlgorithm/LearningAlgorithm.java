@@ -43,7 +43,7 @@ public interface LearningAlgorithm extends Resettable {
 	 * Get the configuration class for this algorithm
 	 * @return current configuration
 	 */
-	public LearningConfiguration getConfig();
+	//public LearningConfiguration getConfig();
 	
 	/**
 	 * Sets the Q(s,a) matrix that will be used by the algorithm from now on. 

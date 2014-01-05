@@ -2,9 +2,9 @@ package org.hanns.rl.discrete.ros;
 
 public class Topic {
 	
-	private static String baseIn = "in";
-	private static String baseConf = "conf";
-	private static String baseOut = "out";
+	public static String baseIn = "in";
+	public static String baseConf = "conf";
+	public static String baseOut = "out";
 	
 	
 	public static String inNo(int no){ 		return baseIn+no; }

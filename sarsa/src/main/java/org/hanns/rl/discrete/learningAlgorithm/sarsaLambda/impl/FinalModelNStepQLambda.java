@@ -115,8 +115,8 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		this.conf = (NStepQLambdaConfig)config;
 	}
 
-	@Override
-	public LearningConfiguration getConfig() { return this.conf; }
+	//@Override
+	public NStepQLambdaConfig getConfig() { return this.conf; }
 
 
 }

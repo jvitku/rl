@@ -69,7 +69,7 @@ public class FinalModelQlearningNaive extends AbstractFinalRL /*implements Final
 		this.config = (QLearningConfig) config;
 	}
 
-	@Override
-	public LearningConfiguration getConfig() { return this.config; }
+	//@Override
+	public QLearningConfig getConfig() { return this.config; }
 
 }

@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
 import org.apache.commons.logging.Log;
+import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
@@ -117,6 +118,8 @@ public class QLambda extends AbstractNodeMain {
 	//private double currentReward;			// reward just received from the node	
 	//private float[] currentState;			
 
+	private int prevAction;					// index of the last action executed
+	
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
@@ -139,17 +142,23 @@ public class QLambda extends AbstractNodeMain {
 
 	private void performSARSAstep(float reward, float[] state){
 
+		// encode the raw float[] values into state variables
+		try {
+			states.setRawData(state);
+		} catch (MessageFormatException e) {
+			e.printStackTrace();
+			log.error(me+"Could not encode state description into state variables");
+		}
+		// select action, perform learning step
+		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
+		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
-		//Double[] vals = q.getActionValsInState(pos);	// read action utilities
-		//int action = asm.selectAction(vals);				// select action
-
-
-
-
-		// publish the action chosen by the ASM
+		// publish action selected by the ASM
 		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
-		//fl.setData(new float[]{min,max}); // TODO set action								
+		fl.setData(actionEncoder.encode(action));								
 		actionPublisher.publish(fl);
+		
+		prevAction = action;
 	}
 
 	/**

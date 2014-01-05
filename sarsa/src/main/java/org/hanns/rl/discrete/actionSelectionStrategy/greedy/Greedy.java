@@ -3,6 +3,7 @@ package org.hanns.rl.discrete.actionSelectionStrategy.greedy;
 import java.util.Random;
 
 import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethod;
+import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethodConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
 /**
@@ -70,4 +71,15 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 
 	@Override
 	public boolean actionWasGreedy() { return this.wasgreedy; }
+	
+	@Override
+	public ActionSelectionMethodConfig getConfig() {
+		System.err.println("Greedy ASM: ERROR: I have no config");
+		return null;
+	}
+
+	@Override
+	public void setConfig(ActionSelectionMethodConfig config) {
+		System.err.println("Greedy ASM: ERROD: I do not need any config");
+	}
 }

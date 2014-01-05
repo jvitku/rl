@@ -1,22 +1,22 @@
 package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfiguration;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepEligibilityTraceConfig;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepQLambdaConfig;
 
-public class NStepEligibilityTraceConf extends BasicConfiguration implements NStepEligibilityTraceConfig{
+public class NStepQLambdaConfImpl extends BasicConfiguration implements NStepQLambdaConfig{
 
 	private int length = 5;			// number of currently visited states to remember 
 	private double lambda = 0.1;	// decay factor for the trace in time
 
 	private double[] decays;		// pre-computed decays (gammaT) for traces
 
-	public NStepEligibilityTraceConf(int length, double lambda){
+	public NStepQLambdaConfImpl(int length, double lambda){
 		this.length = length;
 		this.lambda = lambda;
 		this.fireParameterChanged();
 	}
 
-	public NStepEligibilityTraceConf(int length){
+	public NStepQLambdaConfImpl(int length){
 		this.length = length;
 		this.fireParameterChanged();
 	}
@@ -33,11 +33,11 @@ public class NStepEligibilityTraceConf extends BasicConfiguration implements NSt
 	@Override
 	public void setLambda(double lambda) { 
 		if(lambda<0){
-			System.err.println("NStepEligibilityTraceConf: ERROR: lambda has to " +
+			System.err.println("NStepQLambdaConfImpl: ERROR: lambda has to " +
 					"be from interval of <0,1>, not "+lambda);
 			lambda = 0;
 		}else if(lambda>1){
-			System.err.println("NStepEligibilityTraceConf: ERROR: lambda has to " +
+			System.err.println("NStepQLambdaConfImpl: ERROR: lambda has to " +
 					"be from interval of <0,1>, not "+lambda);
 			lambda = 1;
 		}

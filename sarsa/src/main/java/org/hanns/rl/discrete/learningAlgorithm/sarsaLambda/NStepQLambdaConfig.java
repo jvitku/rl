@@ -13,7 +13,7 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
  * @author Jaroslav Vitku
  *
  */
-public interface NStepEligibilityTraceConfig extends QLearningConfig{
+public interface NStepQLambdaConfig extends QLearningConfig{
 	
 	/**
 	 * Set the length of eligibility trace, how many state-action pairs to update each step

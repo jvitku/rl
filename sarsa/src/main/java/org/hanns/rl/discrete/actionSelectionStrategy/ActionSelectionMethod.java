@@ -37,4 +37,12 @@ public interface ActionSelectionMethod<E> {
 	 */
 	public boolean actionWasGreedy();
 	
+	/**
+	 * Get the class which defines configuration of the method
+	 * @return configuration class for this ASM
+	 */
+	public ActionSelectionMethodConfig getConfig();
+	
+	public void setConfig(ActionSelectionMethodConfig config);
+	
 }

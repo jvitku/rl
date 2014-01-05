@@ -3,6 +3,7 @@ package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy;
 import java.util.Random;
 
 import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethod;
+import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethodConfig;
 import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.EpsilonGreedyConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
@@ -18,9 +19,9 @@ import org.hanns.rl.discrete.actions.ActionSet;
 public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
 	private boolean wasgreedy;
-	Random r;
-	ActionSet acitons;
-	EpsilonGreedyConfig config;
+	protected Random r;
+	protected ActionSet acitons;
+	protected EpsilonGreedyConfig config;
 
 	public EpsilonGreedy(ActionSet actions, EpsilonGreedyConfig config){
 		r = new Random();
@@ -58,9 +59,9 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 		this.wasgreedy = true;
 		return ind;
 	}
-	
+
 	protected abstract boolean allEqual(E[] actionVals);
-	
+
 	protected abstract boolean better(E a, E b);
 
 	@Override
@@ -69,10 +70,18 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 	@Override
 	public ActionSet getActionSet() { return this.acitons;	}
 
+	@Override
 	public EpsilonGreedyConfig getConfig(){ return this.config; }
 
-	public void setConfig(EpsilonGreedyConfig config){ this.config = config; }
-	
+	@Override
+	public void setConfig(ActionSelectionMethodConfig config){
+		if(!(config instanceof EpsilonGreedyConfig)){
+			System.err.println("EpsilonGreedy: ERROR: EpsilonGreedyConfig class expected");
+			return;
+		}
+		this.config = (EpsilonGreedyConfig)config;
+	}
+
 	@Override
 	public boolean actionWasGreedy() { return this.wasgreedy; }
 }

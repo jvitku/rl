@@ -2,8 +2,9 @@ package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepEligibilityTraceConfig;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepQLambdaConfig;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
+import org.hanns.rl.discrete.states.FInalStateSet;
 
 /**
  * 
@@ -27,16 +28,23 @@ import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.StateTrace;
  * @author Jaroslav Vitku
  *
  */
-public class FinalModelSarsaLambda extends AbstractFinalRL{
+public class FinalModelNStepQLambda extends AbstractFinalRL{
 
 	double delta;				// one step error
 
 	private StateTrace trace;	
 
-	private NStepEligibilityTraceConfig conf;
+	private NStepQLambdaConfig conf;
 
-	public FinalModelSarsaLambda(int[] stateSizes, int numActions, 
-			NStepEligibilityTraceConfig conf){
+	public FinalModelNStepQLambda(FInalStateSet set, int numActions, NStepQLambdaConfig conf){
+		super(set, numActions);
+
+		this.conf = conf;
+		trace = new StateTraceImpl(this.conf.getEligibilityLength());
+	}
+	
+	public FinalModelNStepQLambda(int[] stateSizes, int numActions, 
+			NStepQLambdaConfig conf){
 		super(stateSizes, numActions);
 
 		this.conf = conf;
@@ -99,12 +107,12 @@ public class FinalModelSarsaLambda extends AbstractFinalRL{
 
 	@Override
 	public void setConfig(LearningConfiguration config) {
-		if(!(config instanceof NStepEligibilityTraceConfig)){
+		if(!(config instanceof NStepQLambdaConfig)){
 			System.err.println("FinalModelSarsa: ERROR: expected " +
-					"NStepEligibilityTraceConfig congiguration!");
+					"NStepQLambdaConfig congiguration!");
 			return;
 		}
-		this.conf = (NStepEligibilityTraceConfig)config;
+		this.conf = (NStepQLambdaConfig)config;
 	}
 
 	@Override

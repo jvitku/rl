@@ -3,6 +3,7 @@ package org.hanns.rl.discrete.learningAlgorithm;
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
+import org.hanns.rl.discrete.states.FInalStateSet;
 
 /**
  * Abstract class which implements common tasks for Reinforcement Learning
@@ -22,6 +23,12 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 	protected final String mess = "FinalModelQLearning:" +
 			" incorrect dimenion sizes";
 
+	public AbstractFinalRL(FInalStateSet states, int numActions){
+		this.stateSizes = states.getDimensionsSizes().clone();
+		this.numActions = numActions;
+		q = new PreAllocatedFinalQMatrix(stateSizes, numActions);
+	}
+	
 	public AbstractFinalRL(int[] stateSizes, int numActions){
 		this.stateSizes = stateSizes.clone();
 		this.numActions = numActions;

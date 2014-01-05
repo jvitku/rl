@@ -10,8 +10,8 @@ import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelSarsaLambda;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepEligibilityTraceConf;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
+import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
 import org.junit.Test;
 
 import ctu.nengoros.util.SL;
@@ -50,12 +50,12 @@ public class FInalSarsaLambda {
 		/**
 		 * Configure the learning algorithm
 		 */
-		NStepEligibilityTraceConf config = new NStepEligibilityTraceConf(20);
+		NStepQLambdaConfImpl config = new NStepQLambdaConfImpl(20);
 		config.setLambda(0.9);	
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.7);	// more towards immediate reward
 
-		FinalModelLearningAlgorithm ql = new FinalModelSarsaLambda(stateSizes, numActions, config);
+		FinalModelLearningAlgorithm ql = new FinalModelNStepQLambda(stateSizes, numActions, config);
 
 		/**
 		 * Configure the simulation

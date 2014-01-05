@@ -163,6 +163,8 @@ public class QLambda extends AbstractNodeMain {
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
+		log.info(me+"responding with the following action: "+action);
+		
 		// publish action selected by the ASM
 		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
 		fl.setData(actionEncoder.encode(action));								
@@ -250,21 +252,21 @@ public class QLambda extends AbstractNodeMain {
 		/**
 		 * State receiver
 		 */
-		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
+		Subscriber<std_msgs.Float32MultiArray> dataSub = 
 				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
 
-		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
+		dataSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
-				if(data.length != 1)
-					log.error(me+"-"+topicDataIn+" Received state description has" +
+				if(data.length != states.getNumVariables()+1)
+					log.error(me+":"+topicDataIn+": Received state description has" +
 							"unexpected length of"+data.length+"! Expected: "+
-							states.getNumVariables());
+							(states.getNumVariables()+1));
 				else{
 					// here, the state description is decoded and one SARSA step executed
 					myLog(me+"-"+topicDataIn+" Received new reinforcement & state description "+SL.toStr(data));
-
+					//myLog(me+"-"+topicDataIn+" Received new reinforcement & state description ");
 					// decode data (first value is reinforcement..
 					// ..the rest are values of state variables
 					float reward = data[0];

@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.q;
+package org.hanns.rl.discrete.ros.testnodes;
 
 import java.util.Random;
 
@@ -166,7 +166,8 @@ public class GridWorld {
 				rm[i][j] = 0;
 			}
 		}
-		rm[rewardCoords[0]][rewardCoords[1]] = rewardVal;
+		if(rewardCoords!=null)
+			rm[rewardCoords[0]][rewardCoords[1]] = rewardVal;
 		return rm;
 	}
 

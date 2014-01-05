@@ -63,7 +63,8 @@ public class GridWorldNode extends AbstractNodeMain{
 	private final ActionSet actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
 
 	// whether some message from an agent received in the past 1000ms
-	private boolean dataExchanged = false;	
+	private boolean dataExchanged = false;
+	private int step;
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -96,6 +97,7 @@ public class GridWorldNode extends AbstractNodeMain{
 		// create map, place the reinforcements
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
 		map[2][2] = mapReward;	// place reward on the map
+		step = 0;
 
 		// need to encode x values in one float
 		stateEncoder = new BasicVariableEncoder(rangeFrom,rangeTo,sizex);	
@@ -150,25 +152,29 @@ public class GridWorldNode extends AbstractNodeMain{
 							"unexpected length of"+data.length+"! Expected number "
 							+ "of actions (coding 1ofN) is "+noActions);
 				}else{
-					dataExchanged = true;
-					int action = -1;
+					// try to decode action, if success, make simulation step and response with new data
 					try {
-						action = actionEncoder.decode(data);
-					} catch (DecoderException e) {
-						e.printStackTrace();
-					}
-					log.info(me+"Received agents action, this one: "+SL.toStr(data)
-							+" the action no "+action);
+						dataExchanged = true;
+						int action = actionEncoder.decode(data);
+						log.info(me+"Received agents action, this one: "+SL.toStr(data)
+								+" the action no "+action);
 
-					int[] newState = GridWorld.makeStep(sizex, sizey, action, state);
-					float reward = map[newState[0]][newState[1]];
-					
-					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
-					fl.setData(encodeStateRewardMessage(reward,newState));								
-					statePublisher.publish(fl);
-					
-					state = newState.clone();
-					log.info(me+"Node configured and ready to provide simulator services!");
+						int[] newState = GridWorld.makeStep(sizex, sizey, action, state);
+						float reward = map[newState[0]][newState[1]];
+
+						std_msgs.Float32MultiArray fl = statePublisher.newMessage();
+						fl.setData(encodeStateRewardMessage(reward,newState));								
+						statePublisher.publish(fl);	// send a response with reinforcement and new state 
+
+						state = newState.clone();
+						
+						if((step++)%logPeriod==0)
+							System.out.println(GridWorld.vis(map));
+
+					} catch (DecoderException e) {
+						log.error(me+"Unable to decode agents action, ignoring this message!");
+						e.printStackTrace(); 
+					}
 				}
 			}
 		});
@@ -183,7 +189,7 @@ public class GridWorldNode extends AbstractNodeMain{
 
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
 	}
-	
+
 	/**
 	 * Get description of the environment state (agents position) and current
 	 * reward. Encode this it into array of raw float values.

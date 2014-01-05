@@ -152,7 +152,7 @@ public class QLambda extends AbstractNodeMain {
 
 	private void performSARSAstep(float reward, float[] state){
 
-		SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
+		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
 		
 		// encode the raw float[] values into state variables
 		try {

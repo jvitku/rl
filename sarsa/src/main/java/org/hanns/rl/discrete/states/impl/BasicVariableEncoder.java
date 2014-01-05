@@ -50,7 +50,7 @@ public class BasicVariableEncoder implements VariableEncoder{
 	}
 
 	@Override
-	public int encode(final float raww){
+	public int decode(final float raww){
 
 		if(raww>=to)
 			return this.numValues-1;	// max value
@@ -68,8 +68,20 @@ public class BasicVariableEncoder implements VariableEncoder{
 		return result;
 	}
 	
+	
 	@Override
 	public int getNumValues() { return this.numValues; }
+
+	@Override
+	public float encode(int value) {
+		return (float) (from+value*step);
+	}
+
+	@Override
+	public double getMinRaw() { return from; }
+
+	@Override
+	public double getMaxRaw() {return to; }
 
 
 }

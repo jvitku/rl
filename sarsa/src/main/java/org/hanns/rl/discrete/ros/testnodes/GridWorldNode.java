@@ -2,7 +2,12 @@ package org.hanns.rl.discrete.ros.testnodes;
 
 
 import org.apache.commons.logging.Log;
+import org.hanns.rl.common.exceptions.DecoderException;
+import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
+import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
@@ -24,17 +29,16 @@ import ctu.nengoros.util.SL;
 public class GridWorldNode extends AbstractNodeMain{
 
 	public static final String name = "GridWorldNode";
-	public final String me = "["+name+"]";
+	public final String me = "["+name+"] ";
 
 	private PrivateRosparam r;
-
 
 	public static final String shouldLog = "shouldLog";
 	public static final boolean DEF_LOG = true;
 
 	private Log log;
 	private Publisher<std_msgs.Float32MultiArray> statePublisher;
-	private Publisher<std_msgs.Float32MultiArray> actionSubscriber;
+	//private Publisher<std_msgs.Float32MultiArray> actionSubscriber;
 
 	private float[][] map;		// map of rewards
 	private int sizex, sizey;	// default dimensions of the map
@@ -42,14 +46,21 @@ public class GridWorldNode extends AbstractNodeMain{
 	private int[] state;		// current state
 
 	private final int noActions = 4;	// 4 actions -> {<,>,^,v}
-	private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
+	//private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
+	private final float mapReward = 15;	// how much reward agent receives?
 
 	public static final int DEF_SIZEX =10, DEF_SIZEY=10;
-	public static final String sizexConf = "sizex";
+	public static final String sizexConf = "sizex"; // only one size supported so far
 	public static final String sizeyConf = "sizey";
 
 	public static final int DEF_LOGPERIOD =10;			// how often to log, each 10 sim steps? 
 	public static final String logPeriodConf = "logPeriod";
+
+
+	private BasicVariableEncoder stateEncoder;
+	private double rangeFrom = 0, rangeTo = 1;
+	private OneOfNEncoder actionEncoder;
+	private final ActionSet actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
 
 	// whether some message from an agent received in the past 1000ms
 	private boolean dataExchanged = false;	
@@ -73,21 +84,24 @@ public class GridWorldNode extends AbstractNodeMain{
 
 		this.registerROSCommunication(connectedNode);
 
-		map = GridWorld.simpleRewardMap(sizex, sizey, null, 15);
-		state = new int[]{(int)sizex/2, (int)sizey/2};	// start in the center
-		System.out.println("state "+state[0]+" "+state[1]);
-		
-/*
-		// publish action selected by the ASM
-		std_msgs.Float32MultiArray fl = statePublisher.newMessage();
-		fl.setData(new float[]{0,0,1});
-		statePublisher.publish(fl);
-*/
-		
+		this.initData();
+
+		state = new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
+
 		log.info(me+"Node configured and ready to provide simulator services!");
 		this.waitForConnections(connectedNode);
 	}
-	
+
+	private void initData(){
+		// create map, place the reinforcements
+		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
+		map[2][2] = mapReward;	// place reward on the map
+
+		// need to encode x values in one float
+		stateEncoder = new BasicVariableEncoder(rangeFrom,rangeTo,sizex);	
+		actionEncoder = new OneOfNEncoder(actionSet);
+	}
+
 	/**
 	 * This method is used for waiting for receiving communication.
 	 * The node publishes current state of the environment, if in the 
@@ -106,7 +120,7 @@ public class GridWorldNode extends AbstractNodeMain{
 				if(!dataExchanged){
 					log.info(me+"No agent detected, publishing the current state"+SL.toStr(state));
 					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
-					fl.setData(new float[]{0,state[0],state[1]});// TODO not this
+					fl.setData(encodeStateRewardMessage(0,state)); // state vars. to float[] 
 					statePublisher.publish(fl);
 				}
 				dataExchanged = false;
@@ -135,17 +149,25 @@ public class GridWorldNode extends AbstractNodeMain{
 					log.error(me+"Received action description has" +
 							"unexpected length of"+data.length+"! Expected number "
 							+ "of actions (coding 1ofN) is "+noActions);
-					log.info(me+" data: "+data[0]+" "+data[1]);
 				}else{
 					dataExchanged = true;
-					log.info(me+"Received agents action, this one: "+SL.toStr(data));
+					int action = -1;
+					try {
+						action = actionEncoder.decode(data);
+					} catch (DecoderException e) {
+						e.printStackTrace();
+					}
+					log.info(me+"Received agents action, this one: "+SL.toStr(data)
+							+" the action no "+action);
 
-					// TODO, process action and response
-
-					// publish action selected by the ASM
+					int[] newState = GridWorld.makeStep(sizex, sizey, action, state);
+					float reward = map[newState[0]][newState[1]];
+					
 					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
-					fl.setData(new float[]{0,0,1});								
+					fl.setData(encodeStateRewardMessage(reward,newState));								
 					statePublisher.publish(fl);
+					
+					state = newState.clone();
 					log.info(me+"Node configured and ready to provide simulator services!");
 				}
 			}
@@ -160,5 +182,22 @@ public class GridWorldNode extends AbstractNodeMain{
 		sizey = r.getMyInteger(sizeyConf, DEF_SIZEY);
 
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
+	}
+	
+	/**
+	 * Get description of the environment state (agents position) and current
+	 * reward. Encode this it into array of raw float values.
+	 * The first value is the value of reinforcement, the rest values
+	 * are encoded integer values of environment variables. 
+	 * @param vars list of state variables
+	 * @return vector of float values from the range between 0 and 1
+	 */
+	private float[] encodeStateRewardMessage(float reward, int[] vars){
+		float[] f = new float[vars.length+1];
+		f[0] = reward;
+		for(int i=1; i<vars.length; i++){
+			f[i] = stateEncoder.encode(vars[i-1]);
+		}
+		return f;
 	}
 }

@@ -35,7 +35,7 @@ public class BasicStateVariable implements StateVariable{
 	@Override
 	public void setRawValue(float value) { 
 		this.rawval = value;
-		this.val = enc.encode(value);
+		this.val = enc.decode(value);
 	}
 
 	@Override

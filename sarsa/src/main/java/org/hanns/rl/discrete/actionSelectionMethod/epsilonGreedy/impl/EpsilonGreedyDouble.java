@@ -1,7 +1,7 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.impl;
+package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl;
 
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.EpsilonGreedy;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.EpsilonGreedyConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.EpsilonGreedy;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.EpsilonGreedyConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
 /**

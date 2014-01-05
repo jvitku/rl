@@ -2,8 +2,8 @@ package org.hanns.rl.discrete.ros.sarsa;
 
 import org.apache.commons.logging.Log;
 import org.hanns.rl.common.exceptions.MessageFormatException;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.impl.BasicConfig;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
@@ -33,33 +33,38 @@ public class QLambda extends AbstractNodeMain {
 
 	public static final String name = "QLambda";
 	public final String me = "["+name+"] ";
-	public final String s = "/";
+	public static final String s = "/";
+	public static final String ns = name+s;		// namespace for configuration parameters
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
 
-	public static final String dataIn = Topic.baseIn+"States"; 		// inStates
-	public static final String dataOut = Topic.baseOut+"Actions"; 	// outActions
+	public static final String topicDataIn = Topic.baseIn+"States"; 		// inStates
+	public static final String topicDataOut = Topic.baseOut+"Actions"; 	// outActions
 
 	private PrivateRosparam r;
 
 	/**
 	 * Learning rate
 	 */
-	public static final String alphaConfig = "alpha";
+	public static final String alphaConf = "alpha";
+	public static final String topicAlpha= ns+alphaConf;
 	public static final double DEF_ALPHA = 0.7;
 
 	/**
 	 * Decay factor
 	 */
-	public static final String gammaConfig = "gamma";
+	public static final String gammaConf = "gamma";
+	public static final String topicGamma = ns+gammaConf;
 	public static final double DEF_GAMMA = 0.4;
 
 	/**
 	 * Trace decay factor
 	 */
-	public static final String lambdaConfig = "lambda";
+	public static final String lambdaConf = "lambda";
+	public static final String topicLambda = ns+lambdaConf;
+	
 	public static final double DEF_LAMBDA = 0.4;
-	public static final String traceLength = "traceLength";
+	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 20;
 
 	/**
@@ -69,13 +74,13 @@ public class QLambda extends AbstractNodeMain {
 	/**
 	 * Number of state variables considered by the RL (predefined sampling)
 	 */
-	public static final String noInputs = "noInputs";
+	public static final String noInputsConf = "noInputs";
 	public static final int DEF_STATEVARS = 2;
 
 	/**
 	 * Number of actions that can be performed by the RL ASM (coding 1ofN)
 	 */
-	public static final String noOutputs = "noOutputs";
+	public static final String noOutputsConf = "noOutputsConf";
 	public static final int DEF_NOACTIONS = 2;
 
 	/**
@@ -84,14 +89,22 @@ public class QLambda extends AbstractNodeMain {
 	 * Sampling is from the interval [{@link #sampleMn}, {@link #sampleMx}] with 
 	 * {@link #sampleC} of samples.
 	 */
-	public static final String sampleMin="sampleMin", sampleMax="sampleMax", sampleCount="sampleCount";
+	public static final String sampleMinConf="sampleMin",
+			sampleMaxConf="sampleMax", sampleCountConf="sampleCount";
+	/*
+	public static final String topicSampleMin= ns+sampleMinConf,			// ROS topics
+			topicSampleMax = ns+sampleMaxConf, 
+			topicSampleCount = ns+sampleCountConf;*/
+
+
 	public static final double DEF_MIN=0, DEF_MAX=1;
 	public static final int DEF_COUNT=5;
 
 	/**
 	 * Epsilon-greedy ASM configuration
 	 */
-	public static final String epsilonConfig="epsilon";
+	public static final String epsilonConf="epsilon";
+	public static final String topicEpsilon = ns+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
 
 	/**
@@ -115,11 +128,8 @@ public class QLambda extends AbstractNodeMain {
 
 	private BasicFinalStateSet states;		// state variables (each has encoder)
 
-	//private double currentReward;			// reward just received from the node	
-	//private float[] currentState;			
-
 	private int prevAction;					// index of the last action executed
-	
+
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
@@ -157,7 +167,7 @@ public class QLambda extends AbstractNodeMain {
 		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
 		fl.setData(actionEncoder.encode(action));								
 		actionPublisher.publish(fl);
-		
+
 		prevAction = action;
 	}
 
@@ -172,20 +182,20 @@ public class QLambda extends AbstractNodeMain {
 		this.myLog(me+"parsing parameters");
 
 		// RL parameters (default alpha and gamma, but can be also modified online)
-		double alpha = r.getMyDouble(alphaConfig, DEF_ALPHA);
-		double gamma = r.getMyDouble(gammaConfig, DEF_GAMMA);
-		double lambda = r.getMyDouble(lambdaConfig, DEF_LAMBDA);
-		int len = r.getMyInteger(traceLength, DEF_TRACELEN);
-		double epsilon = r.getMyDouble(epsilonConfig, DEF_EPSILON);
+		double alpha = r.getMyDouble(alphaConf, DEF_ALPHA);
+		double gamma = r.getMyDouble(gammaConf, DEF_GAMMA);
+		double lambda = r.getMyDouble(lambdaConf, DEF_LAMBDA);
+		int len = r.getMyInteger(traceLenConf, DEF_TRACELEN);
+		double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
 
 		// dimensionality of the rl task 
-		int noStateVars = r.getMyInteger(noInputs, DEF_STATEVARS);
-		int noActions = r.getMyInteger(noOutputs, DEF_NOACTIONS);
+		int noStateVars = r.getMyInteger(noInputsConf, DEF_STATEVARS);
+		int noActions = r.getMyInteger(noOutputsConf, DEF_NOACTIONS);
 
 		// configuration of sampling for state variables (float->finite no. of states) 
-		double sampleMn = r.getMyDouble(sampleMin, DEF_MIN);
-		double sampleMx = r.getMyDouble(sampleMax, DEF_MAX);
-		int sampleC = r.getMyInteger(sampleCount, DEF_COUNT);
+		double sampleMn = r.getMyDouble(sampleMinConf, DEF_MIN);
+		double sampleMx = r.getMyDouble(sampleMaxConf, DEF_MAX);
+		int sampleC = r.getMyInteger(sampleCountConf, DEF_COUNT);
 
 		this.myLog(me+"creating data structures");
 
@@ -235,25 +245,25 @@ public class QLambda extends AbstractNodeMain {
 		/**
 		 * Action publisher
 		 */
-		actionPublisher =connectedNode.newPublisher(dataOut, std_msgs.Float32MultiArray._TYPE);
+		actionPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
 
 		/**
 		 * State receiver
 		 */
 		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(dataIn, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
 
 		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
 				if(data.length != 1)
-					log.error(me+"-"+dataIn+" Received state description has" +
+					log.error(me+"-"+topicDataIn+" Received state description has" +
 							"unexpected length of"+data.length+"! Expected: "+
 							states.getNumVariables());
 				else{
 					// here, the state description is decoded and one SARSA step executed
-					myLog(me+"-"+dataIn+" Received new reinforcement & state description "+SL.toStr(data));
+					myLog(me+"-"+topicDataIn+" Received new reinforcement & state description "+SL.toStr(data));
 
 					// decode data (first value is reinforcement..
 					// ..the rest are values of state variables
@@ -274,7 +284,7 @@ public class QLambda extends AbstractNodeMain {
 		 * Epsilon
 		 */
 		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(name+s+epsilonConfig, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(name+s+epsilonConf, std_msgs.Float32MultiArray._TYPE);
 
 		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -297,7 +307,7 @@ public class QLambda extends AbstractNodeMain {
 		 * Alpha
 		 */
 		Subscriber<std_msgs.Float32MultiArray> alphaSub = 
-				connectedNode.newSubscriber(name+s+alphaConfig, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(name+s+alphaConf, std_msgs.Float32MultiArray._TYPE);
 
 		alphaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -318,7 +328,7 @@ public class QLambda extends AbstractNodeMain {
 		 * Gamma
 		 */
 		Subscriber<std_msgs.Float32MultiArray> gammaSub = 
-				connectedNode.newSubscriber(name+s+gammaConfig, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(name+s+gammaConf, std_msgs.Float32MultiArray._TYPE);
 
 		gammaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -341,7 +351,7 @@ public class QLambda extends AbstractNodeMain {
 		 * Lambda
 		 */
 		Subscriber<std_msgs.Float32MultiArray> lambdaSub = 
-				connectedNode.newSubscriber(name+s+lambdaConfig, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(name+s+lambdaConf, std_msgs.Float32MultiArray._TYPE);
 
 		lambdaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override

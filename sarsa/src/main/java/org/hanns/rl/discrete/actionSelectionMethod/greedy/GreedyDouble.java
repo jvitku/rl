@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.greedy;
+package org.hanns.rl.discrete.actionSelectionMethod.greedy;
 
 import org.hanns.rl.discrete.actions.ActionSet;
 

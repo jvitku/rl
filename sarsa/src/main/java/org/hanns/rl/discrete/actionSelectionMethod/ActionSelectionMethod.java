@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.actionSelectionStrategy;
+package org.hanns.rl.discrete.actionSelectionMethod;
 
 import org.hanns.rl.discrete.actions.ActionSet;
 

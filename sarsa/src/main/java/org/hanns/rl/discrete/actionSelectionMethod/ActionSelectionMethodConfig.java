@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.actionSelectionStrategy;
+package org.hanns.rl.discrete.actionSelectionMethod;
 
 /**
  * Configuration of general action selection algorithm. 

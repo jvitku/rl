@@ -1,10 +1,10 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy;
+package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy;
 
 import java.util.Random;
 
-import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethodConfig;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.EpsilonGreedyConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
+import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.EpsilonGreedyConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
 /**

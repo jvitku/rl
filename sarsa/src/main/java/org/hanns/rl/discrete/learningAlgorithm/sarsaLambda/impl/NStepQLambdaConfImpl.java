@@ -17,6 +17,10 @@ public class NStepQLambdaConfImpl extends BasicConfiguration implements NStepQLa
 	}
 
 	public NStepQLambdaConfImpl(int length){
+		if(length<1){
+			System.err.println("NStepQLambdaConfImpl: Trace length should be more than 0!");
+			return;
+		}
 		this.length = length;
 		this.fireParameterChanged();
 	}
@@ -25,24 +29,30 @@ public class NStepQLambdaConfImpl extends BasicConfiguration implements NStepQLa
 	public int getEligibilityLength() { return length; }
 
 	@Override
-	public void setEligibilityLength(int length) { 
+	public void setEligibilityLength(int length) {
+		if(length<1){
+			System.err.println("NStepQLambdaConfImpl: Trace length should be more than 0!");
+			return;
+		}
+		boolean changed = length!=this.length;
 		this.length = length;
-		this.fireParameterChanged();
+		if(changed)
+			this.fireParameterChanged();
 	}
 
 	@Override
-	public void setLambda(double lambda) { 
-		if(lambda<0){
-			System.err.println("NStepQLambdaConfImpl: ERROR: lambda has to " +
-					"be from interval of <0,1>, not "+lambda);
-			lambda = 0;
-		}else if(lambda>1){
-			System.err.println("NStepQLambdaConfImpl: ERROR: lambda has to " +
-					"be from interval of <0,1>, not "+lambda);
-			lambda = 1;
+	public void setLambda(double lambda) {
+		if(!super.checkRange("lambda", 0, 1, lambda)){
+			if(lambda<0){
+				lambda = 0;
+			}else if(lambda>1){
+				lambda = 1;
+			}
 		}
+		boolean changed = lambda!=this.lambda;
 		this.lambda = lambda;
-		this.fireParameterChanged();
+		if(changed)
+			this.fireParameterChanged();
 	}
 
 	@Override

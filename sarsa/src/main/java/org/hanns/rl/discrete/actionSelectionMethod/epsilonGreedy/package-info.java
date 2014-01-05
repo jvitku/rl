@@ -5,4 +5,4 @@
  * @author Jaroslav Vitku
  *
  */
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy;
+package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy;

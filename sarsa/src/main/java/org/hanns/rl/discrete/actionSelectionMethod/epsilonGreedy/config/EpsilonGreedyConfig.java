@@ -1,6 +1,6 @@
-package org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config;
+package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config;
 
-import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethodConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
 
 /**
  * Entire configuration of the algorithm.

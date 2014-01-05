@@ -2,10 +2,10 @@ package org.hanns.rl.discrete.q;
 
 import static org.junit.Assert.fail;
 
-import org.hanns.rl.discrete.actionSelectionStrategy.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.EpsilonGreedyConfig;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.config.impl.BasicConfig;
-import org.hanns.rl.discrete.actionSelectionStrategy.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.EpsilonGreedyConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;

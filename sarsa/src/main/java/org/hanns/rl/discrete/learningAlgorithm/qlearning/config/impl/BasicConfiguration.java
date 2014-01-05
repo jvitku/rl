@@ -21,10 +21,16 @@ public class BasicConfiguration implements QLearningConfig{
 
 	@Override
 	public void setAlpha(double alpha) {
-		if(!this.checkRange("alpha", 0, 1, alpha))
-			return;
+		if(!this.checkRange("alpha", 0, 1, alpha)){
+			if(alpha<0)
+				alpha = 0;
+			else
+				alpha = 1;
+		}
+		boolean changed = (this.alpha!= alpha);
 		this.alpha = alpha;
-		this.fireParameterChanged();
+		if(changed)
+			this.fireParameterChanged();
 	}
 
 	@Override
@@ -32,23 +38,29 @@ public class BasicConfiguration implements QLearningConfig{
 
 	@Override
 	public void setGamma(double gamma) {
-		if(!this.checkRange("gamma", 0, 1, gamma))
-			return;
+		if(!this.checkRange("gamma", 0, 1, gamma)){
+			if(gamma<0)
+				gamma = 0;
+			else
+				gamma = 1;
+		}
+		boolean changed = (this.gamma != gamma);
 		this.gamma = gamma;
-		this.fireParameterChanged();
+		if(changed)
+			this.fireParameterChanged();
 	}
 
 	@Override
 	public double getGamma() {return gamma; }
 
 	@Override
-	public void setLearningEnabled(boolean enable) { 
+	public void setLearningEnabled(boolean enable) {
 		this.learningEnabled = enable;
 		this.fireParameterChanged();
 	}
 
 	@Override
-	public boolean getLearningEnabled() {return this.learningEnabled; }
+	public boolean getLearningEnabled() { return this.learningEnabled; }
 
 	@Override
 	public void fireParameterChanged() {}

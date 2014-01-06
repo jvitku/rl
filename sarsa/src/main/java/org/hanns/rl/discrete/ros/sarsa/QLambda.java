@@ -34,12 +34,13 @@ public class QLambda extends AbstractNodeMain {
 	public static final String name = "QLambda";
 	public final String me = "["+name+"] ";
 	public static final String s = "/";
-	public static final String ns = name+s;			// namespace for configuration parameters
+	
+	public static final String ns = name+s; // namespace for config. parameters			
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
 
-	public static final String topicDataIn = Topic.baseIn+"States"; 		// inStates
-	public static final String topicDataOut = Topic.baseOut+"Actions"; 	// outActions
+	public static final String topicDataIn = Topic.baseIn+"States"; // inStates
+	public static final String topicDataOut = Topic.baseOut+"Actions"; // outActions
 
 	private PrivateRosparam r;
 
@@ -84,7 +85,8 @@ public class QLambda extends AbstractNodeMain {
 	public static final int DEF_NOACTIONS = 4;
 
 	/**
-	 * Default sampling parameters, TODO: customize each variable sampling independently
+	 * Default sampling parameters, TODO: customize each variable sampling 
+	 * independently
 	 * 
 	 * Sampling is from the interval [{@link #sampleMn}, {@link #sampleMx}] with 
 	 * {@link #sampleC} of samples.
@@ -102,7 +104,7 @@ public class QLambda extends AbstractNodeMain {
 	public static final String topicEpsilon = ns+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
 
-	public static final int DEF_LOGPERIOD =10;			// how often to log, each 10 sim steps? 
+	public static final int DEF_LOGPERIOD =10;	// how often to log? 
 	public static final String logPeriodConf = "logPeriod";
 	private int logPeriod; 
 
@@ -270,7 +272,8 @@ public class QLambda extends AbstractNodeMain {
 				else{
 					// here, the state description is decoded and one SARSA step executed
 					if(step%logPeriod==0)
-						myLog(me+"<-"+topicDataIn+" Received new reinforcement & state description "+SL.toStr(data));
+						myLog(me+"<-"+topicDataIn+" Received new reinforcement &" +
+								" state description "+SL.toStr(data));
 
 					// decode data (first value is reinforcement..
 					// ..the rest are values of state variables

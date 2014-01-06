@@ -38,6 +38,37 @@ Before usage, the number of input/output connections has to be specified. This d
 Then, the class instance is obtained and starts communication across the ROS network.
 From this point, the ROS node can be use as a SARSA module.
 
+Running the Demo
+---------------------
+
+The algorithm can be ran either as a NeuralModule in the Nengoros simulator, or as a standalone ROS node. 
+
+## Standalone ROS Node
+
+The start scripts are prepared in the `rl/sarsa` folder which simplify launching the nodes. There are three following nodes:
+
+* **QLambda node** (`org.hanns.rl.discrete.ros.sarsa.QLambda`) which implements the Q(lambda) discrete RL algorithm with eligibility traces
+* **GridWorldNode** (`org.hanns.rl.discrete.ros.testnodes.GridWorldNode`) which implements simple simulator with a grid world and a source of reinforcement
+* **QLambdaConfigurator** (`org.hanns.rl.discrete.ros.testnodes.QLambdaConfigurator`) which serves as an example of online configuration of ROS RL node
+
+The following should be started from the `rl/sarsa` folder for successful running the demo:
+
+	jroscore
+	./conf 		# RL algorithm configuration
+	./map		# simple grid world simulator
+	./qlambda	# Q(lambda) discrete RL algorithm
+
+## Nengoros Integration
+
+The standard jython scripts are included in the `rl/sarsa/python` folder, so [linking the data](http://nengoros.wordpress.com/tutorials/integrating-new-project-with-the-nengoros/) into the simulator and following one of tutorials [how to run ROS nodes](http://nengoros.wordpress.com/tutorials/demo-2-publisher-subscriber/) in the Nengoros is sufficient. To link data, run the following command from the folder `nengoros/demonodes`:
+
+	./linkdata -cf ../rl/sarsa
+	
+For example how to use the QLambda node, start the Nengoros simulator and write the following command into the console:
+
+	run nr-demo/sarsa/demo.py
+
+
 TODO and Design Details
 -----------------------
 

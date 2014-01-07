@@ -13,16 +13,12 @@ from ca.nengo.model import Units
 from ctu.nengoros.modules.impl import DefaultNeuralModule as NeuralModule
 from ctu.nengoros.comm.nodeFactory import NodeGroup as NodeGroup
 from ctu.nengoros.comm.rosutils import RosUtils as RosUtils
-
 from org.hanns.rl.discrete.ros.sarsa import QLambda
-
 import rl_sarsa
-
 
 net=nef.Network('Demo of NeuralModule which implements discrete RL')
 net.add_to_nengo()  
 
-################# setup the ROS utils (optional) 
 #RosUtils.setAutorun(False)     # Do we want to autorun roscore and rxgraph? (tru by default)
 #RosUtils.prefferJroscore(True)  # preffer jroscore before the roscore? 
 
@@ -40,14 +36,6 @@ net.add(generator)
 net.add(reward)
 net.connect(generator,	finderA.newTerminationFor(QLambda.topicDataIn,[0,1,1]))
 net.connect(reward,	finderA.newTerminationFor(QLambda.topicDataIn,[1,0,0]))
-#net.connect(generator,	finderB.getTermination('org/hanns/demonodes/pubsub/IN')) 		# connect generator to the termnation on our neural module
-
-# create ANN with 100 neurons which approximates it's input 
-A=net.make('A',neurons=200,dimensions=2,radius=8)    				# identity transformation implemented by population of neurons
-#net.connect(finderA.getOrigin('org/hanns/demonodes/pubsub/OUT'),A)	# connect the origin on our module to the network
-
-#B=net.make('B',neurons=200,dimensions=2,radius=8)    				
-#net.connect(finderB.getOrigin('org/hanns/demonodes/pubsub/OUT'),	B)						
 
 
 print 'Configuration complete.'

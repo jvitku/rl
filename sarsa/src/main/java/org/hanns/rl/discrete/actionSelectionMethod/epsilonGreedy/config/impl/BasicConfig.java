@@ -56,6 +56,5 @@ public class BasicConfig extends AbstractASMConfig implements BasicEpsilonGeedyC
 		// unused	
 		return 0; 
 	}
-
 }
 

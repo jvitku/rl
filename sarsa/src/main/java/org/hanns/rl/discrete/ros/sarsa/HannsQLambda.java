@@ -6,14 +6,23 @@ import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.nodes.HannsNode;
+
 /**
  * The same as {@link QLambda}, but here, the support for HannsNode (importance 
  * setting and quality measure) is added.
  * 
+ * The implementation of HannsNode has two main features here:
+ * <ul>
+ * <li>The methods are available as usual</li>
+ * <li>The data are accessible (subscribe-importance/publish-prosperity) in the
+ * ROS network.</li>
+ * </ul>
+ * 
  * @author Jaroslav Vitku
  *
  */
-public class HannsQLambda extends QLambda{
+public class HannsQLambda extends QLambda implements HannsNode{
 
 
 	public static final String name = "QLambda";
@@ -34,7 +43,7 @@ public class HannsQLambda extends QLambda{
 	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
-		 * Importance
+		 * Subscribe to Importance parameter
 		 */
 		Subscriber<std_msgs.Float32MultiArray> importenceSub = 
 				connectedNode.newSubscriber(topicImportance, std_msgs.Float32MultiArray._TYPE);
@@ -54,5 +63,19 @@ public class HannsQLambda extends QLambda{
 				}
 			}
 		});
+	}
+	
+	@Override
+	public float getProsperity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setImportance(float importance) {
+		logParamChange("CALLED method to chage the value IMPORTANCE",
+				((ImportanceBasedConfig)asm.getConfig()).getImportance(), importance);
+		
+		((ImportanceBasedConfig)asm.getConfig()).setImportance(importance);	
 	}
 }

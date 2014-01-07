@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.q;
 import static org.junit.Assert.fail;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.EpsilonGreedyConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actions.ActionSet;
@@ -43,7 +43,7 @@ public class FInalSarsaLambda {
 		/**
 		 * Configure ASM
 		 */
-		EpsilonGreedyConfig econf = new BasicConfig();
+		BasicEpsilonGeedyConf econf = new BasicConfig();
 		econf.setEpsilon(0.5);	//
 		econf.setExplorationEnabled(true);
 		ActionSelectionMethod<Double> asm = new EpsilonGreedyDouble(actions,econf);
@@ -111,7 +111,7 @@ public class FInalSarsaLambda {
 	private void navigate(FinalQMatrix<Double> q, int numActions,int numSteps, float[][] map, int[] startingPos){
 		ActionSet actions = new BasicFinalActionSet(numActions);
 		// use the epsilon-greedy ASM with exploration disabled
-		EpsilonGreedyConfig econf = new BasicConfig();
+		BasicEpsilonGeedyConf econf = new BasicConfig();
 		econf.setExplorationEnabled(false);
 		ActionSelectionMethod<Double> asm = new EpsilonGreedyDouble(actions, econf);
 

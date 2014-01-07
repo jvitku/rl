@@ -19,4 +19,19 @@ public interface ActionSelectionMethodConfig {
 	 */
 	public boolean getExplorationEnabled();
 
+	/**
+	 * This is similar method to the HannsNode, the more important
+	 * the solution from the algorithm is, the less
+	 * exploration (randomization) should occur here. 
+	 * @param importance value between [0,1] - 1 means no exploration
+	 */
+	public void setImportance(double importance);
+	
+	
+	/**
+	 * Call this method if some parameter was changed. The other 
+	 * parameters can be recomputed in this method
+	 * 
+	 */
+	public void fireParamChanged();
 }

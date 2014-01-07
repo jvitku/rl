@@ -1,18 +1,18 @@
 package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl;
 
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.EpsilonGreedy;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.ImportanceEpsilonGreedy;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
 /**
- * Epsilon greedy for double utility values.
+ * Importance-based Epsilon greedy for double utility values.
  * 
  * @author Jaroslav Vitku
  *
  */
-public class EpsilonGreedyDouble extends EpsilonGreedy<Double>{
+public class ImportanceEpsGreedyDouble extends ImportanceEpsilonGreedy<Double>{
 
-	public EpsilonGreedyDouble(ActionSet actions, BasicEpsilonGeedyConf config) {
+	public ImportanceEpsGreedyDouble(ActionSet actions, ImportanceBasedConfig config) {
 		super(actions, config);
 	}
 

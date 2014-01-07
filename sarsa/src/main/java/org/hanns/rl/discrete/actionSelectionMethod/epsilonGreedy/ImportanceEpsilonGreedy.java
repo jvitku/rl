@@ -5,25 +5,29 @@ import java.util.Random;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actions.ActionSet;
 
+
 /**
- * The Epsilon-Greedy action selection method weights between exploration and exploitation.
- * The parameter epsilon defines the probability of selecting action randomly with uniform distribution.
- * The action is selected according to the Greedy strategy with the probability of 1-epsilon.   
- *  
+ * The Importance-based Epsilon-Greedy action selection method is virtually the 
+ * same as the {@link org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.EpsilonGreedy}, 
+ * but this one uses the importance-based epsilon-greedy configuration.
+ * 
+ * TODO unify these two AMSs somehow
+ * 
  * @author Jaroslav Vitku
  *
  * @param <E> parameter defining the utility of actions
  */
-public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
+public abstract class ImportanceEpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
 	private boolean wasgreedy;
 	protected Random r;
 	protected ActionSet acitons;
-	protected BasicEpsilonGeedyConf config;
+	protected ImportanceBasedConfig config;
 
-	public EpsilonGreedy(ActionSet actions, BasicEpsilonGeedyConf config){
+	public ImportanceEpsilonGreedy(ActionSet actions, ImportanceBasedConfig config){
 		r = new Random();
 		this.acitons = actions;
 		this.config = config;
@@ -71,7 +75,7 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 	public ActionSet getActionSet() { return this.acitons;	}
 
 	@Override
-	public BasicEpsilonGeedyConf getConfig(){ return this.config; }
+	public ImportanceBasedConfig getConfig(){ return this.config; }
 
 	@Override
 	public void setConfig(ActionSelectionMethodConfig config){
@@ -79,7 +83,7 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 			System.err.println("EpsilonGreedy: ERROR: BasicEpsilonGeedyConf class expected");
 			return;
 		}
-		this.config = (BasicEpsilonGeedyConf)config;
+		this.config = (ImportanceBasedConfig)config;
 	}
 
 	@Override

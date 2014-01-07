@@ -1,14 +1,12 @@
 package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config;
 
-import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
-
 /**
  * Entire configuration of the algorithm.
  * 
  * @author Jaroslav Vitku
  *
  */
-public interface EpsilonGreedyConfig extends ActionSelectionMethodConfig {
+public interface BasicEpsilonGeedyConf extends EpsilonGreedyConf {
 
 	/**
 	 * <p>This ensures balance between exploitation of learned knowledge
@@ -22,17 +20,7 @@ public interface EpsilonGreedyConfig extends ActionSelectionMethodConfig {
 	 */
 	public void setEpsilon(double value);
 	
-	/**
-	 * Get the value of epsilon parameter
-	 * @return current value of the parameter
-	 */
-	public double getEpsilon();
 	
-	/**
-	 * For the future use in some adaptive epsilon value
-	 * @param min
-	 */
-	public void setMinEpsilon(double min);
-	public double getMinEpsilon(double min);
+	
 
 }

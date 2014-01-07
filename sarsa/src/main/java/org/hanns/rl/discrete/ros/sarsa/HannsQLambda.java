@@ -1,31 +1,34 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
 /**
- * Implementation of Q(lambda) RL algorithm, which is usable a ROS node.
+ * The same as {@link QLambda}, but here, the support for HannsNode (importance 
+ * setting and quality measure) is added.
  * 
  * @author Jaroslav Vitku
  *
  */
-public class QLambda extends AbstractQLambda{
+public class HannsQLambda extends QLambda{
 	
-	public static final String name = "QLambda";
-
+	public static final String name = "HannsQLambda";
+	
+	@Override
 	protected void initializeASM(double epsilon){
 		/**
 		 *  configure the ASM
 		 */
-		BasicConfig asmConf = new BasicConfig();
-		asm = new EpsilonGreedyDouble(actions, asmConf);
-		((EpsilonGreedyDouble)asm).getConfig().setEpsilon(epsilon);
+		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
+		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
+		//asm.getConfig().setEpsilon(epsilon);
 		asm.getConfig().setExplorationEnabled(true);
 	}
-
+	
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
 		 * Epsilon
@@ -47,5 +50,4 @@ public class QLambda extends AbstractQLambda{
 				}
 			}
 		});
-	}
-}
+	}}

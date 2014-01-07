@@ -14,8 +14,9 @@ public class GridWorld {
 	/**
 	 * Visualize the data in the QMatrix.
 	 * @param q Q(s,a) matrix
-	 * @param vals if true, the value of the best action will be displayed, 
-	 * if false the index of best action will be displayed 
+	 * @param what if 0, rounded values of best action will be 
+	 * displayed for each state, if 1, raw values will be displayed,
+	 * if 2, the graphical representation of actions will be shown.
 	 * @return string visualizing the matrix
 	 */
 	public static String visqm(FinalQMatrix<Double> q, int what){

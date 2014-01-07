@@ -1,5 +1,7 @@
 package org.hanns.rl.discrete.observer;
 
+import org.hanns.rl.common.Resettable;
+
 /**
  * The observer observes agents (nodes) behavior and creates some statistics
  * about it (e.g. to provide the prosperity value).
@@ -7,7 +9,7 @@ package org.hanns.rl.discrete.observer;
  * @author Jaroslav Vitku
  *
  */
-public interface Observer {
+public interface Observer extends Resettable{
 	
 	/**
 	 * SImilar to the 

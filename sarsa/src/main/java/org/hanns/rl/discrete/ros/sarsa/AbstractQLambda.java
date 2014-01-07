@@ -84,8 +84,9 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	 * Default sampling parameters, TODO: customize each variable sampling 
 	 * independently
 	 * 
-	 * Sampling is from the interval [{@link #sampleMn}, {@link #sampleMx}] with 
-	 * {@link #sampleC} of samples.
+	 * Sampling is from the interval [{@link #sampleMinConf}, 
+	 * {@link #sampleMaxConf}] with 
+	 * {@link #sampleCountConf} of samples.
 	 */
 	public static final String sampleMinConf="sampleMin",
 			sampleMaxConf="sampleMax", sampleCountConf="sampleCount";

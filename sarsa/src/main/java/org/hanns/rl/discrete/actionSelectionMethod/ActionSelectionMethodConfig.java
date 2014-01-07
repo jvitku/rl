@@ -29,7 +29,7 @@ public interface ActionSelectionMethodConfig {
 	
 	/**
 	 * Get the current value of action importance
-	 * @return
+	 * @return returns the current value of the importance
 	 */
 	public float getImportance();
 	

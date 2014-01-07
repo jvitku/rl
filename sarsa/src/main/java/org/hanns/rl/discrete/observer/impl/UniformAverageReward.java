@@ -31,4 +31,15 @@ public class UniformAverageReward implements Observer{
 		return 0;
 	}
 
+	@Override
+	public void softReset(boolean randomize) {
+		steps = 0;
+		totalReward = 0;
+	}
+
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
+	}
+
 }

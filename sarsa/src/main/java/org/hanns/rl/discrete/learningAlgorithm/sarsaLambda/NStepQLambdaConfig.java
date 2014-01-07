@@ -17,7 +17,7 @@ public interface NStepQLambdaConfig extends QLearningConfig{
 	
 	/**
 	 * Set the length of eligibility trace, how many state-action pairs to update each step
-	 * @param n number of states visited in the past
+	 * @param length number of remembered states visited in the past
 	 */
 	public void setEligibilityLength(int length);
 

@@ -50,6 +50,10 @@ public class BinaryCoverage implements Observer{
 		return visited/noStates;
 	}
 	
+	/**
+	 * Get the absolute number of visited states
+	 * @return total number of states visited so far
+	 */
 	public int getNoVisitedStates(){
 		return this.noVisited(sizes, new int[sizes.length], 0);
 	}
@@ -79,5 +83,15 @@ public class BinaryCoverage implements Observer{
 			sum = sum + noVisited(sizes, c, dimension+1);
 		}
 		return sum;
+	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		visited.setAllVals(false);
+	}
+
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
 	}
 }

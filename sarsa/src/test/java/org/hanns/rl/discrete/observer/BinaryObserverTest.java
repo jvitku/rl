@@ -49,7 +49,21 @@ public class BinaryObserverTest {
 		
 		bc.observe(-134, -12, new int[]{0,2}, -2);
 		assertTrue(bc.getNoVisitedStates()==6);	
-		assertTrue(bc.getProsperity()==6/6);	
+		assertTrue(bc.getProsperity()==6/6);
+		
+		
+		// test reset
+		bc.hardReset(false);
+		assertTrue(bc.getNoVisitedStates()==0);	
+		assertTrue(bc.getProsperity()==0);
+		
+		bc.observe(-134, -12, new int[]{0,2}, -2);
+		assertTrue(bc.getNoVisitedStates()==1);	
+		assertTrue(bc.getProsperity()==1/6);
+		
+		
 	}
+	
+	
 
 }

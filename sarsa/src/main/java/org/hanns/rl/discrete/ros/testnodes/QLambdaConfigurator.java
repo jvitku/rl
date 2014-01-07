@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
 import org.apache.commons.logging.Log;
+import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.namespace.GraphName;
@@ -16,9 +17,11 @@ import org.ros.node.topic.Publisher;
  */
 public class QLambdaConfigurator extends AbstractNodeMain{
 
-	private Publisher<std_msgs.Float32MultiArray> alphaPub, gammaPub, lambdaPub, epsilonPub;
+	private Publisher<std_msgs.Float32MultiArray> alphaPub, gammaPub, lambdaPub, 
+	epsilonPub, importancePub;
 
-	public float alpha = 0.5f, gamma = 0.3f, lambda = 0.7f, epsilon = 0.5f;
+	public float alpha = 0.5f, gamma = 0.3f, lambda = 0.7f, epsilon = 0.6f, 
+			importance = 0.5f;
 
 	public int sleeptime = 1000;
 
@@ -37,7 +40,8 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 		gammaPub= connectedNode.newPublisher(QLambda.topicGamma, std_msgs.Float32MultiArray._TYPE);
 		lambdaPub= connectedNode.newPublisher(QLambda.topicLambda, std_msgs.Float32MultiArray._TYPE);
 		epsilonPub= connectedNode.newPublisher(QLambda.topicEpsilon, std_msgs.Float32MultiArray._TYPE);
-   
+		importancePub = connectedNode.newPublisher(HannsQLambda.topicImportance, std_msgs.Float32MultiArray._TYPE);
+		
 		connectedNode.executeCancellableLoop(new CancellableLoop() {
 			private int poc;
 
@@ -63,11 +67,16 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 				mess.setData(new float[]{epsilon});
 				epsilonPub.publish(mess);
 
+				mess.setData(new float[]{importance});
+				importancePub.publish(mess);
+				
 				log.info("Step no. "+(poc++)+" Setting these vlaues:"
 						+"\nalpha="+alpha
 						+"\ngamma="+gamma
 						+"\nlambda="+lambda
-						+"\nepsilon="+epsilon);
+						+"\nepsilon="+epsilon
+						+"\nimportance="+importance);
+						
 
 				Thread.sleep(sleeptime);
 			}

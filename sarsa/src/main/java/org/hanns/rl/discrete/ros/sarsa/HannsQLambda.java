@@ -1,7 +1,6 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
@@ -15,9 +14,13 @@ import org.ros.node.topic.Subscriber;
  *
  */
 public class HannsQLambda extends QLambda{
-	
-	public static final String name = "HannsQLambda";
-	
+
+
+	public static final String name = "QLambda";
+
+	public static final String importanceConf = "importance";
+	public static final String topicImportance = ns+importanceConf;
+
 	@Override
 	protected void initializeASM(double epsilon){
 		/**
@@ -25,29 +28,31 @@ public class HannsQLambda extends QLambda{
 		 */
 		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
 		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
-		//asm.getConfig().setEpsilon(epsilon);
 		asm.getConfig().setExplorationEnabled(true);
 	}
 	
+	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
-		 * Epsilon
+		 * Importance
 		 */
-		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(name+s+epsilonConf, std_msgs.Float32MultiArray._TYPE);
+		Subscriber<std_msgs.Float32MultiArray> importenceSub = 
+				connectedNode.newSubscriber(topicImportance, std_msgs.Float32MultiArray._TYPE);
 
-		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
+		importenceSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
 				if(data.length != 1)
-					log.error("Epsilon config: Received message has " +
+					log.error("Importance input: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value Epsilon",
-							((EpsilonGreedyDouble)asm).getConfig().getEpsilon(),data[0]);
-					((EpsilonGreedyDouble)asm).getConfig().setEpsilon(data[0]);
+					logParamChange("RECEIVED chage of value IMPORTANCE",
+							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
+					
+					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
 				}
 			}
 		});
-	}}
+	}
+}

@@ -13,8 +13,6 @@ import org.ros.node.topic.Subscriber;
  *
  */
 public class QLambda extends AbstractQLambda{
-	
-	public static final String name = "QLambda";
 
 	protected void initializeASM(double epsilon){
 		/**
@@ -26,6 +24,7 @@ public class QLambda extends AbstractQLambda{
 		asm.getConfig().setExplorationEnabled(true);
 	}
 
+	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
 		 * Epsilon
@@ -41,7 +40,8 @@ public class QLambda extends AbstractQLambda{
 					log.error("Epsilon config: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value Epsilon",
+
+					logParamChange("RECEIVED chage of value EPSILON",
 							((EpsilonGreedyDouble)asm).getConfig().getEpsilon(),data[0]);
 					((EpsilonGreedyDouble)asm).getConfig().setEpsilon(data[0]);
 				}

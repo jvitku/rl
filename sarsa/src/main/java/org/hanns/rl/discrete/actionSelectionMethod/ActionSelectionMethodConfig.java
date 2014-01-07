@@ -25,7 +25,13 @@ public interface ActionSelectionMethodConfig {
 	 * exploration (randomization) should occur here. 
 	 * @param importance value between [0,1] - 1 means no exploration
 	 */
-	public void setImportance(double importance);
+	public void setImportance(float importance);
+	
+	/**
+	 * Get the current value of action importance
+	 * @return
+	 */
+	public float getImportance();
 	
 	
 	/**

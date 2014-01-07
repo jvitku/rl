@@ -14,7 +14,7 @@ public class BasicConfig extends AbstractASMConfig implements BasicEpsilonGeedyC
 
 	public static final double DEF_EPSILON = 0.5;
 	private double minEpsilon = DEF_MINEPSILON;
-	
+
 	// even in case of maximum importance, the randomization should occur  
 	public static final double DEF_MINEPSILON = 0.1;
 
@@ -42,13 +42,20 @@ public class BasicConfig extends AbstractASMConfig implements BasicEpsilonGeedyC
 		}
 	}
 
+
 	@Override
-	public void setImportance(double importance) {
+	public void fireParamChanged() {}
+
+	@Override
+	public void setImportance(float importance) {
 		// does nothing here
 	}
 
 	@Override
-	public void fireParamChanged() {}
+	public float getImportance() {
+		// unused	
+		return 0; 
+	}
 
 }
 

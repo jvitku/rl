@@ -25,7 +25,7 @@ implements ImportanceBasedEpsilonGreedyConf{
 	private double minEpsilon = DEF_MINEPSILON;
 	private boolean explorationEnabled = true;
 
-	private double importance = 0;
+	private float importance = 0;
 
 	@Override
 	public void setMinEpsilon(double min) {
@@ -47,7 +47,7 @@ implements ImportanceBasedEpsilonGreedyConf{
 	public boolean getExplorationEnabled() { return this.explorationEnabled; }
 
 	@Override
-	public void setImportance(double importance) { 
+	public void setImportance(float importance) { 
 		super.checkRange("importance", 0, 1, importance);
 		this.importance = importance;
 		this.fireParamChanged();
@@ -69,5 +69,8 @@ implements ImportanceBasedEpsilonGreedyConf{
 			epsilon = minEpsilon;
 		epsilon = rand;
 	}
+
+	@Override
+	public float getImportance() { return this.importance; }
 
 }

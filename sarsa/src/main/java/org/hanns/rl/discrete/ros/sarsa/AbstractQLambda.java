@@ -52,6 +52,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = ns+gammaConf;
 	public static final double DEF_GAMMA = 0.4;
+	
 
 	/**
 	 * Trace decay factor
@@ -148,8 +149,12 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		myLog(me+"Node configured and ready now!");
 	}
 
+	/**
+	 * Different AMSs can be used here
+	 * @param connectedNode ROS connectedNode 
+	 */
 	protected abstract void buildASMSumbscribers(ConnectedNode connectedNode);
-	
+
 	protected void performSARSAstep(float reward, float[] state){
 
 		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
@@ -290,26 +295,6 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 			}
 		});
 	}
-/*
-	protected void buildASMSumbscribers(ConnectedNode connectedNode){
-		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(name+s+epsilonConf, std_msgs.Float32MultiArray._TYPE);
-
-		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
-			@Override
-			public void onNewMessage(std_msgs.Float32MultiArray message) {
-				float[] data = message.getData();
-				if(data.length != 1)
-					log.error("Epsilon config: Received message has " +
-							"unexpected length of"+data.length+"!");
-				else{
-					logParamChange("RECEIVED chage of value Epsilon",
-							((EpsilonGreedyDouble)asm).getConfig().getEpsilon(),data[0]);
-					asm.getConfig().setEpsilon(data[0]);
-				}
-			}
-		});
-	}*/
 
 	protected void buildRLSubscribers(ConnectedNode connectedNode){
 		/**
@@ -326,7 +311,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 					log.error("Gamma config: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value Alpha",
+					logParamChange("RECEIVED chage of value ALPHA",
 							rl.getConfig().getAlpha(), data[0]);
 					rl.getConfig().setAlpha(data[0]);
 				}
@@ -347,7 +332,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 					log.error("Gamma config: Received message has" +
 							" unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value gamma",
+					logParamChange("RECEIVED chage of value GAMMA",
 							rl.getConfig().getGamma(), data[0]);
 					rl.getConfig().setGamma(data[0]);
 				}
@@ -370,7 +355,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 					log.error("Lambda config: Received message has" +
 							" unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value lambda",
+					logParamChange("RECEIVED chage of value LAMBDA",
 							rl.getConfig().getLambda(), data[0]);
 					rl.getConfig().setLambda(data[0]);
 				}

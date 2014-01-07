@@ -13,12 +13,12 @@ import org.hanns.rl.discrete.observer.Observer;
 public class BinaryCoverage implements Observer{
 
 	private final int noStates;
-	
+
 	private final int[] sizes;
-	
+
 	// uses the same data Structure as QMatrix
 	private final PreAllocatedMultiDimension<Boolean> visited;
-	
+
 	/**
 	 * Initialize with a vector of dimension sizes (that is number
 	 * of values for each variable, without actions)
@@ -29,7 +29,7 @@ public class BinaryCoverage implements Observer{
 	public BinaryCoverage(int[] varSizes){
 		visited = new PreAllocatedMultiDimension<Boolean>(varSizes, 0, false);
 		sizes = varSizes.clone();
-		
+
 		int tmp = varSizes[0];
 		for(int i=1; i<varSizes.length; i++){
 			tmp = tmp * varSizes[i];
@@ -41,15 +41,17 @@ public class BinaryCoverage implements Observer{
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction){
 		// mark visited state
 		visited.setValue(currentState, true);
+		
+		//System.out.println("binary coverage of: "+this.getProsperity()+ " no visited: "
+			//	+this.getNoVisitedStates()+" of "+this.noStates);
 	}
 
 	@Override
 	public float getProsperity() {
-		
-		int visited = this.noVisited(sizes, new int[sizes.length], 0);
-		return visited/noStates;
+		int vis = this.getNoVisitedStates();
+		return (float)vis/(float)noStates;
 	}
-	
+
 	/**
 	 * Get the absolute number of visited states
 	 * @return total number of states visited so far
@@ -57,7 +59,7 @@ public class BinaryCoverage implements Observer{
 	public int getNoVisitedStates(){
 		return this.noVisited(sizes, new int[sizes.length], 0);
 	}
-	
+
 	/**
 	 * This sums up all visited coordinates in the map. 
 	 * @param sizes number of values for each variable
@@ -66,16 +68,16 @@ public class BinaryCoverage implements Observer{
 	 * @return number of visited states
 	 */
 	private int noVisited(int[] sizes, int[] coords, int dimension){
-		
+
 		if(dimension == sizes.length){
 			if(visited.readValue(coords))
 				return 1;
 			else return 0;
 		}
-		
+
 		int sum = 0;
 		int[] c;
-		
+
 		// in this dimension (e.g. 0 on the start) call this for all childs
 		for(int i=0; i<sizes[dimension]; i++){
 			c = coords.clone(); 

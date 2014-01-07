@@ -25,11 +25,11 @@ import ctu.nengoros.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.util.SL;
 
 public abstract class AbstractQLambda extends AbstractNodeMain{
-	
+
 	public static final String name = "AbstractQLambda";
 	public final String me = "["+name+"] ";
 	public static final String s = "/";
-	
+
 	public static final String ns = name+s; // namespace for config. parameters			
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
@@ -37,7 +37,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String topicDataIn = Topic.baseIn+"States"; // inStates
 	public static final String topicDataOut = Topic.baseOut+"Actions"; // outActions
 
-	private PrivateRosparam r;
+	protected PrivateRosparam r;
 
 	/**
 	 * Learning rate
@@ -52,7 +52,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = ns+gammaConf;
 	public static final double DEF_GAMMA = 0.4;
-	
+
 
 	/**
 	 * Trace decay factor
@@ -103,7 +103,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 	public static final int DEF_LOGPERIOD =10;	// how often to log? 
 	public static final String logPeriodConf = "logPeriod";
-	private int logPeriod; 
+	protected int logPeriod; 
 
 	/**
 	 * ROS node configuration
@@ -121,7 +121,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
 	//protected EpsilonGreedyDouble asm;		// action selection methods
 	protected ActionSelectionMethod<Double> asm;		// action selection methods
-	
+
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
 
@@ -157,9 +157,12 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	protected abstract void buildASMSumbscribers(ConnectedNode connectedNode);
 
 	protected void performSARSAstep(float reward, float[] state){
+		this.decodeState(state);
+		int action = this.learn(reward);
+		this.executeAction(action);
+	}
 
-		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
-		
+	protected void decodeState(float[] state){
 		// encode the raw float[] values into state variables
 		try {
 			states.setRawData(state);
@@ -167,10 +170,19 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 			log.error(me+"ERROR: Could not encode state description into state variables");
 			e.printStackTrace();
 		}
+	}
+
+	protected int learn(float reward){
+		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
+
 		// select action, perform learning step
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
+		return action;
+	}
+
+	protected void executeAction(int action){
 		if((step++)%logPeriod==0) 
 			log.info(me+"Step: "+step+"-> responding with the following action: "
 					+SL.toStr(actionEncoder.encode(action)));
@@ -182,7 +194,6 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 		prevAction = action;
 	}
-
 	/**
 	 * Read private parameters potentially passed to the node. 
 	 */
@@ -245,7 +256,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		rl = new FinalModelNStepQLambda(states, actions.getNumOfActions(), config);
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
-	
+
 	protected void initializeASM(double epsilon){
 		/**
 		 *  configure the ASM

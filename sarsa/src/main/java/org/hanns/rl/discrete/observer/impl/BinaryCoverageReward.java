@@ -15,11 +15,11 @@ import org.hanns.rl.discrete.observer.Observer;
 public class BinaryCoverageReward implements Observer{
 
 	BinaryCoverage cover;
-	UniformAverageReward rew;
+	BinaryRewardPerStep rew;
 	
 	public BinaryCoverageReward(int[] varSizes){
 		cover = new BinaryCoverage(varSizes);
-		rew = new UniformAverageReward();
+		rew = new BinaryRewardPerStep();
 	}
 	
 	@Override
@@ -32,7 +32,12 @@ public class BinaryCoverageReward implements Observer{
 
 	@Override
 	public float getProsperity() {
-		return (cover.getProsperity()+rew.getProsperity())/2;
+		float prosperity = (cover.getProsperity()+rew.getProsperity())/2;
+		
+		System.out.println("observed: entire value: "+prosperity
+		+"  That is cover:"+cover.getProsperity()+
+				" reward/step: "+rew.getProsperity());
+		return prosperity;
 	}
 
 	@Override

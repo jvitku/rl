@@ -23,7 +23,7 @@ public class BinaryRewardPerStep implements Observer{
 	}
 
 	@Override
-	public float getProsperity() { return rewards/steps; }
+	public float getProsperity() { return (float)rewards/(float)steps; }
 
 	@Override
 	public void softReset(boolean randomize) {

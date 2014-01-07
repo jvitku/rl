@@ -2,8 +2,11 @@ package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
+import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.impl.BinaryCoverageReward;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.nodes.HannsNode;
@@ -23,13 +26,49 @@ import ctu.nengoros.nodes.HannsNode;
  *
  */
 public class HannsQLambda extends QLambda implements HannsNode{
-
-
-	public static final String name = "QLambda";
+	
+	protected Publisher<std_msgs.Float32MultiArray> prosperityPub;
 
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = ns+importanceConf;
+	
+	Observer o;	// observes the prosperity
 
+	@Override
+	protected void performSARSAstep(float reward, float[] state){
+		// store the data into the int[]states
+		super.decodeState(state);	
+		// choose action and learn about it
+		int action = super.learn(reward); 
+		// use observer to log info
+		o.observe(super.prevAction, reward, states.getValues(), action);
+		
+		System.out.println("========== obs: "+o.getProsperity());
+		
+		// execute action
+		super.executeAction(action);
+	}
+	
+	@Override
+	public void onStart(final ConnectedNode connectedNode) {
+		
+		log = connectedNode.getLog();
+
+		log.info(me+"started, parsing parameters");
+		this.parseParameters(connectedNode);
+
+		o = new BinaryCoverageReward(states.getDimensionsSizes());
+		
+		myLog(me+"initializing ROS Node IO");
+		this.buildASMSumbscribers(connectedNode);
+		this.buildEligibilitySubscribers(connectedNode);
+		this.buildRLSubscribers(connectedNode);
+		this.buildDataIO(connectedNode);
+		this.buildProsperityPublisher(connectedNode); // this is added
+		
+		myLog(me+"Node configured and ready now!");
+	}
+	
 	@Override
 	protected void initializeASM(double epsilon){
 		/**
@@ -38,6 +77,16 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
 		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
 		asm.getConfig().setExplorationEnabled(true);
+	}
+	
+	protected void buildProsperityPublisher(ConnectedNode connectedNode){
+		actionPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE); 
+	}
+	
+	protected void publishProsperity(){
+		std_msgs.Float32MultiArray fl = prosperityPub.newMessage();	
+		fl.setData(new float[]{this.getProsperity()});								
+		prosperityPub.publish(fl);
 	}
 	
 	@Override
@@ -66,10 +115,7 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	}
 	
 	@Override
-	public float getProsperity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public float getProsperity() { return o.getProsperity(); }
 
 	@Override
 	public void setImportance(float importance) {

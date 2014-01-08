@@ -226,7 +226,7 @@ public class GridWorldNode extends AbstractNodeMain{
 	private float[] encodeStateRewardMessage(float reward, int[] vars){
 		float[] f = new float[vars.length+1];
 		f[0] = reward;
-		for(int i=1; i<vars.length; i++){
+		for(int i=1; i<=vars.length; i++){
 			f[i] = stateEncoder.encode(vars[i-1]);
 		}
 		return f;

@@ -2,7 +2,9 @@ package org.hanns.rl.discrete.ros;
 
 import static org.junit.Assert.*;
 
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
+import org.hanns.rl.discrete.ros.testnodes.GridWorld;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.junit.Test;
 
@@ -41,6 +43,7 @@ public class RosInteractionVis extends RosCommunicationTest{
 		}
 		map.setSimPaused(true);
 		
+		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		
 		
 		rlr.stop();								// stop everything

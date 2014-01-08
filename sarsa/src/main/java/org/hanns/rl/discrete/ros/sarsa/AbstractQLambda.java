@@ -117,9 +117,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	/**
 	 * RL stuff
 	 */
-	protected FinalModelNStepQLambda rl;		// RL algorithm
+	public FinalModelNStepQLambda rl;		// RL algorithm
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
-	//protected EpsilonGreedyDouble asm;		// action selection methods
 	protected ActionSelectionMethod<Double> asm;		// action selection methods
 
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
@@ -175,6 +174,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	protected int learn(float reward){
 		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
 
+		System.out.println("sttttttaaaaaaaaaates : "+SL.toStr(states.getValues()));
+		
 		// select action, perform learning step
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);

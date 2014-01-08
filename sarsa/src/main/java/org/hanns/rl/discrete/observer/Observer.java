@@ -12,7 +12,7 @@ import org.hanns.rl.common.Resettable;
 public interface Observer extends Resettable{
 	
 	/**
-	 * SImilar to the 
+	 * Similar to the 
 	 * {@link org.hanns.rl.discrete.learningAlgorithm.LearningAlgorithm#performLearningStep(int, float, int[], int)},
 	 * but this does not produce any RL action, nor RL-learning. This just 
 	 * logs agents behavior. 

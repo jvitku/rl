@@ -35,7 +35,7 @@ public class BinaryCoverageReward implements Observer{
 		float prosperity = (cover.getProsperity()+rew.getProsperity())/2;
 		
 		System.out.println("observed: entire value: "+prosperity
-		+"  That is cover:"+cover.getProsperity()+
+		+"  That is cover: "+cover.getProsperity()+
 				" reward/step: "+rew.getProsperity());
 		return prosperity;
 	}

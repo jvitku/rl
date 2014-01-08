@@ -19,6 +19,8 @@ import org.hanns.rl.common.Resettable;
  * <li>get action values in a given state</li>
  * </ul>
  * 
+ * TODO split this to the QMatrix interface, which is now deleted.
+ * 
  * @author Jaroslav Vitku
  */
 public interface FinalQMatrix<E> extends Resettable{

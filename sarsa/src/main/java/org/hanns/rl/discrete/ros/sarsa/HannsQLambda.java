@@ -32,7 +32,7 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = ns+importanceConf;
 	
-	Observer o;	// observes the prosperity
+	Observer o;	// observes the prosperity of node
 
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
@@ -42,9 +42,6 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		int action = super.learn(reward); 
 		// use observer to log info
 		o.observe(super.prevAction, reward, states.getValues(), action);
-		
-		System.out.println("========== obs: "+o.getProsperity());
-		
 		// execute action
 		super.executeAction(action);
 	}

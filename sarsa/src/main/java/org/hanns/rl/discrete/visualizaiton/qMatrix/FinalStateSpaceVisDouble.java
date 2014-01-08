@@ -26,5 +26,13 @@ public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 	protected boolean better(Double a, Double b) {
 		return a.doubleValue()>b.doubleValue();
 	}
+
+	@Override
+	public Double round(Double what, int how){
+		int rd = (int)(what*how);
+		double d = (double)rd;
+		return d/how;
+	}
+
 	
 }

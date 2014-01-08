@@ -25,7 +25,8 @@ public interface Visualizer extends Resettable {
 
 	/**
 	 * Set how often to update the visualization.
-	 * @param period How often to update visualization, 1 means every simulation step
+	 * @param period How often to update visualization, 1 means every simulation step, 
+	 * -1 means no visualization
 	 */
 	public void setVisPeriod(int period);
 	

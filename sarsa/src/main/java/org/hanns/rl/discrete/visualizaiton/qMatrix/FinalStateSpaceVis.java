@@ -30,10 +30,12 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	public static final int DEF_SILENT = 0;
 
 	public static final int DEF_VISPERIOD = 20; // visualize each 20 steps by default
+	public static final int ROUNDTO = 1000;	
 
 	public static final String NO_ACTION = ".";
 	public static final String NO_VALUE = ".";
 	public static final String SEPARATOR = "\t";
+	public static final String LINE = "\t------------------------";
 
 	private final int[] dimSizes;
 	protected final int noActions;
@@ -49,7 +51,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 		this.dimSizes = dimSizes.clone();
 		this.noActions = noActions;
 		this.q = q;
-		this.type = 0;
+		this.type = 1;
 
 		this.softReset(false);
 	}
@@ -57,11 +59,12 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 
 	@Override
 	public void performStep(int prevAction, float reward, int[] currentState, int futureAction) {
+		if( this.visPeriod<0 )
+			return;
 		if(! (step++ % visPeriod==0 ) )
 			return;
 
 		System.out.println("Visalization, step no: "+step+"\n"+this.visualize());
-
 	}
 
 	private String visualize(){
@@ -73,40 +76,79 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 
 		// while there is still something to iterate
 		while(true){
+
+			out = out + LINE+" these dimensions of Q matrix are displayed: "
+					+this.writeDims(coords);
+
 			// the y dimension, from the biggest index towards 0 
-			for(int j=dimSizes[1]-1; j>0; j--){
+			for(int j=dimSizes[1]-1; j>=0; j--){
 				coords[1] = j;
+				out = out + "\n"+j+"\t| ";
 				// the x dimension, from the left to right, from 0 towards end
 				for(int i=0; i<dimSizes[0]; i++){
 					coords[0] = i;
+					String sep;
+					if(i==0){
+						sep="";
+					}else
+						sep=SEPARATOR;
 
 					// visualize values?
 					if(type==0){
 						if(!this.foundNonZero(q.getActionValsInState(coords))){
-							out = out + SEPARATOR + NO_ACTION;
+							out = out + sep + NO_ACTION;
 						}else{
 							int ind = this.getMaxActionInd(coords);
-							out = out + SEPARATOR + ind;
+							out = out + sep + ind;
 						}
 						// visualize indexes?
 					}else{
 						if(!this.foundNonZero(q.getActionValsInState(coords))){
-							out = out + SEPARATOR + NO_VALUE;
+							out = out + sep + NO_VALUE;
 						}else{
 							int ind = this.getMaxActionInd(coords);
-							out = out + SEPARATOR + q.getActionValsInState(coords)[ind];
+							out = out + sep + this.round(q.getActionValsInState(coords)[ind],ROUNDTO);
 						}
 					}
 				}
+			}
+			// append X axis
+			out = out+"\nY \t_____";
+			for(int i=1; i<dimSizes[0]; i++){
+				out = out +SEPARATOR+ "______";
+			}
+			out = out +"\n   X \t 0";
+			for(int i=1; i<dimSizes[0]; i++){
+				out = out +SEPARATOR+ i;
 			}
 			coords = dc.next();
 			if(coords==null)
 				break;
 		}
 
-		return out;
+		//return out+"\n"+LINE+LINE+"\n";
+		return out+"\n";
 	}
 
+	/**
+	 * Round the value to a given number of places
+	 * @param what what to round
+	 * @param how how big precision 
+	 * @return rounded value
+	 */
+	public abstract E round(E what, int how);
+	
+	private String writeDims(int[] dims){
+		if(dims.length==1)
+			return "[x]";
+		if(dims.length==2)
+			return "[x,y]";
+		String out = "[x,y,";
+		for(int i=2; i<dims.length; i++){
+			out = out + dims[i];
+		}
+		return out+"]";
+	}
 
 	private int getMaxActionInd(int[] coordinates){
 		E[] vals = q.getActionValsInState(coordinates);
@@ -147,9 +189,9 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 
 	@Override
 	public void setVisPeriod(int period) {
-		if(period<=0){
-			System.err.println("FinalStateSpaceVis: ERROR: will not set negative or zero vis. period");
-			period = 1;
+		if(period<-1){
+			System.err.println("FinalStateSpaceVis: ERROR: period lower than -1, will disable vis.");
+			period = -1;
 		}
 		this.visPeriod = period;
 	}
@@ -210,6 +252,9 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 		 */
 		public int[] next(){
 
+			if(currentDim==dimSizes.length)
+				return null;
+
 			// can add index to this dimension?
 			if(coords[currentDim] < dimSizes[currentDim]-1){
 				// use the new index, return new coords.
@@ -225,20 +270,6 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 				// not out of range, so return coords.
 				return coords;
 			}
-
-			//int dim = 2; // ignore first two dims
-			/*
-			// while the entire dimension is exploited 
-			while(coords[dim]==dimSizes[dim]){
-				// last dimension and is exploited already? quit.
-				if(dim==dimSizes.length-1){
-					return null;
-				}
-				dim++;
-			}
-			// found first not entirely exploited dimension, increase the index
-			coords[dim]++;
-			return coords;*/
 		}
 
 		public int[] getCurrentCoords(){

@@ -53,7 +53,7 @@ public class GridWorldNode extends AbstractNodeMain{
 	public static final String sizexConf = "sizex"; // only one size supported so far
 	public static final String sizeyConf = "sizey";
 
-	public static final int DEF_LOGPERIOD =10;			// how often to log, each 10 sim steps? 
+	public static final int DEF_LOGPERIOD =50;			// how often to log, each 10 sim steps? 
 	public static final String logPeriodConf = "logPeriod";
 
 
@@ -65,6 +65,7 @@ public class GridWorldNode extends AbstractNodeMain{
 	// whether some message from an agent received in the past 1000ms
 	private boolean dataExchanged = false;
 	private int step;
+	private boolean simPaused = false;
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -180,6 +181,27 @@ public class GridWorldNode extends AbstractNodeMain{
 		});
 	}
 
+	/**
+	 * Get the current simulation step.
+	 * @return current simulation step
+	 */
+	public int getStep(){ return this.step; }
+	
+	/**
+	 * THe simulation can be paused, during the paused simulation, the mapNode (this)
+	 * is not responding with new state(reward) to a client (RL node). The simulation 
+	 * can be resumed by the method {@link #setSimPaused(boolean)}.
+	 * @return true if the simulation is not running
+	 */
+	public boolean getSimPaused(){ return this.simPaused; }
+	
+	/**
+	 * Pause/resume the simulation
+	 * @param paused true if the simulation should be paused
+	 */
+	public void setSimPaused(boolean paused){ this.simPaused = paused; }
+	
+	
 	private void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
 

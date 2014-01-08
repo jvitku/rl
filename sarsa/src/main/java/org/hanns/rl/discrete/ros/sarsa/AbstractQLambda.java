@@ -77,7 +77,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	/**
 	 * Number of actions that can be performed by the RL ASM (coding 1ofN)
 	 */
-	public static final String noOutputsConf = "noOutputsConf";
+	public static final String noOutputsConf = "noOutputs";
 	public static final int DEF_NOACTIONS = 4;
 
 	/**
@@ -234,7 +234,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		states = new BasicFinalStateSet(vars);
 
 		/**
-		 * build action set & action encoder
+		 * Build the action set & action encoder
 		 */
 		String[] names = new String[noActions];
 		for(int i=0; i<noActions; i++)

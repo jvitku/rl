@@ -1,5 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
+import java.util.LinkedList;
+
 import org.apache.commons.logging.Log;
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
@@ -138,6 +140,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		log = connectedNode.getLog();
 
 		log.info(me+"started, parsing parameters");
+		this.addParams();
 		this.parseParameters(connectedNode);
 
 		myLog(me+"initializing ROS Node IO");
@@ -193,6 +196,32 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 		prevAction = action;
 	}
+	
+	/**
+	 * This is just for future listing of parameters that
+	 * can be used (e.g. on launch). 
+	 */
+	protected void addParams(){
+		this.addParam(noInputsConf, ""+DEF_STATEVARS,"Number of state variables");
+		this.addParam(sampleCountConf, ""+DEF_COUNT, "Number of samples for variables, that is: number of values!");
+		this.addParam(sampleMinConf, ""+DEF_MIN,"Min. value on the state input");
+		this.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
+		this.addParam(noOutputsConf, ""+DEF_NOACTIONS,"Number of actions available to the agent (1ofN coded)");
+		
+		
+		this.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
+		this.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
+		this.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
+		this.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
+		this.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
+		this.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
+		this.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
+
+		String intro = "---------------------- Available parameters are: ";
+		String outro = "------------------------------------------------";
+		System.out.println(intro+"\n"+this.listParams()+"\n"+outro);
+	}
+	
 	/**
 	 * Read private parameters potentially passed to the node. 
 	 */
@@ -393,5 +422,43 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 			return;
 		log.info(message+" Value is being changed from: "+oldVal+" to "+newVal);
 	}
-
+	
+	/**
+	 * This is temporary solution for the missing paramManager (above)
+	 * in the Jroscore.
+	 * 
+	 * @return
+	 */
+	public String listParams(){
+		String out = null;
+		Param[] p = new Param[params.size()];
+		p = params.toArray(p);
+		for(int i=0; i<p.length; i++){
+			if(out ==null){
+				out = p[i].name+":="+p[i].def+"\t\t"+p[i].descr;
+			}else{
+				out = out +"\n"+p[i].name+":="+p[i].def+"\t\t"+p[i].descr;
+			}
+		}
+		return out;
+	}
+	
+	protected LinkedList<Param> params;
+	
+	protected void addParam(String name, String def, String descr){
+		if(params == null)
+			params = new LinkedList<Param>();
+		params.add(new Param(name, descr, def));
+	}
+	
+	private class Param{
+		public final String name;
+		public final String descr;
+		public final String def;
+		public Param(String name, String descr, String def){
+			this.name = "_"+name;
+			this.descr = descr;
+			this.def = def;
+		}
+	}
 }

@@ -1,7 +1,5 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
-import java.util.LinkedList;
-
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.observer.Observer;
@@ -37,8 +35,6 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	
 	Observer o;	// observes the prosperity of node
 	
-	LinkedList<ParamDescription> params;
-
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
 		// store the data into the int[]states
@@ -55,7 +51,8 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	public void onStart(final ConnectedNode connectedNode) {
 		
 		log = connectedNode.getLog();
-
+		
+		this.addParams();
 		log.info(me+"started, parsing parameters");
 		this.parseParameters(connectedNode);
 
@@ -134,4 +131,6 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		System.err.println("This feature is still TODO");
 		return null;
 	}
+	
+	
 }

@@ -23,7 +23,7 @@ public class HannsQLambdaVis extends HannsQLambda{
 		this.visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
 		
-		visualization.setVisPeriod(10);
+		visualization.setVisPeriod(this.logPeriod);
 		visualization.setTypeVisualization(0);
 	}
 

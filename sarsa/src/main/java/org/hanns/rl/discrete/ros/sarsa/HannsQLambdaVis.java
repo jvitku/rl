@@ -23,16 +23,25 @@ public class HannsQLambdaVis extends HannsQLambda{
 		// initialize the visualizer
 		this.visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
+		
+		visualization.setVisPeriod(10);
 	}
 
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
-		this.decodeState(state);
-		int action = this.learn(reward);
-		this.executeAction(action);
+		// store the data into the int[]states
+		super.decodeState(state);	
+		// choose action and learn about it
+		int action = super.learn(reward); 
+		// use observer to log info
+		o.observe(super.prevAction, reward, states.getValues(), action);
+		
+		o.getProsperity();
+		
+		// execute action
+		super.executeAction(action);
 		
 		this.visualization.performStep(prevAction, reward, states.getValues(), action);
-		
 	}
 	
 	public Visualizer getVisualizer(){

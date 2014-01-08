@@ -167,6 +167,9 @@ public class GridWorldNode extends AbstractNodeMain{
 						fl.setData(encodeStateRewardMessage(reward,newState));								
 						statePublisher.publish(fl);	// send a response with reinforcement and new state 
 
+						System.out.println(me+"Responding with this state "+SL.toStr(newState)+
+								" .. that is "+SL.toStr(encodeStateRewardMessage(reward,newState)));
+						
 						state = newState.clone();
 						
 						if((step++)%logPeriod==0)

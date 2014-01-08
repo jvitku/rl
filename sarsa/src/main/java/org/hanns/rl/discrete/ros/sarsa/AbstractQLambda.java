@@ -34,7 +34,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
 
-	public static final String topicDataIn = Topic.baseIn+"States"; // inStates
+	public static final String topicDataIn  = Topic.baseIn+"States"; // inStates
 	public static final String topicDataOut = Topic.baseOut+"Actions"; // outActions
 
 	protected PrivateRosparam r;
@@ -129,7 +129,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	protected int prevAction;					// index of the last action executed
 
 	protected int step = 0;
-
+	
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
@@ -255,6 +255,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		rl = new FinalModelNStepQLambda(states, actions.getNumOfActions(), config);
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
+	
 
 	protected void initializeASM(double epsilon){
 		/**

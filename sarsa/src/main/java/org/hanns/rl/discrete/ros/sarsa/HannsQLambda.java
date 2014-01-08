@@ -1,5 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
+import java.util.LinkedList;
+
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.observer.Observer;
@@ -10,6 +12,7 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.nodes.HannsNode;
+import ctu.nengoros.nodes.ParamDescription;
 
 /**
  * The same as {@link QLambda}, but here, the support for HannsNode (importance 
@@ -33,6 +36,8 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	public static final String topicImportance = ns+importanceConf;
 	
 	Observer o;	// observes the prosperity of node
+	
+	LinkedList<ParamDescription> params;
 
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
@@ -120,5 +125,13 @@ public class HannsQLambda extends QLambda implements HannsNode{
 				((ImportanceBasedConfig)asm.getConfig()).getImportance(), importance);
 		
 		((ImportanceBasedConfig)asm.getConfig()).setImportance(importance);	
+	}
+	
+	@Override
+	public ParamDescription[] getParams() {
+		// TODO parse parameters from the XML file, auto-generate
+	// jython script
+		System.err.println("This feature is still TODO");
+		return null;
 	}
 }

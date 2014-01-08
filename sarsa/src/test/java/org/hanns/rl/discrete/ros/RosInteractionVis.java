@@ -38,7 +38,7 @@ public class RosInteractionVis extends RosCommunicationTest{
 		
 		
 		// simulate 2000 steps
-		while(map.getStep() < 500){
+		while(map.getStep() < 50000){
 			sleep(100);
 		}
 		map.setSimPaused(true);

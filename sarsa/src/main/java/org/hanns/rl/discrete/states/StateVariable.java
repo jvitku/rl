@@ -47,4 +47,10 @@ public interface StateVariable {
 	 */
 	public int getNumValues();
 	
+	/**
+	 * Get the encoder used by this variable to encode/decode the data from/to raw.
+	 * @return encoder used by this variable
+	 */
+	public VariableEncoder getEncoder();
+	
 }

@@ -44,4 +44,7 @@ public class BasicStateVariable implements StateVariable{
 	@Override
 	public int getNumValues() { return enc.getNumValues(); }
 
+	@Override
+	public VariableEncoder getEncoder() { return this.enc; }
+
 }

@@ -22,6 +22,14 @@ public class RosInteractionVis extends RosCommunicationTest{
 	public static final String[] rl = new String[]{
 		RL,"_importance:=0","_noOutputs:=4","_noInputs:=2","_sampleCount:=10"};
 	
+	/**
+	 * The tests does the following:
+	 * -runs the RL node and MAP node
+	 * -simulates agents interaction with the environment and logs it prosperity
+	 * -after 10 000 steps, the agent should have explored the entire map
+	 * -this information is contained in the prosperity value
+	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void runMapAndRL(){
 		RosRunner rlr = super.runNode(rl);		// run the RL
@@ -38,13 +46,17 @@ public class RosInteractionVis extends RosCommunicationTest{
 		
 		
 		// simulate 2000 steps
-		while(map.getStep() < 50000){
+		while(map.getStep() < 10000){
 			sleep(100);
 		}
 		map.setSimPaused(true);
 		
-		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
+		// prosperity is measured here 50/50 of:
+		// binary coverage: how many tales of the map agent visited (has to be 1.0)
+		// binary reward per step: typically something like 0.0115
+		assertTrue(rl.getProsperity()>0.5);
 		
+		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		
 		rlr.stop();								// stop everything
 		mapr.stop();

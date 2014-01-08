@@ -45,13 +45,13 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	private int details = DEF_DETAILS; 
 
 	private int step;
-	private int type; // 0 means rounded values, 1 means numbers of actions
+	private int type; // 0 means numbers of actions, 1 means rounded values
 
 	public FinalStateSpaceVis(int[] dimSizes, int noActions, FinalQMatrix<E> q){
 		this.dimSizes = dimSizes.clone();
 		this.noActions = noActions;
 		this.q = q;
-		this.type = 1;
+		this.type = 0;
 
 		this.softReset(false);
 	}
@@ -161,6 +161,10 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 		return ind;
 	}
 
+	/**
+	 * Set the type of visualization
+	 * @param type  0 means numbers of actions, 1 means rounded values
+	 */
 	public void setTypeVisualization(int type){
 		if(type == 0 || type ==1){
 			this.type = type;

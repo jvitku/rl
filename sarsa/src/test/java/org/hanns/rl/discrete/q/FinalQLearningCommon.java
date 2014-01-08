@@ -146,7 +146,7 @@ public class FinalQLearningCommon {
 			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
 			prevAction = action;							// prepare action to be executed
 			
-			if(i%1000==0){
+			if(i % 1000==0){
 				System.out.println("step "+i);
 			}
 		}
@@ -156,8 +156,8 @@ public class FinalQLearningCommon {
 		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, 4, map, new int[]{5,5}); // not entire map is explored
-		this.navigate(q, 4, 4, map, new int[]{7,6});	 
+		this.navigate(q, 4, 5, map, new int[]{5,5}); // not entire map is explored
+		this.navigate(q, 4, 5, map, new int[]{7,6});	 
 	}
 	
 	/**

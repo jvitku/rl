@@ -15,7 +15,6 @@ public class HannsQLambdaVis extends HannsQLambda{
 
 	private FinalStateSpaceVisDouble visualization;
 
-
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		super.onStart(connectedNode);
@@ -25,6 +24,7 @@ public class HannsQLambdaVis extends HannsQLambda{
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
 		
 		visualization.setVisPeriod(10);
+		visualization.setTypeVisualization(0);
 	}
 
 	@Override

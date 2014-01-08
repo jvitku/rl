@@ -41,7 +41,7 @@ public class VariableEncoderTest {
 		
 		assertTrue(enc.decode((float)0.89)==8);
 		assertTrue(enc.encode(8)==0.8f);
-		assertTrue(enc.decode((float)0.9)==8);	// well float
+		assertTrue(enc.decode((float)0.9)==9);	
 		
 		assertTrue(enc.decode((float)0.91)==9);
 		assertTrue(enc.decode((float)0.99)==9);

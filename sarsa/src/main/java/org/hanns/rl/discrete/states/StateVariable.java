@@ -22,6 +22,12 @@ public interface StateVariable {
 	 * @return encoded value of the variable (used by algorithms)
 	 */
 	public int getVal();
+	
+	/**
+	 * Set the value, this also encodes the value into the raw value.
+	 * @param value value in the range of values [0,numValues-1]
+	 */
+	public void setVal(int value);
 
 	
 	/**
@@ -51,6 +57,6 @@ public interface StateVariable {
 	 * Get the encoder used by this variable to encode/decode the data from/to raw.
 	 * @return encoder used by this variable
 	 */
-	public VariableEncoder getEncoder();
+	//public VariableEncoder getEncoder();
 	
 }

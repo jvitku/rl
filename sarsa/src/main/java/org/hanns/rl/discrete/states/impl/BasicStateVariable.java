@@ -44,7 +44,21 @@ public class BasicStateVariable implements StateVariable{
 	@Override
 	public int getNumValues() { return enc.getNumValues(); }
 
-	@Override
-	public VariableEncoder getEncoder() { return this.enc; }
+	//@Override
+	//public VariableEncoder getEncoder() { return this.enc; }
 
+	@Override
+	public void setVal(int value) {
+		/*
+		if(value > enc.getNumValues() || value < 0){
+			System.err.println("BasicStateVariable: ERROR: value ("+value+
+					") out of range, range is: [0,"+enc.getNumValues()+"] "
+					+" ignoring!");
+			return;
+		}*/
+		
+		this.val = value;
+		this.rawval = this.enc.encode(val);
+	}
 }
+

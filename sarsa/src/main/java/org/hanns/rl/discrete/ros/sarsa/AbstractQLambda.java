@@ -184,7 +184,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	}
 
 	protected void executeAction(int action){
-		if((step++)%logPeriod==0) 
+		if((step++) % logPeriod==0) 
 			log.info(me+"Step: "+step+"-> responding with the following action: "
 					+SL.toStr(actionEncoder.encode(action)));
 

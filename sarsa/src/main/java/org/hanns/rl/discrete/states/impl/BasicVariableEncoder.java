@@ -11,6 +11,8 @@ import org.hanns.rl.discrete.states.VariableEncoder;
  */
 public class BasicVariableEncoder implements VariableEncoder{
 
+	public static final double DEF_TOL = 0.00001;
+	
 	private final int numValues;
 	private final double from, to;
 
@@ -61,20 +63,46 @@ public class BasicVariableEncoder implements VariableEncoder{
 		double val = from;
 		int result = 0;
 
-		while((val+step) <= raww){	// count steps until the value is overshot
+		while( this.toleranceLessEqual((val+step),raww, DEF_TOL)){	
+		//while((val+step) <= raww){	// count steps until the value is overshot (did not work)
 			val += step;
 			result++;
 		}
 		return result;
 	}
 	
+	/**
+	 * This operation is similar to <=, but this operation 
+	 * is computed with a given tolerance (e.g. 7 <= 0.69999 is true)
+	 * Equation computed is therefore return: 
+	 * (leq <= what+tolerance) || (leq <=what-tolerance)
+	 * 
+	 * @param leq value that is tested to be less or equal
+	 * @param what value to be leq compared with
+	 * @param tolerance tolerance of operation
+	 * @return true if the equation is true
+	 */
+	private boolean toleranceLessEqual(double leq, double what, double tolerance){
+		
+		return(leq <= what+tolerance || leq <=what-tolerance);
+		
+	}
 	
 	@Override
 	public int getNumValues() { return this.numValues; }
 
 	@Override
 	public float encode(int value) {
-		return (float) (from+value*step);
+		if(value < 0)
+			return (float) from;
+		
+		//double vl = value; // this makes difference
+		int vl = value;
+		
+		float val = (float) (from+vl*step);
+		if(val > to)
+			return (float) to;
+		return val;
 	}
 
 	@Override
@@ -82,6 +110,5 @@ public class BasicVariableEncoder implements VariableEncoder{
 
 	@Override
 	public double getMaxRaw() {return to; }
-
 
 }

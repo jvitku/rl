@@ -62,7 +62,7 @@ public class FInalSarsaLambda {
 		 * Configure the simulation
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
-		int numsteps = 500;
+		int numsteps = 1000;
 		int action, prevAction;
 		float reward;
 
@@ -94,8 +94,8 @@ public class FInalSarsaLambda {
 		System.out.println(GridWorld.vis(map));
 
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, 4, map, new int[]{5,5}); // not entire map is explored
-		this.navigate(q, 4, 4, map, new int[]{7,6});	 
+		this.navigate(q, 4, 5, map, new int[]{5,5}); // not entire map is explored
+		this.navigate(q, 4, 5, map, new int[]{7,6});	 
 	}
 
 	/**

@@ -11,10 +11,10 @@ from ctu.nengoros.comm.nodeFactory import NodeGroup as NodeGroup
 from ctu.nengoros.comm.rosutils import RosUtils as RosUtils
 from ctu.nengoros.modules.impl import DefaultNeuralModule as NeuralModule
 
-from org.hanns.rl.discrete.ros.sarsa import QLambda
+from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVis as QLambda
 
 # java classes
-node = "org.hanns.rl.discrete.ros.sarsa.QLambda"
+node = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
 
 # Synchronous NeuralModule implementing QLambda algorithm
 def qlambda(name, noStateVars=2, noActions=4):

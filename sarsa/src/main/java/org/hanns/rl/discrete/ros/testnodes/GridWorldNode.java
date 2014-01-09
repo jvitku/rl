@@ -18,6 +18,7 @@ import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.nodes.HannsNode;
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
+import ctu.nengoros.rosparam.manager.ParamListTmp;
 import ctu.nengoros.util.SL;
 
 /**
@@ -67,6 +68,8 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	private boolean dataExchanged = false;
 	private int step;
 	private boolean simPaused = false;
+	
+	protected ParamListTmp paramList;			// parameter storage
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -83,6 +86,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 				+ "\n-Response is composed as follows: [float reward, float varX, float varY]\n\n");
 
 		this.parseParameters(connectedNode);
+		this.printParams();
 		log.info(me+"Parameters parsed, creating the map of size: "+sizex+"x"+sizey+"\n\n");
 
 		this.registerROSCommunication(connectedNode);
@@ -208,11 +212,18 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	
 	private void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
-
+		paramList = new ParamListTmp();
+		
+		
 		// parse size of the map 
 		sizex = r.getMyInteger(sizexConf, DEF_SIZEX);
-		sizey = r.getMyInteger(sizeyConf, DEF_SIZEY);
+		//sizey = r.getMyInteger(sizeyConf, DEF_SIZEY); 
+		sizey = sizex; // TODO allow different sampling periods in the RL algorithm
 
+		paramList.addParam(sizexConf, ""+DEF_SIZEX, "Currently, only square maps are supported, "
+				+ "therefore this defines the size of map");
+		
+		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log data to console?");
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
 	}
 
@@ -233,14 +244,17 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		return f;
 	}
 
+	protected void printParams(){
+		String intro = "---------------------- Available parameters are: ";
+		String outro = "------------------------------------------------";
+		System.out.println(intro+"\n"+paramList.listParams()+"\n"+outro);
+	}
+	
 	@Override
 	public float getProsperity() { return 1; } // TODO, service provides should not have prosperity?
 
 	@Override
-	public String listParams() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public String listParams() { return this.paramList.listParams(); }
 
 	@Override
 	public void setImportance(float arg0) { } // TODO, service providers should have importance?

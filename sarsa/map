@@ -40,4 +40,4 @@ ROSJAVA=$RJ/rosjava/$CL/:$RJ/apache_xmlrpc_client/$CL/:$RJ/apache_xmlrpc_common/
 
 #java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun org.hanns.demonodes.time.pubsub.Sub $0 $1 $2 $3 $4
 
-java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun "org.hanns.rl.discrete.ros.testnodes.GridWorldNode"
+java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun "org.hanns.rl.discrete.ros.testnodes.GridWorldNode" $0 $1 $2 $3 $4

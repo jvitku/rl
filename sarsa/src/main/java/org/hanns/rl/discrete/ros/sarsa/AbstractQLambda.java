@@ -211,7 +211,6 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		paramList.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
 		paramList.addParam(noOutputsConf, ""+DEF_NOACTIONS,"Number of actions available to the agent (1ofN coded)");
 		
-		
 		paramList.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
 		paramList.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
@@ -220,12 +219,6 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
 		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
 	}
-	
-	/*
-	@Override
-	public String listParams(){
-		return paramList.listParams();
-	}*/
 	
 	protected void printParams(){
 		String intro = "---------------------- Available parameters are: ";

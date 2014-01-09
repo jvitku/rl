@@ -68,6 +68,8 @@ public class BasicVariableEncoder implements VariableEncoder{
 			val += step;
 			result++;
 		}
+		if(result > numValues-1)
+			result = numValues-1;
 		return result;
 	}
 	

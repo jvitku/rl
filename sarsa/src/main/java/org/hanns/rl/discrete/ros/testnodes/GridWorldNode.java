@@ -33,23 +33,23 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	public static final String name = "GridWorldNode";
 	public final String me = "["+name+"] ";
 
-	private PrivateRosparam r;
+	protected PrivateRosparam r;
 
 	public static final String shouldLog = "shouldLog";
 	public static final boolean DEF_LOG = true;
 
-	private Log log;
-	private Publisher<std_msgs.Float32MultiArray> statePublisher;
+	protected Log log;
+	protected Publisher<std_msgs.Float32MultiArray> statePublisher;
 	//private Publisher<std_msgs.Float32MultiArray> actionSubscriber;
 
-	private float[][] map;		// map of rewards
-	private int sizex, sizey;	// default dimensions of the map
-	private int logPeriod;		// how often to log
-	private int[] state;		// current state
+	protected float[][] map;		// map of rewards
+	protected int sizex, sizey;	// default dimensions of the map
+	protected int logPeriod;		// how often to log
+	protected int[] state;		// current state
 
-	private final int noActions = 4;	// 4 actions -> {<,>,^,v}
+	protected final int noActions = 4;	// 4 actions -> {<,>,^,v}
 	//private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
-	private final float mapReward = 15;	// how much reward agent receives?
+	protected final float mapReward = 15;	// how much reward agent receives?
 
 	public static final int DEF_SIZEX =10, DEF_SIZEY=10;
 	public static final String sizexConf = "sizex"; // only one size supported so far
@@ -59,15 +59,15 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	public static final String logPeriodConf = "logPeriod";
 
 
-	private BasicVariableEncoder stateEncoder;
-	private double rangeFrom = 0, rangeTo = 1;
-	private OneOfNEncoder actionEncoder;
-	private final ActionSet actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
+	protected BasicVariableEncoder stateEncoder;
+	protected double rangeFrom = 0, rangeTo = 1;
+	protected OneOfNEncoder actionEncoder;
+	protected final ActionSet actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
 
 	// whether some message from an agent received in the past 1000ms
-	private boolean dataExchanged = false;
-	private int step;
-	private boolean simPaused = false;
+	protected boolean dataExchanged = false;
+	protected int step;
+	protected boolean simPaused = false;
 	
 	protected ParamListTmp paramList;			// parameter storage
 
@@ -99,7 +99,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		this.waitForConnections(connectedNode);
 	}
 
-	private void initData(){
+	protected void initData(){
 		// create map, place the reinforcements
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
 		map[2][2] = mapReward;	// place reward on the map
@@ -118,7 +118,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	 * 
 	 * @param connectedNode
 	 */
-	private void waitForConnections(ConnectedNode connectedNode){
+	protected void waitForConnections(ConnectedNode connectedNode){
 		connectedNode.executeCancellableLoop(new CancellableLoop() {
 			@Override
 			protected void setup() {}
@@ -136,7 +136,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		});
 	}
 
-	private void registerROSCommunication(ConnectedNode connectedNode){
+	protected void registerROSCommunication(ConnectedNode connectedNode){
 
 		/**
 		 * State publisher - connect to the input-data topic of (.e.g.) QLambda
@@ -210,7 +210,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	public void setSimPaused(boolean paused){ this.simPaused = paused; }
 	
 	
-	private void parseParameters(ConnectedNode connectedNode){
+	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
 		paramList = new ParamListTmp();
 		
@@ -235,7 +235,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	 * @param vars list of state variables
 	 * @return vector of float values from the range between 0 and 1
 	 */
-	private float[] encodeStateRewardMessage(float reward, int[] vars){
+	protected float[] encodeStateRewardMessage(float reward, int[] vars){
 		float[] f = new float[vars.length+1];
 		f[0] = reward;
 		for(int i=1; i<=vars.length; i++){

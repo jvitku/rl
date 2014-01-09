@@ -4,6 +4,7 @@ import org.hanns.rl.discrete.observer.Observer;
 import org.hanns.rl.discrete.visualizaiton.Visualizer;
 import org.hanns.rl.discrete.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
 import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Publisher;
 
 import ctu.nengoros.util.SL;
 
@@ -16,14 +17,18 @@ import ctu.nengoros.util.SL;
  */
 public class HannsQLambdaVis extends HannsQLambda{
 
-	private FinalStateSpaceVisDouble visualization;
-
+	protected FinalStateSpaceVisDouble visualization;
+	protected Publisher<std_msgs.Float32MultiArray> prospPublisher;
+	public static final String topicProsperity = ns+"prosperity";
+	
 	SL sl;
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		super.onStart(connectedNode);
-
+		
+		this.registerProsperityPublisher(connectedNode);
+		
 		sl = new SL("filex");
 		sl.printToFile(true);
 
@@ -44,10 +49,9 @@ public class HannsQLambdaVis extends HannsQLambda{
 		// use observer to log info
 		o.observe(super.prevAction, reward, states.getValues(), action);
 
-		o.getProsperity();
-
 		// execute action
 		super.executeAction(action);
+		this.publishProsperity();
 
 		if(this.visualization!=null)
 			this.visualization.performStep(prevAction, reward, states.getValues(), action);
@@ -67,6 +71,16 @@ public class HannsQLambdaVis extends HannsQLambda{
 		if(step%logPeriod ==0)
 			SL.sinfol(step+" "+o.getProsperity()+" \tcoverage:"+childs[0].getProsperity()
 				+" \treward/step:"+childs[1].getProsperity()); // log data
+	}
+	
+	protected void registerProsperityPublisher(ConnectedNode connectedNode){
+		prospPublisher =connectedNode.newPublisher(topicProsperity, std_msgs.Float32MultiArray._TYPE);
+	}
+	
+	protected void publishProsperity(){
+		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();	
+		fl.setData(new float[]{o.getProsperity()});								
+		prospPublisher.publish(fl);
 	}
 
 }

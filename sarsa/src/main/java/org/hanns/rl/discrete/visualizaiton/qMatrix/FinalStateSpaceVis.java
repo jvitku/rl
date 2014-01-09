@@ -30,7 +30,9 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	public static final int DEF_SILENT = 0;
 
 	public static final int DEF_VISPERIOD = 20; // visualize each 20 steps by default
-	public static final int ROUNDTO = 1000;	
+	public static final int ROUNDTO = 1000;
+	
+	private final boolean useRounding = true;
 
 	public static final String NO_ACTION = ".";
 	public static final String NO_VALUE = ".";
@@ -107,7 +109,10 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 							out = out + sep + NO_VALUE;
 						}else{
 							int ind = this.getMaxActionInd(coords);
-							out = out + sep + this.round(q.getActionValsInState(coords)[ind],ROUNDTO);
+							if(useRounding)
+								out = out + sep + this.round(q.getActionValsInState(coords)[ind],ROUNDTO);
+							else
+								out = out + sep + q.getActionValsInState(coords)[ind];
 						}
 					}
 				}

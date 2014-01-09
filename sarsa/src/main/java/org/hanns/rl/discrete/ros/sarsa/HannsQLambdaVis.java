@@ -63,6 +63,10 @@ public class HannsQLambdaVis extends HannsQLambda{
 		Observer[] childs = o.getChilds(); 
 		sl.pl(step+" "+o.getProsperity()+" "+childs[0].getProsperity()
 				+" "+childs[1].getProsperity()); // log data
+		
+		if(step%logPeriod ==0)
+			SL.sinfol(step+" "+o.getProsperity()+" \tcoverage:"+childs[0].getProsperity()
+				+" \treward/step:"+childs[1].getProsperity()); // log data
 	}
 
 }

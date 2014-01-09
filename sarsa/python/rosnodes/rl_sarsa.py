@@ -19,9 +19,14 @@ nodep = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisProsperity"
 
 
 # Synchronous NeuralModule implementing QLambda algorithm
-def qlambda(name, noStateVars=2, noActions=4):
+# noStateVars = how many state variables is used
+# noActions = how much actions the agent has available
+# noValues = how much values has each state variable - this should correspond to the map dimensions
+def qlambda(name, noStateVars=2, noActions=4, noValues=5):
 	g = NodeGroup("QLambda", True);
-	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), '_'+QLambda.noOutputsConf+':='+str(noActions)]
+	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
+	'_'+QLambda.noOutputsConf+':='+str(noActions),
+	'_'+QLambda.sampleCountConf+':='+str(noValues)]
 		
 	g.addNode(command, "QLambda", "java");
 	module = NeuralModule(name+'_QLambda', g, False)
@@ -38,10 +43,15 @@ def qlambda(name, noStateVars=2, noActions=4):
 	return module
 
 # Synchronous NeuralModule implementing QLambda algorithm
-def qlambdaProsperity(name, noStateVars=2, noActions=4):
+# noStateVars = how many state variables is used
+# noActions = how much actions the agent has available
+# noValues = how much values has each state variable - this should correspond to the map dimensions
+def qlambdaProsperity(name, noStateVars=2, noActions=4, noValues=5):
 	
-	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), '_'+QLambda.noOutputsConf+':='+str(noActions)]
-	
+	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
+	'_'+QLambda.noOutputsConf+':='+str(noActions),
+	'_'+QLambda.sampleCountConf+':='+str(noValues)]
+		
 	g = NodeGroup("QLambda", True);
 	g.addNode(command, "QLambda", "java");
 	module = NeuralModule(name+'_QLambda', g, False)
@@ -61,10 +71,10 @@ def qlambdaProsperity(name, noStateVars=2, noActions=4):
 # Build the RL module, add it into the network and connect
 # two value generators defining the default values of the parameters
 # so the script does not have to define it manually
-def qlambdaConfigured(name, net, noStateVars=2, noActions=4):
+def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5):
 	
 	# build the node
-	mod = qlambdaProsperity(name, noStateVars,noActions);
+	mod = qlambdaProsperity(name, noStateVars,noActions,noValues);
 	net.add(mod)
 	
 	# define the configuration
@@ -78,3 +88,4 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4):
 	net.connect('lambda', mod.getTermination(QLambda.topicLambda))
 
 	return mod
+	

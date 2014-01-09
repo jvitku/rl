@@ -7,6 +7,7 @@ import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
@@ -49,7 +50,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 
 	protected final int noActions = 4;	// 4 actions -> {<,>,^,v}
 	//private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
-	protected final float mapReward = 15;	// how much reward agent receives?
+	protected float mapReward = 15;	// how much reward agent receives?
 
 	public static final int DEF_SIZEX =10, DEF_SIZEY=10;
 	public static final String sizexConf = "sizex"; // only one size supported so far
@@ -68,7 +69,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	protected boolean dataExchanged = false;
 	protected int step;
 	protected boolean simPaused = false;
-	
+
 	protected ParamListTmp paramList;			// parameter storage
 
 	@Override
@@ -91,6 +92,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 
 		this.registerROSCommunication(connectedNode);
 
+		this.defineMap();
 		this.initData();
 
 		state = new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
@@ -99,10 +101,14 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		this.waitForConnections(connectedNode);
 	}
 
-	protected void initData(){
+	protected void defineMap(){
 		// create map, place the reinforcements
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
 		map[2][2] = mapReward;	// place reward on the map
+	}
+
+	protected void initData(){
+
 		step = 0;
 
 		// need to encode x values in one float
@@ -162,23 +168,24 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 					try {
 						dataExchanged = true;
 						int action = actionEncoder.decode(data);
-						log.info(me+"Received agents action, this one: "+SL.toStr(data)
-								+" the action no "+action);
 
-						int[] newState = GridWorld.makeStep(sizex, sizey, action, state);
+						if((step)%logPeriod==0)
+							log.info(me+"STEP: "+step+" Received agents action, this one: "+SL.toStr(data)
+									+" the action no "+action);
+
+						int[] newState = executeMapAction(action);
 						float reward = map[newState[0]][newState[1]];
 
 						std_msgs.Float32MultiArray fl = statePublisher.newMessage();
 						fl.setData(encodeStateRewardMessage(reward,newState));								
 						statePublisher.publish(fl);	// send a response with reinforcement and new state 
-
-						System.out.println(me+"Responding with this state "+SL.toStr(newState)+
-								" .. that is "+SL.toStr(encodeStateRewardMessage(reward,newState)));
-						
 						state = newState.clone();
-						
-						if((step++)%logPeriod==0)
-							System.out.println(GridWorld.vis(map));
+
+						if((step++)%logPeriod==0){
+							System.out.println(me+"Responding with this state "+SL.toStr(newState)+
+									" .. that is "+SL.toStr(encodeStateRewardMessage(reward,newState)));
+							visMap();
+						}
 
 					} catch (DecoderException e) {
 						log.error(me+"Unable to decode agents action, ignoring this message!");
@@ -189,12 +196,21 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		});
 	}
 
+	protected void visMap(){
+		System.out.println(GridWorld.vis(map));
+	}
+
+	protected int[] executeMapAction(int action){
+		int[] newState = GridWorld.makeStep(sizex, sizey, action, state);
+		return newState;
+	}
+
 	/**
 	 * Get the current simulation step.
 	 * @return current simulation step
 	 */
 	public int getStep(){ return this.step; }
-	
+
 	/**
 	 * THe simulation can be paused, during the paused simulation, the mapNode (this)
 	 * is not responding with new state(reward) to a client (RL node). The simulation 
@@ -202,19 +218,19 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	 * @return true if the simulation is not running
 	 */
 	public boolean getSimPaused(){ return this.simPaused; }
-	
+
 	/**
 	 * Pause/resume the simulation
 	 * @param paused true if the simulation should be paused
 	 */
 	public void setSimPaused(boolean paused){ this.simPaused = paused; }
-	
-	
+
+
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
 		paramList = new ParamListTmp();
-		
-		
+
+
 		// parse size of the map 
 		sizex = r.getMyInteger(sizexConf, DEF_SIZEX);
 		//sizey = r.getMyInteger(sizeyConf, DEF_SIZEY); 
@@ -222,7 +238,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 
 		paramList.addParam(sizexConf, ""+DEF_SIZEX, "Currently, only square maps are supported, "
 				+ "therefore this defines the size of map");
-		
+
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log data to console?");
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
 	}
@@ -249,7 +265,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 		String outro = "------------------------------------------------";
 		System.out.println(intro+"\n"+paramList.listParams()+"\n"+outro);
 	}
-	
+
 	@Override
 	public float getProsperity() { return 1; } // TODO, service provides should not have prosperity?
 

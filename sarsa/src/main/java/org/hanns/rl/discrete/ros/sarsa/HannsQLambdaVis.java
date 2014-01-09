@@ -37,7 +37,8 @@ public class HannsQLambdaVis extends HannsQLambda{
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
 
 		visualization.setVisPeriod(this.logPeriod);
-		visualization.setTypeVisualization(1);
+		visualization.setTypeVisualization(2);
+		visualization.setActionRemapping(new String[]{"<",">","^","v"});
 	}
 
 	@Override

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
-import org.hanns.rl.discrete.ros.testnodes.GridWorld;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
+import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
 
 import ctu.nengoros.RosRunner;

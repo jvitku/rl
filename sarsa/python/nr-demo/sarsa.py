@@ -42,4 +42,5 @@ net.add(reward)
 net.connect(generator,	finderA.newTerminationFor(QLambda.topicDataIn,[0,1,1]))
 net.connect(reward,		finderA.newTerminationFor(QLambda.topicDataIn,[1,0,0]))
 
+
 print 'Configuration complete.'

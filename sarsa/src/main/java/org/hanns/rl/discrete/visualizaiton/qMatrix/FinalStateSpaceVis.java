@@ -32,13 +32,15 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	public static final int DEF_VISPERIOD = 20; // visualize each 20 steps by default
 	public static final int ROUNDTO = 1000;
 	
-	private final boolean useRounding = true;
+	private boolean useRounding = true;
 
-	public static final String NO_ACTION = ".";
+	public static final String NO_ACTION = " ";
 	public static final String NO_VALUE = ".";
 	public static final String SEPARATOR = "\t";
 	public static final String LINE = "\t------------------------";
 
+	private String[] remaps = null;
+	
 	private final int[] dimSizes;
 	protected final int noActions;
 	private final FinalQMatrix<E> q;
@@ -104,7 +106,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 							out = out + sep + ind;
 						}
 						// visualize indexes?
-					}else{
+					}else if(type==1){
 						if(!this.foundNonZero(q.getActionValsInState(coords))){
 							out = out + sep + NO_VALUE;
 						}else{
@@ -113,6 +115,18 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 								out = out + sep + this.round(q.getActionValsInState(coords)[ind],ROUNDTO);
 							else
 								out = out + sep + q.getActionValsInState(coords)[ind];
+						}
+					}else{
+						if(remaps==null){
+							System.out.println("visualization: ERROR: for type vis.=2 the remappings "
+									+"have to be set!");
+							return null;
+						}
+						if(!this.foundNonZero(q.getActionValsInState(coords))){
+							out = out + sep + NO_ACTION;
+						}else{
+							int ind = this.getMaxActionInd(coords);
+							out = out + sep + remaps[ind];
 						}
 					}
 				}
@@ -168,13 +182,14 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 
 	/**
 	 * Set the type of visualization
-	 * @param type  0 means numbers of actions, 1 means rounded values
+	 * @param type  0 means numbers of actions, 1 means rounded values, 2 uses 
+	 * graphical representation if previously set by the {@link #setActionRemapping(String[])}
 	 */
 	public void setTypeVisualization(int type){
-		if(type == 0 || type ==1){
+		if(type == 0 || type ==1 || type==2){
 			this.type = type;
 		}else{
-			System.err.println("unsupported type of visualization, types supported are: 0/1");
+			System.err.println("unsupported type of visualization, types supported are: 0/1/2");
 		}
 	}
 
@@ -225,6 +240,23 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	}
 
 
+	@Override
+	public void setRoundingEnabled(boolean enabled) {
+		this.useRounding = enabled;
+	}
+	
+
+	@Override
+	public void setActionRemapping(String[] remaps) {
+		if(remaps.length!=this.noActions){
+			System.err.println("Visaulization: ERROR: my no actions is: "+this.noActions
+					+" not "+remaps.length);
+			return;
+		}
+		this.remaps = remaps;		
+	}
+	
+	
 	/**
 	 * Setup with dimension sizes. Use the {@link #next()} method
 	 * to sequentially iterate across the dimensions from third one

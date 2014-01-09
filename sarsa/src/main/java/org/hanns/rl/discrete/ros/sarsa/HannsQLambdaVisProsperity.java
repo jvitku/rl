@@ -17,6 +17,8 @@ public class HannsQLambdaVisProsperity extends HannsQLambdaVis{
 	@Override
 	protected void publishProsperity(){
 		
+		this.visualization.setTypeVisualization(2);	
+		
 		float[] observed = new float[3];
 		observed[0] = o.getProsperity();
 		observed[1] = o.getChilds()[0].getProsperity();

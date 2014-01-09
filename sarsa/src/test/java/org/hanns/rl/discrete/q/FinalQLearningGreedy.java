@@ -12,7 +12,7 @@ import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl.BasicConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQlearningNaive;
-import org.hanns.rl.discrete.ros.testnodes.GridWorld;
+import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
 
 import ctu.nengoros.util.SL;

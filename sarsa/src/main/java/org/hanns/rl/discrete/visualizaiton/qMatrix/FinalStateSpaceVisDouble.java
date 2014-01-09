@@ -34,5 +34,4 @@ public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 		return d/how;
 	}
 
-	
 }

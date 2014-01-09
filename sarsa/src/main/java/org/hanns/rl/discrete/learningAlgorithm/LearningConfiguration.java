@@ -1,12 +1,14 @@
 package org.hanns.rl.discrete.learningAlgorithm;
 
+import org.hanns.rl.common.Resettable;
+
 /**
  * Configuration of general learning algorithm. 
  * 
  * @author Jaroslav Vitku
  *
  */
-public interface LearningConfiguration {
+public interface LearningConfiguration extends Resettable {
 	
 	/**
 	 * This should be called from all methods that set some parameter.

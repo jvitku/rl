@@ -28,7 +28,7 @@ import ctu.nengoros.util.SL;
 
 public abstract class AbstractQLambda extends AbstractNodeMain{
 
-	public static final String name = "AbstractQLambda";
+	public static final String name = "QLambda";
 	public final String me = "["+name+"] ";
 	public static final String s = "/";
 
@@ -182,7 +182,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		// select action, perform learning step
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
-
+		
 		return action;
 	}
 
@@ -428,3 +428,5 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	}
 
 }
+
+

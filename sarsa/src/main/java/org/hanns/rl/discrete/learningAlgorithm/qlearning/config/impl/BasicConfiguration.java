@@ -81,4 +81,10 @@ public class BasicConfiguration implements QLearningConfig{
 		return false;
 	}
 
+	@Override
+	public void softReset(boolean randomize) { this.fireParameterChanged(); }
+
+	@Override
+	public void hardReset(boolean randomize) { this.softReset(randomize); }
+
 }

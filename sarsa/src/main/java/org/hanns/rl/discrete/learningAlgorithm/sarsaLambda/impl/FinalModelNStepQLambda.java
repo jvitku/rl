@@ -23,6 +23,8 @@ import org.hanns.rl.discrete.states.FInalStateSet;
  *  <p>Note: the final model means that the algorithm can be used only for Q-matrix
  *  with finite number of dimension and dimension sizes</p>
  *  
+ *  <p>Also note that this learning algorithm ignores sub-zero rewards (handled as zero rewards).</p>
+ *  
  * @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">page 24 - Sarsa(lambda)</a>
  *  
  * @author Jaroslav Vitku
@@ -59,6 +61,9 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		if(this.prevState == null)
 			this.prevState = newState.clone();
 
+		if(reward<0)	
+			reward=0;
+		
 		// we were there and made the action
 		double prevVal = q.get(prevState, prevAction);	
 		// action values available now
@@ -69,18 +74,19 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
-
+		
 		trace.push(prevState,prevAction);	// store the previous state-action pair
 
 		double value;
 
 		// apply knowledge update to all states stored in the trace 
 		for(int i=0; i<trace.size(); i++){
-
-			// apply the eligibility trace to n previously visited state-aciton pairs
-			value = q.get(trace.get(i))+conf.getdecays()[i]*delta*conf.getAlpha();
+			//System.out.println("value in the q is "+q.get(trace.get(i))+" trace: "+SL.toStr(trace.get(i)));
+			
+			// apply the eligibility trace to n previously visited state-action pairs
+			value = q.get(trace.get(i)) + conf.getdecays()[i]*delta*conf.getAlpha();
 			// add to old value
-			q.set(trace.get(i), value); 
+			q.set(trace.get(i), value);
 		}
 		prevState = newState.clone();		// update last state and action
 	}

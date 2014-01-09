@@ -79,7 +79,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 		// while there is still something to iterate
 		while(true){
 
-			out = out + LINE+" these dimensions of Q matrix are displayed: "
+			out = out + "\n"+LINE+" these dimensions of Q matrix are displayed: "
 					+this.writeDims(coords);
 
 			// the y dimension, from the biggest index towards 0 

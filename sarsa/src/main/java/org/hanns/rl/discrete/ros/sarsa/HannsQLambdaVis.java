@@ -48,7 +48,7 @@ public class HannsQLambdaVis extends HannsQLambda{
 		int action = super.learn(reward); 
 		// use observer to log info
 		o.observe(super.prevAction, reward, states.getValues(), action);
-
+		
 		// execute action
 		super.executeAction(action);
 		this.publishProsperity();

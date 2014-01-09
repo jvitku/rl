@@ -86,4 +86,13 @@ public class NStepQLambdaConfImpl extends BasicConfiguration implements NStepQLa
 	@Override
 	public double[] getdecays() { return this.decays; }
 
+	@Override
+	public void softReset(boolean randomize) {
+		this.fireParameterChanged();
+	}
+
+	@Override
+	public void hardReset(boolean randomize) { this.softReset(randomize); }
+
+
 }

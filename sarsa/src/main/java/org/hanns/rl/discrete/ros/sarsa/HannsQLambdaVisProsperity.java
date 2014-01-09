@@ -31,5 +31,6 @@ public class HannsQLambdaVisProsperity extends HannsQLambdaVis{
 		prospPublisher.publish(fl);
 	}
 	
-	
 }
+
+

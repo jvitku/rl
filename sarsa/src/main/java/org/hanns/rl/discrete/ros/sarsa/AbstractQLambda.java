@@ -1,6 +1,5 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
-import java.util.LinkedList;
 
 import org.apache.commons.logging.Log;
 import org.hanns.rl.common.exceptions.MessageFormatException;
@@ -24,6 +23,7 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
+import ctu.nengoros.rosparam.manager.ParamListTmp;
 import ctu.nengoros.util.SL;
 
 public abstract class AbstractQLambda extends AbstractNodeMain{
@@ -39,7 +39,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String topicDataIn  = Topic.baseIn+"States"; // inStates
 	public static final String topicDataOut = Topic.baseOut+"Actions"; // outActions
 
-	protected PrivateRosparam r;
+	protected PrivateRosparam r;	// parameter (command-line) reader
+	protected ParamListTmp paramList;			// parameter storage
 
 	/**
 	 * Learning rate
@@ -141,6 +142,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 		log.info(me+"started, parsing parameters");
 		this.addParams();
+		this.printParams();
 		this.parseParameters(connectedNode);
 
 		myLog(me+"initializing ROS Node IO");
@@ -202,24 +204,33 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	 * can be used (e.g. on launch). 
 	 */
 	protected void addParams(){
-		this.addParam(noInputsConf, ""+DEF_STATEVARS,"Number of state variables");
-		this.addParam(sampleCountConf, ""+DEF_COUNT, "Number of samples for variables, that is: number of values!");
-		this.addParam(sampleMinConf, ""+DEF_MIN,"Min. value on the state input");
-		this.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
-		this.addParam(noOutputsConf, ""+DEF_NOACTIONS,"Number of actions available to the agent (1ofN coded)");
+		paramList = new ParamListTmp();
+		paramList.addParam(noInputsConf, ""+DEF_STATEVARS,"Number of state variables");
+		paramList.addParam(sampleCountConf, ""+DEF_COUNT, "Number of samples for variables, that is: number of values!");
+		paramList.addParam(sampleMinConf, ""+DEF_MIN,"Min. value on the state input");
+		paramList.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
+		paramList.addParam(noOutputsConf, ""+DEF_NOACTIONS,"Number of actions available to the agent (1ofN coded)");
 		
 		
-		this.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
-		this.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
-		this.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
-		this.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
-		this.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
-		this.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
-		this.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
-
+		paramList.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
+		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
+		paramList.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
+		paramList.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
+		paramList.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
+		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
+		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
+	}
+	
+	/*
+	@Override
+	public String listParams(){
+		return paramList.listParams();
+	}*/
+	
+	protected void printParams(){
 		String intro = "---------------------- Available parameters are: ";
 		String outro = "------------------------------------------------";
-		System.out.println(intro+"\n"+this.listParams()+"\n"+outro);
+		System.out.println(intro+"\n"+paramList.listParams()+"\n"+outro);
 	}
 	
 	/**
@@ -422,43 +433,5 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 			return;
 		log.info(message+" Value is being changed from: "+oldVal+" to "+newVal);
 	}
-	
-	/**
-	 * This is temporary solution for the missing paramManager (above)
-	 * in the Jroscore.
-	 * 
-	 * @return
-	 */
-	public String listParams(){
-		String out = null;
-		Param[] p = new Param[params.size()];
-		p = params.toArray(p);
-		for(int i=0; i<p.length; i++){
-			if(out ==null){
-				out = p[i].name+":="+p[i].def+"\t\t"+p[i].descr;
-			}else{
-				out = out +"\n"+p[i].name+":="+p[i].def+"\t\t"+p[i].descr;
-			}
-		}
-		return out;
-	}
-	
-	protected LinkedList<Param> params;
-	
-	protected void addParam(String name, String def, String descr){
-		if(params == null)
-			params = new LinkedList<Param>();
-		params.add(new Param(name, descr, def));
-	}
-	
-	private class Param{
-		public final String name;
-		public final String descr;
-		public final String def;
-		public Param(String name, String descr, String def){
-			this.name = "_"+name;
-			this.descr = descr;
-			this.def = def;
-		}
-	}
+
 }

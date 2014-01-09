@@ -41,6 +41,11 @@ public class BinaryCoverageReward implements Observer{
 				*/
 		return prosperity;
 	}
+	
+	@Override
+	public Observer[] getChilds(){
+		return new Observer[]{cover,rew};
+	}
 
 	@Override
 	public void softReset(boolean randomize) {

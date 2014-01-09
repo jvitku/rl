@@ -34,5 +34,11 @@ public interface Observer extends Resettable{
 	 * @return value from interval [0,1] determining how successful the algorithm is 
 	 */
 	public float getProsperity();
+	
+	/**
+	 * Observer value can be composed of sub-observers' values, so return all child observers.
+	 * @return array of child observers that are potebtially used to compute the observed value.
+	 */
+	public Observer[] getChilds();
 
 }

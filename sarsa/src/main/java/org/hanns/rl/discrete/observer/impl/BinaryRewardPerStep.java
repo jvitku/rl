@@ -33,4 +33,10 @@ public class BinaryRewardPerStep implements Observer{
 
 	@Override
 	public void hardReset(boolean randomize) { this.softReset(randomize); }
+	
+	@Override
+	public Observer[] getChilds() {
+		System.err.println("ERROR: no childs available");
+		return null;
+	}
 }

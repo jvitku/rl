@@ -10,7 +10,6 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.nodes.HannsNode;
-import ctu.nengoros.nodes.ParamDescription;
 
 /**
  * The same as {@link QLambda}, but here, the support for HannsNode (importance 
@@ -32,9 +31,10 @@ public class HannsQLambda extends QLambda implements HannsNode{
 
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = ns+importanceConf;
+	public static final double DEF_IMPORTANCE = 0.3; 
 	
 	Observer o;	// observes the prosperity of node
-	
+		
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
 		// store the data into the int[]states
@@ -53,6 +53,9 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		log = connectedNode.getLog();
 		
 		this.addParams();
+		paramList.addParam(importanceConf, ""+DEF_IMPORTANCE, "How important is action selected "
+				+ "(less important means more expliration)");
+		this.printParams();
 		log.info(me+"started, parsing parameters");
 		this.parseParameters(connectedNode);
 
@@ -125,12 +128,7 @@ public class HannsQLambda extends QLambda implements HannsNode{
 	}
 	
 	@Override
-	public ParamDescription[] getParams() {
-		// TODO parse parameters from the XML file, auto-generate
-	// jython script
-		System.err.println("This feature is still TODO");
-		return null;
-	}
-	
+	public String listParams() { return super.paramList.listParams(); }
+
 	
 }

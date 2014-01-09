@@ -16,6 +16,7 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.nodes.HannsNode;
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.util.SL;
 
@@ -26,7 +27,7 @@ import ctu.nengoros.util.SL;
  * @author Jaroslav Vitku
  *
  */
-public class GridWorldNode extends AbstractNodeMain{
+public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 
 	public static final String name = "GridWorldNode";
 	public final String me = "["+name+"] ";
@@ -231,4 +232,16 @@ public class GridWorldNode extends AbstractNodeMain{
 		}
 		return f;
 	}
+
+	@Override
+	public float getProsperity() { return 1; } // TODO, service provides should not have prosperity?
+
+	@Override
+	public String listParams() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setImportance(float arg0) { } // TODO, service providers should have importance?
 }

@@ -42,4 +42,10 @@ public class UniformAverageReward implements Observer{
 		this.softReset(randomize);
 	}
 
+	
+	@Override
+	public Observer[] getChilds() {
+		System.err.println("ERROR: no childs available");
+		return null;
+	}
 }

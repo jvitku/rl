@@ -14,8 +14,8 @@ import org.hanns.rl.discrete.observer.Observer;
  */
 public class BinaryCoverageReward implements Observer{
 
-	BinaryCoverage cover;
-	BinaryRewardPerStep rew;
+	protected Observer cover;
+	protected Observer rew;
 	
 	public BinaryCoverageReward(int[] varSizes){
 		cover = new BinaryCoverage(varSizes);

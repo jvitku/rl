@@ -12,12 +12,12 @@ import org.hanns.rl.discrete.observer.Observer;
  */
 public class BinaryCoverage implements Observer{
 
-	private final int noStates;
+	protected final int noStates;
 
-	private final int[] sizes;
+	protected final int[] sizes;
 
 	// uses the same data Structure as QMatrix
-	private final PreAllocatedMultiDimension<Boolean> visited;
+	protected final PreAllocatedMultiDimension<Boolean> visited;
 
 	/**
 	 * Initialize with a vector of dimension sizes (that is number

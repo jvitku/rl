@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.ros.sarsa;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.observer.Observer;
-import org.hanns.rl.discrete.observer.impl.KnowledgeCoverageReward;
+import org.hanns.rl.discrete.observer.impl.BinaryCoverageForgettingReward;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
@@ -58,7 +58,8 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		this.printParams();
 		log.info(me+"started, parsing parameters");
 		this.parseParameters(connectedNode);
-		o = new KnowledgeCoverageReward(states.getDimensionsSizes(),q);
+		//o = new KnowledgeCoverageReward(states.getDimensionsSizes(),q);
+		o = new BinaryCoverageForgettingReward(states.getDimensionsSizes());//,q);
 		
 		myLog(me+"initializing ROS Node IO");
 		this.buildASMSumbscribers(connectedNode);

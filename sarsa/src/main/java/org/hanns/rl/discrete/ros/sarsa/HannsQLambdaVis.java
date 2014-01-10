@@ -20,15 +20,15 @@ public class HannsQLambdaVis extends HannsQLambda{
 	protected FinalStateSpaceVisDouble visualization;
 	protected Publisher<std_msgs.Float32MultiArray> prospPublisher;
 	public static final String topicProsperity = ns+"prosperity";
-	
+
 	SL sl;
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		super.onStart(connectedNode);
-		
+
 		this.registerProsperityPublisher(connectedNode);
-		
+
 		sl = new SL("filex");
 		sl.printToFile(true);
 
@@ -49,7 +49,9 @@ public class HannsQLambdaVis extends HannsQLambda{
 		int action = super.learn(reward); 
 		// use observer to log info
 		o.observe(super.prevAction, reward, states.getValues(), action);
-		
+
+		//System.out.println("fuuuuu \t\t\talpha"+rl.getConfig().getAlpha()+" "+rl.getConfig().getGamma()+" "+rl.getConfig().getLambda());
+
 		// execute action
 		super.executeAction(action);
 		this.publishProsperity();
@@ -68,19 +70,21 @@ public class HannsQLambdaVis extends HannsQLambda{
 		Observer[] childs = o.getChilds(); 
 		sl.pl(step+" "+o.getProsperity()+" "+childs[0].getProsperity()
 				+" "+childs[1].getProsperity()); // log data to file each step
-		
+
 		if(step%logPeriod ==0)
 			SL.sinfol("step: "+step+" "+o.getProsperity()+"\tcoverage="+childs[0].getProsperity()
-				+" \treward/step="+childs[1].getProsperity()); // log data
+					+" \treward/step="+childs[1].getProsperity()); // log data
 	}
-	
+
 	protected void registerProsperityPublisher(ConnectedNode connectedNode){
 		prospPublisher =connectedNode.newPublisher(topicProsperity, std_msgs.Float32MultiArray._TYPE);
 	}
-	
+
 	protected void publishProsperity(){
+		Observer[] childs = o.getChilds(); 
 		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();	
-		fl.setData(new float[]{o.getProsperity()});								
+		fl.setData(new float[]{o.getProsperity(),childs[0].getProsperity()
+				,childs[1].getProsperity()});								
 		prospPublisher.publish(fl);
 	}
 

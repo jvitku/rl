@@ -15,7 +15,7 @@ from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVis as QLambda
 
 # java classes
 node =  "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
-nodep = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisProsperity"
+nodep = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
 
 
 # Synchronous NeuralModule implementing QLambda algorithm

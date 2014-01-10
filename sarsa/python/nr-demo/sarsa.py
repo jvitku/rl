@@ -2,8 +2,13 @@
 #
 # starts: 
 #   -Neural module with the RL algorithm
-#	-Three config parameter inputs with default value of parameters: alpha, gamma, lamda
+#	-Four config parameter inputs with default value of parameters: alpha, gamma, lamda, importance
 #   -Two signal generators: reward generator generates only 1st dim, state generator generates two state vars
+#
+# Test:
+# 	-let the agent lear 
+#	-move with the parameter IPORTANCE towards 1 - observe that the agent sticks to one of reward sources and exploits it
+# 	-move the parameter IMPORTANCE lower - observe how the agent continues with exploration
 #
 # by Jaroslav Vitku [vitkujar@fel.cvut.cz]
 

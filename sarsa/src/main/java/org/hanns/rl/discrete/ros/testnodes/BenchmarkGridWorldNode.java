@@ -65,20 +65,23 @@ public class BenchmarkGridWorldNode extends GridWorldNode{
 	 */
 	@Override
 	protected void defineMap(){
-		sizex = 20;
+		sizex = 10;
 		sizey = sizex; 
 
-		mapReward = 1;
+		mapReward = 15;
 
 		log.info(me+"Parameters parsed, creating the map of size: "+sizex+"x"+sizey+"\n\n");
 
 		map = new float[sizex][sizey];
-		map[4][6] = mapReward;
-		map[15][12] = mapReward;
+		map[1][4] = mapReward;
+		//map[15][12] = mapReward;
 
-		GridWorldObstacle.drawObstacle(new int[]{7,7}, new int[]{0,6}, map);
-		GridWorldObstacle.drawObstacle(new int[]{12,12}, new int[]{sizey-7,sizey-1}, map);
+		//GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{0,4}, map);
+		//GridWorldObstacle.drawObstacle(new int[]{10,10}, new int[]{sizey-4,sizey-1}, map);
 
+		GridWorldObstacle.drawObstacle(new int[]{3,3}, new int[]{0,2}, map);
+		GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{sizey-3,sizey-1}, map);
+		
 		System.out.println("--------------- " +GridWorldObstacle.vis(map));
 	}
 

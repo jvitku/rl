@@ -47,14 +47,14 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	 */
 	public static final String alphaConf = "alpha";
 	public static final String topicAlpha= ns+alphaConf;
-	public static final double DEF_ALPHA = 0.7;
+	public static final double DEF_ALPHA = 0.5;
 
 	/**
 	 * Decay factor
 	 */
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = ns+gammaConf;
-	public static final double DEF_GAMMA = 0.4;
+	public static final double DEF_GAMMA = 0.3;
 
 
 	/**
@@ -63,9 +63,9 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String lambdaConf = "lambda";
 	public static final String topicLambda = ns+lambdaConf;
 
-	public static final double DEF_LAMBDA = 0.4;
+	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
-	public static final int DEF_TRACELEN = 20;
+	public static final int DEF_TRACELEN = 10;
 
 	/**
 	 * TODO: parameter (input?) rl enabled
@@ -104,7 +104,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final String topicEpsilon = ns+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
 
-	public static final int DEF_LOGPERIOD =10;	// how often to log? 
+	public static final int DEF_LOGPERIOD =100;	// how often to log? 
 	public static final String logPeriodConf = "logPeriod";
 	protected int logPeriod; 
 

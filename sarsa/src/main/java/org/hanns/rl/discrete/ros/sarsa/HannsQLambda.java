@@ -31,7 +31,7 @@ public class HannsQLambda extends QLambda implements HannsNode{
 
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = ns+importanceConf;
-	public static final double DEF_IMPORTANCE = 0.3; 
+	public static final double DEF_IMPORTANCE = 0.7; 
 	
 	Observer o;	// observes the prosperity of node
 		

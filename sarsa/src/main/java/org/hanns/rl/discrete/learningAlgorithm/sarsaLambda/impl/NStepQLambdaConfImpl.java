@@ -11,12 +11,14 @@ public class NStepQLambdaConfImpl extends BasicConfiguration implements NStepQLa
 	private double[] decays;		// pre-computed decays (gammaT) for traces
 
 	public NStepQLambdaConfImpl(int length, double lambda){
+		super();
 		this.length = length;
 		this.lambda = lambda;
 		this.fireParameterChanged();
 	}
 
 	public NStepQLambdaConfImpl(int length){
+		super();
 		if(length<1){
 			System.err.println("NStepQLambdaConfImpl: Trace length should be more than 0!");
 			return;

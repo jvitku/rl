@@ -1,5 +1,7 @@
 package org.hanns.rl.discrete.learningAlgorithm.qLearning.config.impl;
 
+import org.hanns.rl.discrete.actions.ActionBufferInt;
+import org.hanns.rl.discrete.actions.impl.ActionBuffer;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
 /**
@@ -10,6 +12,8 @@ import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
  */
 public class BasicConfiguration implements QLearningConfig{
 
+	private ActionBufferInt buffer;	// action buffer for remembering action executed in the past
+	
 	private boolean learningEnabled = true;
 
 	public static final double DEF_ALPHA=0.5;
@@ -19,6 +23,11 @@ public class BasicConfiguration implements QLearningConfig{
 	private double alpha = DEF_ALPHA;
 	private double gamma = DEF_GAMMA;
 
+	
+	public BasicConfiguration(){
+		this.buffer = new ActionBuffer();
+	}
+	
 	@Override
 	public void setAlpha(double alpha) {
 		if(!this.checkRange("alpha", 0, 1, alpha)){
@@ -86,5 +95,11 @@ public class BasicConfiguration implements QLearningConfig{
 
 	@Override
 	public void hardReset(boolean randomize) { this.softReset(randomize); }
+
+	@Override
+	public void setBuffer(ActionBufferInt buffer) { this.buffer = buffer; }
+
+	@Override
+	public ActionBufferInt getBuffer() { return this.buffer; }
 
 }

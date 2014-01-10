@@ -81,11 +81,13 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5):
 	net.make_input('alpha',[QLambda.DEF_ALPHA])
 	net.make_input('gamma',[QLambda.DEF_GAMMA])
 	net.make_input('lambda',[QLambda.DEF_LAMBDA])
-
+	net.make_input('importance',[QLambda.DEF_IMPORTANCE])
+	
 	# wire it
 	net.connect('alpha', mod.getTermination(QLambda.topicAlpha))
 	net.connect('gamma', mod.getTermination(QLambda.topicGamma))
 	net.connect('lambda', mod.getTermination(QLambda.topicLambda))
-
+	net.connect('importance', mod.getTermination(QLambda.topicImportance))
+	
 	return mod
 	

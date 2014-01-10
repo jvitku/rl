@@ -24,14 +24,13 @@ net.add_to_nengo()
 #RosUtils.setAutorun(False)     # Do we want to autorun roscore and rxgraph? (tru by default)
 #RosUtils.prefferJroscore(True)  # preffer jroscore before the roscore? 
 
-finderA = rl_sarsa.qlambdaConfigured("RL",net, 2 ,4, 20)   # 2 state variables, 5 actions, xsize=20
+rl = rl_sarsa.qlambdaConfigured("RL",net, 2 ,4, 20)   # 2 state variables, 5 actions, xsize=20
 
 world = gridworld.benchmark("map");
 net.add(world)
 
 # data
-net.connect(world.getOrigin(QLambda.topicDataIn), finderA.newTerminationFor(QLambda.topicDataIn))
-net.connect(finderA.getOrigin(QLambda.topicDataOut), world.getTermination(QLambda.topicDataOut))
-
+net.connect(world.getOrigin(QLambda.topicDataIn), rl.newTerminationFor(QLambda.topicDataIn))
+net.connect(rl.getOrigin(QLambda.topicDataOut), world.getTermination(QLambda.topicDataOut))
 
 print 'Configuration complete.'

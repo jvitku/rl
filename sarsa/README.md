@@ -143,6 +143,7 @@ After launching the node:
 
 ## TODO
 
+* Previous Action caching, because of one-step action-state loop delay
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)
 

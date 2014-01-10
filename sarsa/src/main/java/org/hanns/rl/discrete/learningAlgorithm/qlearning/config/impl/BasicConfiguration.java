@@ -76,8 +76,8 @@ public class BasicConfiguration implements QLearningConfig{
 	public boolean checkRange(String paramName, double from, double to, double newVal){
 		if(newVal>=from && newVal<=to)
 			return true;
-		System.err.println("Config ERROR, the parameter "+paramName+" should be from" +
-				" interval ["+from+","+to+"], not "+newVal);
+		//System.err.println("Config ERROR, the parameter "+paramName+" should be from" +
+		//		" interval ["+from+","+to+"], not "+newVal);
 		return false;
 	}
 

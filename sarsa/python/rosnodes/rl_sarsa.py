@@ -11,7 +11,7 @@ from ctu.nengoros.comm.nodeFactory import NodeGroup as NodeGroup
 from ctu.nengoros.comm.rosutils import RosUtils as RosUtils
 from ctu.nengoros.modules.impl import DefaultNeuralModule as NeuralModule
 
-from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVisProsperity as QLambda
+from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVis as QLambda
 
 # java classes
 node =  "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
@@ -22,11 +22,12 @@ nodep = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisProsperity"
 # noStateVars = how many state variables is used
 # noActions = how much actions the agent has available
 # noValues = how much values has each state variable - this should correspond to the map dimensions
-def qlambda(name, noStateVars=2, noActions=4, noValues=5):
+def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
 	g = NodeGroup("QLambda", True);
 	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
 	'_'+QLambda.noOutputsConf+':='+str(noActions),
-	'_'+QLambda.sampleCountConf+':='+str(noValues)]
+	'_'+QLambda.sampleCountConf+':='+str(noValues),
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod)]
 		
 	g.addNode(command, "QLambda", "java");
 	module = NeuralModule(name+'_QLambda', g, False)
@@ -46,11 +47,12 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5):
 # noStateVars = how many state variables is used
 # noActions = how much actions the agent has available
 # noValues = how much values has each state variable - this should correspond to the map dimensions
-def qlambdaProsperity(name, noStateVars=2, noActions=4, noValues=5):
+def qlambdaProsperity(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
 	
 	command = [nodep, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
 	'_'+QLambda.noOutputsConf+':='+str(noActions),
-	'_'+QLambda.sampleCountConf+':='+str(noValues)]
+	'_'+QLambda.sampleCountConf+':='+str(noValues),
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod)]
 		
 	g = NodeGroup("QLambda", True);
 	g.addNode(command, "QLambda", "java");
@@ -71,10 +73,10 @@ def qlambdaProsperity(name, noStateVars=2, noActions=4, noValues=5):
 # Build the RL module, add it into the network and connect
 # two value generators defining the default values of the parameters
 # so the script does not have to define it manually
-def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5):
+def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
 	
 	# build the node
-	mod = qlambdaProsperity(name, noStateVars,noActions,noValues);
+	mod = qlambdaProsperity(name, noStateVars,noActions,noValues, logPeriod)
 	net.add(mod)
 	
 	# define the configuration

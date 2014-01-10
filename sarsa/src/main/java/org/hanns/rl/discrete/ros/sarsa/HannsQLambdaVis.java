@@ -10,7 +10,7 @@ import ctu.nengoros.util.SL;
 
 /**
  * The same as {@link org.hanns.rl.discrete.ros.sarsa.HannsQLambda}, but with visualization 
- * available.
+ * available. Also, this node publishes its prosperity, which is composed of coverage and reward/step.
  * 
  * @author Jaroslav Vitku
  *
@@ -67,11 +67,11 @@ public class HannsQLambdaVis extends HannsQLambda{
 	private void log(){
 		Observer[] childs = o.getChilds(); 
 		sl.pl(step+" "+o.getProsperity()+" "+childs[0].getProsperity()
-				+" "+childs[1].getProsperity()); // log data
+				+" "+childs[1].getProsperity()); // log data to file each step
 		
 		if(step%logPeriod ==0)
-			SL.sinfol(step+" "+o.getProsperity()+" \tcoverage:"+childs[0].getProsperity()
-				+" \treward/step:"+childs[1].getProsperity()); // log data
+			SL.sinfol("step: "+step+" "+o.getProsperity()+"\tcoverage="+childs[0].getProsperity()
+				+" \treward/step="+childs[1].getProsperity()); // log data
 	}
 	
 	protected void registerProsperityPublisher(ConnectedNode connectedNode){

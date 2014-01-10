@@ -14,8 +14,8 @@ public class AbstractASMConfig {
 	protected double checkRange(String paramName, double from, double to, double newVal){
 		if(!(newVal>=from && newVal<=to)){
 
-			System.err.println("Config WARNING, the parameter "+paramName+
-					" should be from the interval ["+from+","+to+"], not "+newVal);
+			//System.err.println("Config WARNING, the parameter "+paramName+
+			//		" should be from the interval ["+from+","+to+"], not "+newVal);
 			if(newVal<from)
 				return from;
 			if(newVal>to)

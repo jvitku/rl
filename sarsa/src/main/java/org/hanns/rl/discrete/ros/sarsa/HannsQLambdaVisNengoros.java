@@ -9,13 +9,21 @@ import org.ros.node.topic.Publisher;
 import ctu.nengoros.util.SL;
 
 /**
- * The same as {@link org.hanns.rl.discrete.ros.sarsa.HannsQLambda}, but with visualization 
- * available. Also, this node publishes its prosperity, which is composed of coverage and reward/step.
+ * The same as {@link org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis}, but here the 
+ * filtering of input data is made in the following way:
+ * <ul>
+ * <li>Only state changes are registered as new state (that is e.g. response from the GridWorld)</li>
+ * <li>There is specified maximum numbed of steps without response (to executed action). 
+ * This defines the maximum length of closed loop where the RL is (max. delay between 
+ * action->new state)</li>
+ * <li>If the response is not received in the predefined number of steps, the situation 
+ * is evaluated as the following case: the action executed did not have effect, RL&ASM: continue.</li>
+ * </ul>
  * 
  * @author Jaroslav Vitku
  *
  */
-public class HannsQLambdaVis extends HannsQLambda{
+public class HannsQLambdaVisNengoros extends HannsQLambda{
 
 	protected FinalStateSpaceVisDouble visualization;
 	protected Publisher<std_msgs.Float32MultiArray> prospPublisher;
@@ -49,6 +57,8 @@ public class HannsQLambdaVis extends HannsQLambda{
 		int action = super.learn(reward); 
 		// use observer to log info
 		o.observe(super.prevAction, reward, states.getValues(), action);
+
+		//System.out.println("fuuuuu \t\t\talpha"+rl.getConfig().getAlpha()+" "+rl.getConfig().getGamma()+" "+rl.getConfig().getLambda());
 
 		// execute action
 		super.executeAction(action);

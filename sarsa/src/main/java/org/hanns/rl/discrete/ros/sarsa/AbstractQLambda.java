@@ -6,6 +6,7 @@ import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
@@ -120,16 +121,17 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	/**
 	 * RL stuff
 	 */
-	public FinalModelNStepQLambda rl;		// RL algorithm
+	public FinalModelNStepQLambda rl;			// RL algorithm
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
-	protected ActionSelectionMethod<Double> asm;		// action selection methods
+	protected ActionSelectionMethod<Double> asm;// action selection methods
 
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
 
 	protected BasicFinalStateSet states;		// state variables (each has encoder)
 
-	protected int prevAction;					// index of the last action executed
+	//protected int prevAction;					// index of the last action executed
+	protected ActionBufferInt actionBuffer;		// buffer remembering previously executed actions
 
 	protected int step = 0;
 	
@@ -181,7 +183,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 		// select action, perform learning step
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
-		rl.performLearningStep(prevAction, reward, states.getValues(), action);
+		rl.performLearningStep(actionBuffer, reward, states.getValues(), action);
 		
 		return action;
 	}
@@ -196,7 +198,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		fl.setData(actionEncoder.encode(action));								
 		actionPublisher.publish(fl);
 
-		prevAction = action;
+		//prevAction = action;
+		//actionBuffer.push(action);	// this is done in the learning algs.
 	}
 	
 	/**
@@ -280,6 +283,7 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		NStepQLambdaConfImpl config = new NStepQLambdaConfImpl(len, lambda);
 		config.setAlpha(alpha);
 		config.setGamma(gamma);
+		actionBuffer = config.getBuffer();
 
 		initializeASM(epsilon);
 		/**

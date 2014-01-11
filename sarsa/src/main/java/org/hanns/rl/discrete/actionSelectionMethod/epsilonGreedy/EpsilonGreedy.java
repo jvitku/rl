@@ -18,6 +18,8 @@ import org.hanns.rl.discrete.actions.ActionSet;
  */
 public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
+	public final double MIN_EPS=0.1;	
+	
 	private boolean wasgreedy;
 	protected Random r;
 	protected ActionSet acitons;
@@ -36,6 +38,13 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 			System.err.println("ERROR: incorrect size of actionValues array!");
 			this.wasgreedy = false;
 			return -1;
+		}
+		// if exploration disabled, choose randomly with p=min. epsilon
+		if(!config.getExplorationEnabled()){
+			if(r.nextDouble() <= this.MIN_EPS){
+				this.wasgreedy = false;
+				return r.nextInt(actionValues.length);
+			}
 		}
 		// if can explore, can choose randomly with p=epsilon 
 		if(config.getExplorationEnabled()){

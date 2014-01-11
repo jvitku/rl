@@ -1,5 +1,6 @@
 package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl;
 
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.NStepQLambdaConfig;
@@ -54,7 +55,7 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 	}
 
 	@Override
-	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
+	public void performLearningStep(ActionBufferInt prevActions, float reward, int[] newState, int newAction) {
 		if(!this.conf.getLearningEnabled())
 			return;
 
@@ -64,8 +65,11 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		if(reward<0)	
 			reward=0;
 		
+		if(prevActions.isEmpty())
+			prevActions.push(DEF_FIRST_ACT);
+		
 		// we were there and made the action
-		double prevVal = q.get(prevState, prevAction);	
+		double prevVal = q.get(prevState, prevActions.read());	
 		// action values available now
 		Double[] newActions  = q.getActionValsInState(newState);	
 		// value of the best available action now
@@ -75,7 +79,7 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
 		
-		trace.push(prevState,prevAction);	// store the previous state-action pair
+		trace.push(prevState, prevActions.read());	// store the previous state-action pair
 
 		double value;
 
@@ -89,6 +93,7 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 			q.set(trace.get(i), value);
 		}
 		prevState = newState.clone();		// update last state and action
+		prevActions.push(newAction);		// remember what is being executed now
 	}
 
 	@Override

@@ -48,16 +48,14 @@ public class HannsQLambdaVis extends HannsQLambda{
 		// choose action and learn about it
 		int action = super.learn(reward); 
 		// use observer to log info
-		o.observe(super.prevAction, reward, states.getValues(), action);
-
-		//System.out.println("fuuuuu \t\t\talpha"+rl.getConfig().getAlpha()+" "+rl.getConfig().getGamma()+" "+rl.getConfig().getLambda());
+		o.observe(actionBuffer.read(), reward, states.getValues(), action);// probably correct state-action pair
 
 		// execute action
 		super.executeAction(action);
 		this.publishProsperity();
 
 		if(this.visualization!=null)
-			this.visualization.performStep(prevAction, reward, states.getValues(), action);
+			this.visualization.performStep(actionBuffer.read(), reward, states.getValues(), action);
 
 		this.log();
 	}

@@ -49,6 +49,7 @@ public class BasicConfig extends AbstractASMConfig implements BasicEpsilonGeedyC
 	@Override
 	public void setImportance(float importance) {
 		// does nothing here
+		System.err.println("ERROR: basicConfig does not support importance");
 	}
 
 	@Override

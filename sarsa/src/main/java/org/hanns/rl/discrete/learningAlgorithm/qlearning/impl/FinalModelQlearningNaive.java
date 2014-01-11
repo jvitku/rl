@@ -1,5 +1,6 @@
 package org.hanns.rl.discrete.learningAlgorithm.qLearning.impl;
 
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
@@ -39,15 +40,18 @@ public class FinalModelQlearningNaive extends AbstractFinalRL /*implements Final
 	 * has been chosen for execution.
 	 */
 	@Override
-	public void performLearningStep(int prevAction, float reward, int[] newState, int newAction) {
+	public void performLearningStep(ActionBufferInt prevActions, float reward, int[] newState, int newAction) {
 		if(!this.config.getLearningEnabled())
 			return;
 
 		if(this.prevState == null)
 			this.init(newState);
+		
+		if(prevActions.isEmpty())
+			prevActions.push(DEF_FIRST_ACT);
 
 		// we were there and made the action
-		double prevVal = q.get(prevState, prevAction);	
+		double prevVal = q.get(prevState, prevActions.read());	
 		// action values available now
 		Double[] newActions  = q.getActionValsInState(newState);	
 		// value of the best available action now
@@ -57,8 +61,10 @@ public class FinalModelQlearningNaive extends AbstractFinalRL /*implements Final
 		double learned = prevVal + this.config.getAlpha()*
 				(reward+this.config.getGamma()*maxNewActionVal-prevVal);
 
-		q.set(prevState, prevAction, learned);	// store the value
+		q.set(prevState, prevActions.read(), learned);	// store the value
+		
 		prevState = newState.clone();		// update last state and action
+		prevActions.push(newAction);		// remember what is being executed now
 	}
 
 

@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.learningAlgorithm;
 
 import org.hanns.rl.common.Resettable;
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
 /**
@@ -19,13 +20,13 @@ public interface LearningAlgorithm extends Resettable {
 	 * in a reward), current state, and the futureAction (selected by the ASM) that 
 	 * is going to be executed by the agent. 
 	 *   
-	 * @param previousAction index of action that has just been executed by the agent
+	 * @param previousActions buffer which remembers defined number of actions executed previously by the agent 
 	 * @param reward value of reward received from the environment (or the rest of an architecture) 
 	 * @param currentState state that is being currently observed on inputs
 	 * @param futureAction index of action that has been selected by the ASM and is going
 	 * to be executed by the agent this step  
 	 */
-	public void performLearningStep(int previousAction, float reward, int[] currentState, int futureAction);	
+	public void performLearningStep(ActionBufferInt previousActions, float reward, int[] currentState, int futureAction);	
 	
 	/**
 	 * Initialize the algorithm. Mainly set the starting state of the environment.

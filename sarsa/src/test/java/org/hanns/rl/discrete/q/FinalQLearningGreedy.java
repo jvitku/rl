@@ -6,6 +6,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
@@ -50,6 +51,7 @@ public class FinalQLearningGreedy {
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
+		ActionBufferInt a = config.getBuffer();
 
 		//new FinalModelQlearningNaive(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearningNaive(stateSizes, numActions, config);
@@ -59,19 +61,24 @@ public class FinalQLearningGreedy {
 
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int action, prevAction;
+		int nextAction;//, prevAction;
 		float reward;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = GridWorld.generateAction(r, numActions);	// select first action
+		//prevAction = GridWorld.generateAction(r, numActions);	// select first action
+		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
-			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
+			
+			nextAction = GridWorld.generateAction(r, numActions);	// select the future action
+			
+			ql.performLearningStep(a, reward, pos, nextAction);	// learn about it
+			
+			pos = GridWorld.makeStep(sx, sy, nextAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			action = GridWorld.generateAction(r, numActions);	// select the future action
-			ql.performLearningStep(prevAction, reward, pos, action);	// learn about it
-			prevAction = action;
+			
+			//prevAction = nextAction;
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
@@ -93,6 +100,7 @@ public class FinalQLearningGreedy {
 	/**
 	 * Action selection method is Epsilon-greedy.
 	 */
+	//@Ignore
 	@Test
 	public void asm(){
 
@@ -123,6 +131,7 @@ public class FinalQLearningGreedy {
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
+		ActionBufferInt a = config.getBuffer();
 		
 		FinalModelLearningAlgorithm ql = new FinalModelQlearningNaive(stateSizes, numActions, config);
 
@@ -131,20 +140,23 @@ public class FinalQLearningGreedy {
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int action, prevAction;
-		float reward;
+		int action;//, prevAction;
+		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
 		
 		for(int i=0; i<numsteps; i++){
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
-			action = asm.selectAction(vals);				// select action 
-			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
+			action = asm.selectAction(vals);				// select action
+			
+			
+			ql.performLearningStep(a, reward, pos, action);// learn about it
+			
+			//prevAction = action;							// prepare action to be executed
+			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
-			prevAction = action;							// prepare action to be executed
 			
 			if(i%1000==0){
 				System.out.println("step "+i);
@@ -156,8 +168,8 @@ public class FinalQLearningGreedy {
 		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, 4, map, new int[]{5,5}); // not entire map is explored
-		this.navigate(q, 4, 4, map, new int[]{7,6});	 
+		this.navigate(q, 4, 5, map, new int[]{5,5}); // not entire map is explored
+		this.navigate(q, 4, 5, map, new int[]{7,6});	 
 	}
 	
 	/**

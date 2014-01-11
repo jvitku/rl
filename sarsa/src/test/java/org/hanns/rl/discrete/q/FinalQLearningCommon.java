@@ -6,6 +6,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
@@ -37,6 +38,7 @@ public class FinalQLearningCommon {
 	 * <li>Action selection is pure random</li>
 	 *  </ul>
 	 */
+	//@Ignore
 	@Test
 	public void basicQLearning(){
 		
@@ -50,7 +52,8 @@ public class FinalQLearningCommon {
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
-
+		ActionBufferInt a = config.getBuffer();
+		
 		//new FinalModelQlearningNaive(int[] stateSizes, int numActions, QLearningConfig config){
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
 
@@ -58,20 +61,24 @@ public class FinalQLearningCommon {
 		System.out.println("map generated is: \n"+GridWorld.vis(map));
 
 		int[] pos = new int[]{2,2};	// agents position on the map
-		int numsteps = 50000;
-		int action, prevAction;
+		int numsteps = 60000;
+		int action;//, prevAction;
 		float reward;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = GridWorld.generateAction(r, numActions);	// select first action
+		//prevAction = GridWorld.generateAction(r, numActions);	// select first action
+		
+		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
-			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
-			reward = map[pos[0]][pos[1]];					// read reward
 			action = GridWorld.generateAction(r, numActions);	// select the future action
-			ql.performLearningStep(prevAction, reward, pos, action);	// learn about it
-			prevAction = action;
+			ql.performLearningStep(a, reward, pos, action);		// learn about it
+//			prevAction = action;
+			
+			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
+			reward = map[pos[0]][pos[1]];					// read reward
+			
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
@@ -82,17 +89,18 @@ public class FinalQLearningCommon {
 		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, sx+sy, map, new int[]{0,0});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{5,5});
-		this.navigate(q, 4, sx+sy, map, new int[]{9,6});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{9,0});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{0,6});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{7,4});	// reward pos.
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{0,0});	// corner
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{5,5});
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{9,6});	// corner
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{9,0});	// corner
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{0,6});	// corner
+		this.navigate(q, 4, 2*sx+sy, map, new int[]{7,4});	// reward pos.
 	}
 	
 	/**
 	 * Action selection method is Epsilon-greedy.
 	 */
+	//@Ignore
 	@Test
 	public void asm(){
 
@@ -123,6 +131,7 @@ public class FinalQLearningCommon {
 		BasicConfiguration config = new BasicConfiguration();
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.3);	// more towards immediate reward
+		ActionBufferInt a = config.getBuffer();
 		
 		FinalModelLearningAlgorithm ql = new FinalModelQlearning(stateSizes, numActions, config);
 
@@ -130,21 +139,28 @@ public class FinalQLearningCommon {
 		 * Configure the simulation
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
-		int numsteps = 50000;
-		int action, prevAction;
+		int numsteps = 70000;
+		int action;//, prevAction;
 		float reward;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		
+		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
-			Double[] vals = q.getActionValsInState(pos);	// read action utilities
-			action = asm.selectAction(vals);				// select action 
-			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
-			reward = map[pos[0]][pos[1]];					// read reward
-			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
-			prevAction = action;							// prepare action to be executed
+			
+			Double[] vals = q.getActionValsInState(pos);		// read action utilities
+			action = asm.selectAction(vals);					// select action
+			
+			ql.performLearningStep(a, reward, pos, action);		// learn about it
+			
+			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
+			
+			reward = map[pos[0]][pos[1]];						// read reward
+			
+			//prevAction = action;							// prepare action to be executed
 			
 			if(i % 1000==0){
 				System.out.println("step "+i);
@@ -156,8 +172,8 @@ public class FinalQLearningCommon {
 		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, 5, map, new int[]{5,5}); // not entire map is explored
-		this.navigate(q, 4, 5, map, new int[]{7,6});	 
+		this.navigate(q, 4, 8, map, new int[]{5,5}); // not entire map is explored
+		this.navigate(q, 4, 8, map, new int[]{7,6});	 
 	}
 	
 	/**
@@ -173,8 +189,10 @@ public class FinalQLearningCommon {
 	private void navigate(FinalQMatrix<Double> q, int numActions,int numSteps, float[][] map, int[] startingPos){
 		ActionSet actions = new BasicFinalActionSet(numActions);
 		// use the epsilon-greedy ASM with exploration disabled
+		//ImportanceBasedConfig econf = new ImportanceBasedConfig();
 		BasicEpsilonGeedyConf econf = new BasicConfig();
 		econf.setExplorationEnabled(false);
+		//econf.setImportance(0.99f);	// still, some randomization is required
 		ActionSelectionMethod<Double> asm = new EpsilonGreedyDouble(actions, econf);
 		
 		int action;

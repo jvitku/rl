@@ -6,6 +6,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
@@ -52,9 +53,10 @@ public class FInalSarsaLambda {
 		 * Configure the learning algorithm
 		 */
 		NStepQLambdaConfImpl config = new NStepQLambdaConfImpl(20);
-		config.setLambda(0.9);	
+		config.setLambda(0.6);	
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.7);	// more towards immediate reward
+		ActionBufferInt a = config.getBuffer();
 
 		FinalModelLearningAlgorithm ql = new FinalModelNStepQLambda(stateSizes, numActions, config);
 
@@ -62,27 +64,31 @@ public class FInalSarsaLambda {
 		 * Configure the simulation
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
-		int numsteps = 1000;
-		int action, prevAction;
-		float reward;
+		int numsteps = 2000;
+		int action;//, prevAction;
+		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
+		//prevAction = a.read();
 
 		for(int i=0; i<numsteps; i++){
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
-			action = asm.selectAction(vals);				// select action 
-			pos = GridWorld.makeStep(sx, sy, prevAction, pos);	// move agent
+			action = asm.selectAction(vals);				// select action
+			
+			ql.performLearningStep(a, reward, pos, action);// learn about it
+			//prevAction = action;							// prepare action to be executed
+			
+			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
-			ql.performLearningStep(prevAction, reward, pos, action);// learn about it
-			prevAction = action;							// prepare action to be executed
-
+			
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
-			/*
+			
 			System.out.println(GridWorld.visqm(q, 0));
+			/*
 			try {
 				System.in.read();
 			} catch (IOException e) { e.printStackTrace(); }
@@ -94,8 +100,8 @@ public class FInalSarsaLambda {
 		System.out.println(GridWorld.vis(map));
 
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, 5, map, new int[]{5,5}); // not entire map is explored
-		this.navigate(q, 4, 5, map, new int[]{7,6});	 
+		this.navigate(q, 4, 7, map, new int[]{5,5}); // not entire map is explored
+		this.navigate(q, 4, 7, map, new int[]{7,6});	 
 	}
 
 	/**

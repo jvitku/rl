@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.learningAlgorithm;
 
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
+import org.hanns.rl.discrete.actions.ActionBufferInt;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.impl.PreAllocatedFinalQMatrix;
 import org.hanns.rl.discrete.states.FInalStateSet;
@@ -14,6 +15,8 @@ import org.hanns.rl.discrete.states.FInalStateSet;
  */
 public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 
+	public static int DEF_FIRST_ACT = 0;	// first action added by default
+	
 	protected FinalQMatrix<Double> q;
 	protected int numActions;
 	protected int[] stateSizes;
@@ -36,7 +39,7 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 	}
 
 	@Override
-	public abstract void performLearningStep(int prevAction, float reward, 
+	public abstract void performLearningStep(ActionBufferInt prevActions, float reward, 
 			int[] newState, int newAction);
 	
 	@Override

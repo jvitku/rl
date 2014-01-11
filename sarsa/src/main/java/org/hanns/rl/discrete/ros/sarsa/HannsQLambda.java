@@ -42,7 +42,7 @@ public class HannsQLambda extends QLambda implements HannsNode{
 		// choose action and learn about it
 		int action = super.learn(reward); 
 		// use observer to log info
-		o.observe(super.prevAction, reward, states.getValues(), action);
+		o.observe(actionBuffer.read(), reward, states.getValues(), action);// observe probably correct state-aciton pair
 		// execute action
 		super.executeAction(action);
 	}

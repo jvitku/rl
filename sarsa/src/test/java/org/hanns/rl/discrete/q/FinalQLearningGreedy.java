@@ -61,13 +61,11 @@ public class FinalQLearningGreedy {
 
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int nextAction;//, prevAction;
-		float reward;
+		int nextAction;
+		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		//prevAction = GridWorld.generateAction(r, numActions);	// select first action
-		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
 			
@@ -78,7 +76,6 @@ public class FinalQLearningGreedy {
 			pos = GridWorld.makeStep(sx, sy, nextAction, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
 			
-			//prevAction = nextAction;
 			if(i%1000==0){
 				System.out.println("step "+i);
 			}
@@ -140,21 +137,19 @@ public class FinalQLearningGreedy {
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 50000;
-		int action;//, prevAction;
+		int action;
 		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
 		
 		for(int i=0; i<numsteps; i++){
+			
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
 			action = asm.selectAction(vals);				// select action
 			
-			
 			ql.performLearningStep(a, reward, pos, action);// learn about it
 			
-			//prevAction = action;							// prepare action to be executed
 			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
 			

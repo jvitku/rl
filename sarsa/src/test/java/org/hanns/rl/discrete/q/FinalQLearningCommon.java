@@ -63,18 +63,15 @@ public class FinalQLearningCommon {
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 60000;
 		int action;//, prevAction;
-		float reward;
+		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		//prevAction = GridWorld.generateAction(r, numActions);	// select first action
-		
-		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
+			
 			action = GridWorld.generateAction(r, numActions);	// select the future action
 			ql.performLearningStep(a, reward, pos, action);		// learn about it
-//			prevAction = action;
 			
 			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
@@ -140,14 +137,11 @@ public class FinalQLearningCommon {
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 70000;
-		int action;//, prevAction;
-		float reward;
+		int action;
+		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
-		
-		reward = 0;
 		
 		for(int i=0; i<numsteps; i++){
 			
@@ -157,10 +151,7 @@ public class FinalQLearningCommon {
 			ql.performLearningStep(a, reward, pos, action);		// learn about it
 			
 			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
-			
 			reward = map[pos[0]][pos[1]];						// read reward
-			
-			//prevAction = action;							// prepare action to be executed
 			
 			if(i % 1000==0){
 				System.out.println("step "+i);

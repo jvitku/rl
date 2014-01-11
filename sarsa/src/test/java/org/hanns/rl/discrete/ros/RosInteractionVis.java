@@ -44,7 +44,6 @@ public class RosInteractionVis extends RosCommunicationTest{
 		assertTrue(rlr.getNode() instanceof HannsQLambda);
 		HannsQLambda rl = (HannsQLambda) rlr.getNode();
 		
-		
 		// simulate 2000 steps
 		while(map.getStep() < 10000){
 			sleep(100);

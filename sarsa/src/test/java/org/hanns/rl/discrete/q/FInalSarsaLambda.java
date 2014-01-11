@@ -65,29 +65,27 @@ public class FInalSarsaLambda {
 		 */
 		int[] pos = new int[]{2,2};	// agents position on the map
 		int numsteps = 2000;
-		int action;//, prevAction;
+		int action;
 		float reward = 0;
 
 		@SuppressWarnings("unchecked")
 		FinalQMatrix<Double> q = (FinalQMatrix<Double>)(ql.getMatrix());
-		//prevAction = asm.selectAction(q.getActionValsInState(pos));				// select action
-		//prevAction = a.read();
 
 		for(int i=0; i<numsteps; i++){
+			
 			Double[] vals = q.getActionValsInState(pos);	// read action utilities
 			action = asm.selectAction(vals);				// select action
 			
 			ql.performLearningStep(a, reward, pos, action);// learn about it
-			//prevAction = action;							// prepare action to be executed
 			
 			pos = GridWorld.makeStep(sx, sy, action, pos);	// move agent
 			reward = map[pos[0]][pos[1]];					// read reward
 			
-			if(i%1000==0){
+			if(i%40==0){
 				System.out.println("step "+i);
+				System.out.println(GridWorld.visqm(q, 0));
 			}
-			
-			System.out.println(GridWorld.visqm(q, 0));
+				
 			/*
 			try {
 				System.in.read();

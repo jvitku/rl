@@ -1,6 +1,7 @@
 HANNS project - Nodes for Reinforcement Learning
 ================================================
 
+
 Author Jaroslav Vitku [vitkujar@fel.cvut.cz]
 
 

@@ -197,9 +197,6 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
 		fl.setData(actionEncoder.encode(action));								
 		actionPublisher.publish(fl);
-
-		//prevAction = action;
-		//actionBuffer.push(action);	// this is done in the learning algs.
 	}
 	
 	/**

@@ -5,6 +5,8 @@ import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.LearningConfiguration;
 import org.hanns.rl.discrete.learningAlgorithm.qLearning.config.QLearningConfig;
 
+import ctu.nengoros.util.SL;
+
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
@@ -47,6 +49,8 @@ public class FinalModelQlearning extends AbstractFinalRL /*implements FinalModel
 		if(prevActions.isEmpty())
 			prevActions.push(DEF_FIRST_ACT);
 
+//		System.out.println("RL: previous state is: "+SL.toStr(prevState)+" past action read is "+prevActions.read()); 
+		
 		// we were there and made the action
 		double prevVal = q.get(prevState, prevActions.read());	
 		// action values available now
@@ -59,6 +63,8 @@ public class FinalModelQlearning extends AbstractFinalRL /*implements FinalModel
 				(reward+this.config.getGamma()*newActionVal-prevVal);
 
 		q.set(prevState, prevActions.read(), learned);	// store the value
+		
+		//System.out.println("RL And executing this one in this state "+SL.toStr(newState)+" action "+newAction);
 		
 		prevState = newState.clone();		// update last state and action
 		prevActions.push(newAction);		// remember what is being executed now

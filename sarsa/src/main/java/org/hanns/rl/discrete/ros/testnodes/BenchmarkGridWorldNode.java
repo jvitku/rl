@@ -38,6 +38,7 @@ public class BenchmarkGridWorldNode extends GridWorldNode{
 		log.info(me+"Node configured and ready to provide simulator services!");
 		this.waitForConnections(connectedNode);
 	}
+	
 	@Override
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);

@@ -38,8 +38,6 @@ public class HannsQLambdaVisNengoros extends HannsQLambdaVis{
 		filter = new MessageDerivator(len);
 	}
 
-	int poc = 0;
-	
 	/**
 	 * Well, filter messages directly after receiving them
 	 */
@@ -74,24 +72,16 @@ public class HannsQLambdaVisNengoros extends HannsQLambdaVis{
 						myLog(me+"<-"+topicDataIn+" Received new reinforcement &" +
 								" state description "+SL.toStr(data)+" Message should be "
 										+ "processed?: "+shouldPass);
-				
-					/*
-					if(poc++%2==0){
-						// publish the NOOP 
-						std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
-						fl.setData(actionEncoder.encode(-1));								
-						actionPublisher.publish(fl);
-					}*/
 					
 					if(!shouldPass){
-						//System.out.println(step+"sending noop");
+						System.out.println(step+"sending noop");
 						// publish the NOOP 
 						std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
 						fl.setData(actionEncoder.encode(-1));								
 						actionPublisher.publish(fl);
 						return;
 					}
-					//System.out.println(step+"sending action");
+					System.out.println(step+"sending action");
 
 					// decode data (first value is reinforcement..
 					// ..the rest are values of state variables

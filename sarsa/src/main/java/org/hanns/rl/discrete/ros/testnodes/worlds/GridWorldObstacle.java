@@ -112,8 +112,10 @@ public class GridWorldObstacle extends GridWorld{
 				if(map[current[0]][current[1]-1] != -1)
 					coords[1] = current[1]-1;
 			}
+		}else if(action==-1){ 			// NOOP
+			return coords;
 		}else{
-			System.err.println("unrecognized action!");
+			System.err.println("unrecognized action! "+action);
 		}
 		return coords;
 	}

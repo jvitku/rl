@@ -23,7 +23,7 @@ public class OneOfNEncoder implements ActionEncoder{
 
 	@Override
 	public float[] encode(int no) {
-		if(no>=set.getNumOfActions() || no<-1){
+		if(no >= set.getNumOfActions() || no<-1){
 			System.err.println("OneOfNEncoder: incorrect index of action!" +
 					"Have only this number of actions: "+set.getNumOfActions());
 			// set no action and continue

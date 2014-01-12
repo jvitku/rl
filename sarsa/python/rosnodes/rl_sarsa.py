@@ -92,4 +92,50 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeri
 	net.connect('importance', mod.getTermination(QLambda.topicImportance))
 	
 	return mod
+
+#################################################################################
 	
+nodedelay = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros"
+	
+def qlambdaDelay(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
+
+	command = [nodedelay, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
+	'_'+QLambda.noOutputsConf+':='+str(noActions),
+	'_'+QLambda.sampleCountConf+':='+str(noValues),
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod)]
+
+	g = NodeGroup("QLambda", True);
+	g.addNode(command, "QLambda", "java");
+	module = NeuralModule(name+'_QLambda', g, False)
+
+	module.createEncoder(QLambda.topicAlpha,"float",1); 				# alpha config
+	module.createEncoder(QLambda.topicGamma,"float",1);
+	module.createEncoder(QLambda.topicLambda,"float",1);
+	module.createEncoder(QLambda.topicImportance,"float",1);
+
+	module.createDecoder(QLambda.topicProsperity,"float",3);			# float[]{prosperity, coverage, reward/step}
+
+	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
+	module.createEncoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
+
+	return module
+
+def qlambdaConfiguredDelay(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
+
+	# build the node
+	mod = qlambdaDelay(name, noStateVars,noActions, noValues, logPeriod)
+	net.add(mod)
+
+	# define the configuration
+	net.make_input('alpha',[QLambda.DEF_ALPHA])
+	net.make_input('gamma',[QLambda.DEF_GAMMA])
+	net.make_input('lambda',[QLambda.DEF_LAMBDA])
+	net.make_input('importance',[QLambda.DEF_IMPORTANCE])
+
+	# wire it
+	net.connect('alpha', mod.getTermination(QLambda.topicAlpha))
+	net.connect('gamma', mod.getTermination(QLambda.topicGamma))
+	net.connect('lambda', mod.getTermination(QLambda.topicLambda))
+	net.connect('importance', mod.getTermination(QLambda.topicImportance))
+
+	return mod

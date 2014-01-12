@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.ros;
 import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
+import org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
@@ -47,8 +47,8 @@ public class NengorosMessageFilter extends RosCommunicationTest{
 		assertTrue(mapr.getNode() instanceof GridWorldNode);
 		GridWorldNode map = (GridWorldNode)mapr.getNode();
 		
-		assertTrue(rlr.getNode() instanceof HannsQLambda);
-		HannsQLambda rl = (HannsQLambda) rlr.getNode();
+		assertTrue(rlr.getNode() instanceof HannsQLambdaVisNengoros);
+		HannsQLambdaVisNengoros rl = (HannsQLambdaVisNengoros) rlr.getNode();
 		
 		
 		// simulate 2000 steps

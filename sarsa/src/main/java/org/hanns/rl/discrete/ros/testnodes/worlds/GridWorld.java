@@ -144,8 +144,10 @@ public class GridWorld {
 			if(current[1] > 0){
 				coords[1] = current[1]-1;
 			}
+		}else if(action==-1){			// NOOP
+			return coords;
 		}else{
-			System.err.println("unrecognized action!");
+			System.err.println("unrecognized action! Action:"+action);
 		}
 		return coords;
 	}

@@ -1,7 +1,8 @@
-package org.hanns.rl.discrete.observer.impl;
+package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
+import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
 
 /**
  * This computes binary occurrence of the agent for all states.
@@ -10,8 +11,12 @@ import org.hanns.rl.discrete.observer.Observer;
  * 
  * @author Jaroslav Vitku
  */
-public class BinaryCoverage implements Observer{
+public class BinaryCoverage extends AbsProsperityObserver{
 
+	public static final String name = "BinaryCoverage";
+	public static final String explanation = "Value from [0,1] telling how many" +
+			"states from the state space were visited at least once.";
+	
 	protected final int noStates;
 
 	protected final int[] sizes;
@@ -39,11 +44,15 @@ public class BinaryCoverage implements Observer{
 
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction){
+
+		step++;
+
 		// mark visited state
 		visited.setValue(currentState, true);
-		
-		//System.out.println("binary coverage of: "+this.getProsperity()+ " no visited: "
-			//	+this.getNoVisitedStates()+" of "+this.noStates);
+
+		if(this.shouldVis  && step % visPeriod==0)
+			System.out.println("binary coverage of: "+this.getProsperity()+ " no visited: "
+					+this.getNoVisitedStates()+" of "+this.noStates);
 	}
 
 	@Override
@@ -89,16 +98,12 @@ public class BinaryCoverage implements Observer{
 
 	@Override
 	public void softReset(boolean randomize) {
+		super.softReset(randomize);
 		visited.setAllVals(false);
 	}
 
 	@Override
-	public void hardReset(boolean randomize) {
-		this.softReset(randomize);
-	}
-
-	@Override
-	public Observer[] getChilds() {
+	public ProsperityObserver[] getChilds() {
 		System.err.println("ERROR: no childs available");
 		return null;
 	}

@@ -4,7 +4,7 @@ import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorldObstacle;
 import org.ros.node.ConnectedNode;
 
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamListTmp;
+import ctu.nengoros.rosparam.manager.ParamList;
 
 /**
  * The same as GrodWorldNode, but this one has predefined map with obstacles and rewards.
@@ -42,7 +42,7 @@ public class BenchmarkGridWorldNode extends GridWorldNode{
 	@Override
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
-		paramList = new ParamListTmp();
+		paramList = new ParamList();
 
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log data to console?");
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);

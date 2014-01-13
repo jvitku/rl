@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros;
+import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
@@ -19,7 +20,8 @@ import ctu.nengoros.nodes.RosCommunicationTest;
  */
 public class NengorosMessageFilter extends RosCommunicationTest{
 
-	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros";
+	//public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros";
+	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambda";
 	public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
 	
 	//public static final String RLPARAMS = "_importance:=0 _noOutputsConf:=4 _noInputsConf:=4";
@@ -47,8 +49,11 @@ public class NengorosMessageFilter extends RosCommunicationTest{
 		assertTrue(mapr.getNode() instanceof GridWorldNode);
 		GridWorldNode map = (GridWorldNode)mapr.getNode();
 		
-		assertTrue(rlr.getNode() instanceof HannsQLambdaVisNengoros);
-		HannsQLambdaVisNengoros rl = (HannsQLambdaVisNengoros) rlr.getNode();
+		assertTrue(rlr.getNode() instanceof QLambda);
+		QLambda rl = (QLambda) rlr.getNode();
+		
+		//assertTrue(rlr.getNode() instanceof HannsQLambdaVisNengoros);
+		//HannsQLambdaVisNengoros rl = (HannsQLambdaVisNengoros) rlr.getNode();
 		
 		
 		// simulate 2000 steps
@@ -60,8 +65,8 @@ public class NengorosMessageFilter extends RosCommunicationTest{
 		// prosperity is measured here 50/50 of:
 		// binary coverage: how many tales of the map agent visited (has to be 1.0)
 		// binary reward per step: typically something like 0.0115
-		System.out.println("prosperity "+rl.getProsperity());
-		assertTrue(rl.getProsperity()>0.1);
+		System.out.println("prosperity "+rl.getProsperityObserver().getProsperity());
+		assertTrue(rl.getProsperityObserver().getProsperity()>0.1);
 		
 		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		

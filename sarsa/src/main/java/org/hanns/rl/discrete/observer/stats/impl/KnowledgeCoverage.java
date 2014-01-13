@@ -1,8 +1,8 @@
-package org.hanns.rl.discrete.observer.impl;
+package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
 
 /**
  * <p>Similar to {@link org.hanns.rl.discrete.observer.impl.BinaryCoverage}, but here
@@ -18,16 +18,18 @@ import org.hanns.rl.discrete.observer.Observer;
  * @author Jaroslav Vitku
  *
  */
-public class KnowledgeCoverage implements Observer{
+public class KnowledgeCoverage extends AbsProsperityObserver{
 
+	public static final String name = "KnowledgeCoverage";
+	public static final String explanation = "Value from [0,1] telling how many" +
+			"states from the state space have non-zero utility value for some action.";
+	
 	private final int noStates;
-
 	private final int[] sizes;
+	protected final FinalQMatrix<Double> q;
 
 	// uses the same data Structure as QMatrix, but with booleans indicating presence of a knowledge
 	private final PreAllocatedMultiDimension<Boolean> knowledgePresent;
-
-	protected final FinalQMatrix<Double> q;
 
 	/**
 	 * Initialize with a vector of dimension sizes (that is number
@@ -52,6 +54,9 @@ public class KnowledgeCoverage implements Observer{
 
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction){
+		
+		step++;
+		
 		// here, if there is some non-zero utility value in the current state, mark as covered
 		if(this.someKnowledgeFound(currentState))
 			knowledgePresent.setValue(currentState, true);
@@ -114,17 +119,8 @@ public class KnowledgeCoverage implements Observer{
 
 	@Override
 	public void softReset(boolean randomize) {
+		super.softReset(randomize);
 		knowledgePresent.setAllVals(false);
 	}
 
-	@Override
-	public void hardReset(boolean randomize) {
-		this.softReset(randomize);
-	}
-
-	@Override
-	public Observer[] getChilds() {
-		System.err.println("ERROR: no childs available");
-		return null;
-	}
 }

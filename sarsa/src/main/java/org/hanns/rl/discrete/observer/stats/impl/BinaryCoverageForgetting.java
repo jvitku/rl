@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.observer.impl;
+package org.hanns.rl.discrete.observer.stats.impl;
 
 import java.util.Random;
 
@@ -14,6 +14,11 @@ import java.util.Random;
  */
 public class BinaryCoverageForgetting extends BinaryCoverage{
 
+	public static final String name = "BinaryCoverageForgetting";
+	public static final String explanation = "Value from [0,1] telling how many" +
+			"states from the state space were visited. Each time step, one " +
+			"state is forgotten, so this value is more informative than BinaryCoverage";
+	
 	Random r;
 
 	/**
@@ -31,14 +36,17 @@ public class BinaryCoverageForgetting extends BinaryCoverage{
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction){
 
+		step++;
+
 		visited.setValue(currentState, true);	// mark visited state
-		
+
 		visited.setValue(this.randomState(), false);	// forget one random visited state each step 
-		
-		//System.out.println("binary coverage of: "+this.getProsperity()+ " no visited: "
-			//	+this.getNoVisitedStates()+" of "+this.noStates);
+
+		if(this.shouldVis  && step % visPeriod==0)
+			System.out.println("binary coverage of: "+this.getProsperity()+ " no visited: "
+					+this.getNoVisitedStates()+" of "+this.noStates);
 	}
-	
+
 	private int[] randomState(){
 		int[] rs = new int[sizes.length];
 		for(int i=0; i<rs.length; i++){
@@ -47,5 +55,5 @@ public class BinaryCoverageForgetting extends BinaryCoverage{
 		}
 		return rs;
 	}
-	
+
 }

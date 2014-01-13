@@ -1,10 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
-import org.hanns.rl.discrete.observer.Observer;
-import org.hanns.rl.discrete.visualizaiton.Visualizer;
-import org.hanns.rl.discrete.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
+import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
 import org.ros.node.ConnectedNode;
-import org.ros.node.topic.Publisher;
 
 import ctu.nengoros.util.SL;
 
@@ -15,35 +12,25 @@ import ctu.nengoros.util.SL;
  * @author Jaroslav Vitku
  *
  */
-public class HannsQLambdaVis extends HannsQLambda{
-
-	protected FinalStateSpaceVisDouble visualization;
-	protected Publisher<std_msgs.Float32MultiArray> prospPublisher;
-	public static final String topicProsperity = ns+"prosperity";
+@Deprecated
+public class HannsQLambdaVis extends AbstractQLambda{
 
 	SL sl;
-
+/*
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		super.onStart(connectedNode);
 
-		this.registerProsperityPublisher(connectedNode);
+		this.buildProsperityPublisher(connectedNode);
 
 		sl = new SL("filex");
 		sl.printToFile(true);
 
-		// initialize the visualizer
-		this.visualization = new FinalStateSpaceVisDouble(
-				states.getDimensionsSizes(), actions.getNumOfActions(), q);
-
-		visualization.setVisPeriod(this.logPeriod);
-		visualization.setTypeVisualization(2);
-		visualization.setActionRemapping(new String[]{"<",">","^","v"});
 	}
 
 	@Override
 	protected void performSARSAstep(float reward, float[] state){
-		// store the data into the int[]states
+		// store the data into the int[] states
 		super.decodeState(state);	
 		// choose action and learn about it
 		int action = super.learn(reward); 
@@ -54,18 +41,15 @@ public class HannsQLambdaVis extends HannsQLambda{
 		super.executeAction(action);
 		this.publishProsperity();
 
-		if(this.visualization!=null)
-			this.visualization.performStep(prevAction, reward, states.getValues(), action);
+		//if(this.visualization!=null)
+			//this.visualization.observe(prevAction, reward, states.getValues(), action);
 
 		this.log();
 	}
-
-	public Visualizer getVisualizer(){
-		return this.visualization;
-	}
+*/
 
 	private void log(){
-		Observer[] childs = o.getChilds(); 
+		ProsperityObserver[] childs = o.getChilds(); 
 		sl.pl(step+" "+o.getProsperity()+" "+childs[0].getProsperity()
 				+" "+childs[1].getProsperity()); // log data to file each step
 
@@ -74,16 +58,10 @@ public class HannsQLambdaVis extends HannsQLambda{
 					+" \treward/step="+childs[1].getProsperity()); // log data
 	}
 
-	protected void registerProsperityPublisher(ConnectedNode connectedNode){
-		prospPublisher =connectedNode.newPublisher(topicProsperity, std_msgs.Float32MultiArray._TYPE);
-	}
-
-	protected void publishProsperity(){
-		Observer[] childs = o.getChilds(); 
-		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();	
-		fl.setData(new float[]{o.getProsperity(),childs[0].getProsperity()
-				,childs[1].getProsperity()});								
-		prospPublisher.publish(fl);
+	@Override
+	protected void onNewDataReceived(float[] data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

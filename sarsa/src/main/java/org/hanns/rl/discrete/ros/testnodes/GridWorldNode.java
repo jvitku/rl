@@ -19,7 +19,7 @@ import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.nodes.HannsNode;
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamListTmp;
+import ctu.nengoros.rosparam.manager.ParamList;
 import ctu.nengoros.util.SL;
 
 /**
@@ -70,7 +70,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	protected int step;
 	protected boolean simPaused = false;
 
-	protected ParamListTmp paramList;			// parameter storage
+	protected ParamList paramList;			// parameter storage
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -228,7 +228,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
-		paramList = new ParamListTmp();
+		paramList = new ParamList();
 
 
 		// parse size of the map 

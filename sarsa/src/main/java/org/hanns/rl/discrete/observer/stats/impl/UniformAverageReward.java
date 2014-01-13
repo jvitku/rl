@@ -1,6 +1,6 @@
-package org.hanns.rl.discrete.observer.impl;
+package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
 
 /**
  * Basic observer which logs only positive rewards without considering 
@@ -10,7 +10,12 @@ import org.hanns.rl.discrete.observer.Observer;
  * @author Jaroslav Vitku
  *
  */
-public class UniformAverageReward implements Observer{
+public class UniformAverageReward extends AbsProsperityObserver{
+
+	public static final String name = "BinaryAverageReward";
+	public static final String explanation = "Value from [0,1] telling" +
+			"how often some reward is received per step, 1=reward " +
+			"received each step.";
 
 	private int steps = 0; 			// simulation step
 	private float totalReward = 0; 	// total reward received 
@@ -18,6 +23,7 @@ public class UniformAverageReward implements Observer{
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState,
 			int futureAction) {
+
 		steps++;
 		if(reward>0){
 			totalReward += reward;
@@ -33,19 +39,8 @@ public class UniformAverageReward implements Observer{
 
 	@Override
 	public void softReset(boolean randomize) {
-		steps = 0;
+		super.softReset(randomize);
 		totalReward = 0;
 	}
 
-	@Override
-	public void hardReset(boolean randomize) {
-		this.softReset(randomize);
-	}
-
-	
-	@Override
-	public Observer[] getChilds() {
-		System.err.println("ERROR: no childs available");
-		return null;
-	}
 }

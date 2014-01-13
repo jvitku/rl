@@ -1,87 +1,66 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
 
-import org.apache.commons.logging.Log;
-import org.hanns.rl.common.exceptions.MessageFormatException;
+import java.util.LinkedList;
+
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
-import org.hanns.rl.discrete.ros.Topic;
+import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
+import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgettingReward;
+import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.message.MessageListener;
-import org.ros.namespace.GraphName;
-import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
-import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamListTmp;
+import ctu.nengoros.rosparam.manager.ParamList;
 import ctu.nengoros.util.SL;
 
-public abstract class AbstractQLambda extends AbstractNodeMain{
+public abstract class AbstractQLambda extends AbstractHannsNode{
 
 	public static final String name = "QLambda";
-	public final String me = "["+name+"] ";
-	public static final String s = "/";
-
-	public static final String ns = name+s; // namespace for config. parameters			
-	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
-	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
-
-	public static final String topicDataIn  = Topic.baseIn+"States"; // inStates
-	public static final String topicDataOut = Topic.baseOut+"Actions"; // outActions
-
-	protected PrivateRosparam r;	// parameter (command-line) reader
-	protected ParamListTmp paramList;			// parameter storage
-
+	
 	/**
-	 * Learning rate
+	 * RL parameters
 	 */
+	// learning rate
 	public static final String alphaConf = "alpha";
 	public static final String topicAlpha= ns+alphaConf;
 	public static final double DEF_ALPHA = 0.5;
-
-	/**
-	 * Decay factor
-	 */
+	// Decay factor
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = ns+gammaConf;
 	public static final double DEF_GAMMA = 0.3;
-
-
-	/**
-	 * Trace decay factor
-	 */
+	// Trace decay factor
 	public static final String lambdaConf = "lambda";
 	public static final String topicLambda = ns+lambdaConf;
-
+	// Length of eligibility trace
 	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 10;
 
 	/**
-	 * TODO: parameter (input?) rl enabled
+	 * Importance based Epsilon-greedy ASM configuration
 	 */
-
-	/**
-	 * Number of state variables considered by the RL (predefined sampling)
-	 */
-	public static final String noInputsConf = "noInputs";
-	public static final int DEF_STATEVARS = 2;
-
-	/**
-	 * Number of actions that can be performed by the RL ASM (coding 1ofN)
-	 */
-	public static final String noOutputsConf = "noOutputs";
-	public static final int DEF_NOACTIONS = 4;
+	// probability of choosing action randomly
+	public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
+	public static final String topicEpsilon = ns+epsilonConf;
+	public static final double DEF_EPSILON=0.6;
+	// importance affect current value of epsilon: higher action importance, smaller eps.
+	public static final String importanceConf = "importance";
+	public static final String topicImportance = ns+importanceConf;
+	public static final double DEF_IMPORTANCE = 0.7; 
 
 	/**
 	 * Default sampling parameters, TODO: customize each variable sampling 
@@ -97,32 +76,13 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	public static final double DEF_MIN=0, DEF_MAX=1;
 	public static final int DEF_COUNT=5;
 
+	
 	/**
-	 * Epsilon-greedy ASM configuration
+	 * RL instances
 	 */
-	public static final String epsilonConf="epsilon";
-	public static final String topicEpsilon = ns+epsilonConf;
-	public static final double DEF_EPSILON=0.6;
-
-	public static final int DEF_LOGPERIOD =100;	// how often to log? 
-	public static final String logPeriodConf = "logPeriod";
-	protected int logPeriod; 
-
-	/**
-	 * ROS node configuration
-	 */
-	public static final String shouldLog = "shouldLog";
-	public static final boolean DEF_LOG = true;
-	protected boolean willLog = true;
-	protected Log log;
-	protected Publisher<std_msgs.Float32MultiArray> actionPublisher;
-
-	/**
-	 * RL stuff
-	 */
-	public FinalModelNStepQLambda rl;		// RL algorithm
+	public FinalModelNStepQLambda rl;			// RL algorithm
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
-	protected ActionSelectionMethod<Double> asm;		// action selection methods
+	protected ActionSelectionMethod<Double> asm;// action selection methods
 
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
@@ -130,62 +90,53 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 	protected BasicFinalStateSet states;		// state variables (each has encoder)
 
 	protected int prevAction;					// index of the last action executed
-
 	protected int step = 0;
-	
-	@Override
-	public GraphName getDefaultNodeName() { return GraphName.of(name); }
+
+	ProsperityObserver o;						// observes the prosperity of node
+	protected LinkedList<Observer> observers;	// logging, visualization & observing data
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		log = connectedNode.getLog();
 
 		log.info(me+"started, parsing parameters");
-		this.addParams();
-		this.printParams();
+		this.registerParameters();
+		paramList.printParams();
 		this.parseParameters(connectedNode);
-
+		this.registerObservers();
+		
 		myLog(me+"initializing ROS Node IO");
-		this.buildASMSumbscribers(connectedNode);
-		this.buildEligibilitySubscribers(connectedNode);
-		this.buildRLSubscribers(connectedNode);
+		
+		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
 
 		myLog(me+"Node configured and ready now!");
 	}
 
 	/**
-	 * Different AMSs can be used here
-	 * @param connectedNode ROS connectedNode 
+	 * Adds arbitrary observers/visualizators to the node/algorithms
 	 */
-	protected abstract void buildASMSumbscribers(ConnectedNode connectedNode);
+	protected void registerObservers(){
+		observers = new LinkedList<Observer>();
 
-	protected void performSARSAstep(float reward, float[] state){
-		this.decodeState(state);
-		int action = this.learn(reward);
-		this.executeAction(action);
-	}
-
-	protected void decodeState(float[] state){
-		// encode the raw float[] values into state variables
-		try {
-			states.setRawData(state);
-		} catch (MessageFormatException e) {
-			log.error(me+"ERROR: Could not encode state description into state variables");
-			e.printStackTrace();
-		}
-	}
-
-	protected int learn(float reward){
-		//SL.sinfol(me+"\n\n my pos: "+SL.toStr(state)+" reward "+reward);
-
-		// select action, perform learning step
-		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
-		rl.performLearningStep(prevAction, reward, states.getValues(), action);
+		o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
+		observers.add(o);
 		
-		return action;
-	}
+		// initialize the visualizer
+		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
+				states.getDimensionsSizes(), actions.getNumOfActions(), q);
 
+		visualization.setVisPeriod(this.logPeriod);
+		visualization.setTypeVisualization(2);
+		visualization.setActionRemapping(new String[]{"<",">","^","v"});
+	}
+		
+
+	/**
+	 * Execute action selected by the ASM and publish over the ROS network
+	 * 
+	 * @param action index of selected action, this action is encoded and sent
+	 */
 	protected void executeAction(int action){
 		if((step++) % logPeriod==0) 
 			log.info(me+"Step: "+step+"-> responding with the following action: "
@@ -198,19 +149,16 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 
 		prevAction = action;
 	}
-	
-	/**
-	 * This is just for future listing of parameters that
-	 * can be used (e.g. on launch). 
-	 */
-	protected void addParams(){
-		paramList = new ParamListTmp();
-		paramList.addParam(noInputsConf, ""+DEF_STATEVARS,"Number of state variables");
+
+	@Override
+	protected void registerParameters(){
+		paramList = new ParamList();
+		paramList.addParam(noInputsConf, ""+DEF_NOINPUTS,"Number of state variables");
 		paramList.addParam(sampleCountConf, ""+DEF_COUNT, "Number of samples for variables, that is: number of values!");
 		paramList.addParam(sampleMinConf, ""+DEF_MIN,"Min. value on the state input");
 		paramList.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
-		paramList.addParam(noOutputsConf, ""+DEF_NOACTIONS,"Number of actions available to the agent (1ofN coded)");
-		
+		paramList.addParam(noOutputsConf, ""+DEF_NOOUTPUTS,"Number of actions available to the agent (1ofN coded)");
+
 		paramList.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
 		paramList.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
@@ -219,16 +167,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
 		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
 	}
-	
-	protected void printParams(){
-		String intro = "---------------------- Available parameters are: ";
-		String outro = "------------------------------------------------";
-		System.out.println(intro+"\n"+paramList.listParams()+"\n"+outro);
-	}
-	
-	/**
-	 * Read private parameters potentially passed to the node. 
-	 */
+
+	@Override
 	@SuppressWarnings("unchecked")
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
@@ -245,8 +185,8 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
 
 		// dimensionality of the RL task 
-		int noStateVars = r.getMyInteger(noInputsConf, DEF_STATEVARS);
-		int noActions = r.getMyInteger(noOutputsConf, DEF_NOACTIONS);
+		int noStateVars = r.getMyInteger(noInputsConf, DEF_NOINPUTS);
+		int noActions = r.getMyInteger(noOutputsConf, DEF_NOOUTPUTS);
 
 		// configuration of sampling for state variables (float->finite no. of states) 
 		double sampleMn = r.getMyDouble(sampleMinConf, DEF_MIN);
@@ -289,27 +229,33 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
 	
-
+	/**
+	 * Configure the ASM
+	 * @param epsilon 
+	 */
 	protected void initializeASM(double epsilon){
-		/**
-		 *  configure the ASM
-		 */
-		BasicConfig asmConf = new BasicConfig();
-		asm = new EpsilonGreedyDouble(actions, asmConf);
-		((EpsilonGreedyDouble)asm).getConfig().setEpsilon(epsilon);
+		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
+		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
+		((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(epsilon);
 		asm.getConfig().setExplorationEnabled(true);
-
 	}
 
+
+	/**
+	 * This method is called by the dataSubscriber when a new ROS 
+	 * message with state and reward description arrives.
+	 */
+	protected abstract void onNewDataReceived(float[] data);
+	
+	/**
+	 * Register the {@link #actionPublisher} for publishing actions 
+	 * and the state subscriber for receiving state+reward data.
+	 * 
+	 * @param connectedNode
+	 */
 	protected void buildDataIO(ConnectedNode connectedNode){
-		/**
-		 * Action publisher
-		 */
 		actionPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
 
-		/**
-		 * State receiver
-		 */
 		Subscriber<std_msgs.Float32MultiArray> dataSub = 
 				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
 
@@ -327,21 +273,27 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 						myLog(me+"<-"+topicDataIn+" Received new reinforcement &" +
 								" state description "+SL.toStr(data));
 
-					// decode data (first value is reinforcement..
-					// ..the rest are values of state variables
-					float reward = data[0];
-					float[] state = new float[data.length-1];
-					for(int i=0; i<state.length; i++){
-						state[i] = data[i+1];
-					}
-					// perform the SARSA step
-					performSARSAstep(reward, state);
+					// implement this
+					onNewDataReceived(data);
 				}
 			}
 		});
 	}
 
-	protected void buildRLSubscribers(ConnectedNode connectedNode){
+	/**
+	 * Register subscribers for the RL configuration (alpha & gamma)
+	 * @param connectedNode
+	 */
+	@Override
+	protected void buildConfigSubscribers(ConnectedNode connectedNode){
+		
+		this.buildRLConfigSubscribers(connectedNode);
+		this.buildEligibilitySubscribers(connectedNode);
+		this.buildASMSumbscribers(connectedNode);
+
+	}
+	
+	protected void buildRLConfigSubscribers(ConnectedNode connectedNode){
 		/**
 		 * Alpha
 		 */
@@ -385,6 +337,12 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		});	
 	}
 
+
+	/**
+	 * Register configuration data-lines for the ASM (epsilon & importance).
+	 * 
+	 * @param connectedNode
+	 */
 	protected void buildEligibilitySubscribers(ConnectedNode connectedNode){
 		/**
 		 * Lambda
@@ -408,25 +366,72 @@ public abstract class AbstractQLambda extends AbstractNodeMain{
 		});
 	}
 
-	protected void myLog(String what){
-		if(this.willLog)
-			log.info(what);
-	}
-
 	/**
-	 * Log only if allowed, and if the value is changed
-	 * @param message message to show value change
-	 * @param oldVal old value
-	 * @param newVal new one
+	 * Different AMSs can be used here, here subscribe for importance & epsilon
+	 * 
+	 * @param connectedNode ROS connectedNode 
 	 */
-	protected void logParamChange(String message, double oldVal, double newVal){
-		if(!this.willLog)
-			return;
-		if(oldVal==newVal)
-			return;
-		log.info(message+" Value is being changed from: "+oldVal+" to "+newVal);
-	}
+	protected void buildASMSumbscribers(ConnectedNode connectedNode){
+		/**
+		 * Epsilon
+		 */
+		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
+				connectedNode.newSubscriber(name+s+epsilonConf, std_msgs.Float32MultiArray._TYPE);
 
+		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
+			@Override
+			public void onNewMessage(std_msgs.Float32MultiArray message) {
+				float[] data = message.getData();
+				if(data.length != 1)
+					log.error("Epsilon config: Received message has " +
+							"unexpected length of"+data.length+"!");
+				else{
+
+					logParamChange("RECEIVED chage of value EPSILON",
+							((EpsilonGreedyDouble)asm).getConfig().getEpsilon(),data[0]);
+					((EpsilonGreedyDouble)asm).getConfig().setEpsilon(data[0]);
+				}
+			}
+		});
+		
+		/**
+		 * Importance parameter
+		 */
+		Subscriber<std_msgs.Float32MultiArray> importenceSub = 
+				connectedNode.newSubscriber(topicImportance, std_msgs.Float32MultiArray._TYPE);
+
+		importenceSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
+			@Override
+			public void onNewMessage(std_msgs.Float32MultiArray message) {
+				float[] data = message.getData();
+				if(data.length != 1)
+					log.error("Importance input: Received message has " +
+							"unexpected length of"+data.length+"!");
+				else{
+					logParamChange("RECEIVED chage of value IMPORTANCE",
+							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
+
+					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Publishes three values, first one is the composed prosperity, 
+	 * composed of two following values.
+	 */
+	@Override
+	protected void publishProsperity(){
+		ProsperityObserver[] childs = o.getChilds(); 
+		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();	
+		fl.setData(new float[]{o.getProsperity(),childs[0].getProsperity()
+				,childs[1].getProsperity()});								
+		prospPublisher.publish(fl);
+	}
+	
+	@Override
+	public ProsperityObserver getProsperityObserver() { return o; }
 }
 
 

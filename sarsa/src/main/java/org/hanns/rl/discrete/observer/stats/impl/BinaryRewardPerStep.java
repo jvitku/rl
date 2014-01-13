@@ -1,6 +1,6 @@
-package org.hanns.rl.discrete.observer.impl;
+package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.Observer;
+import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
 
 /**
  * Computes average binary received reinforcement per step.
@@ -8,8 +8,12 @@ import org.hanns.rl.discrete.observer.Observer;
  * @author Jaroslav Vitku
  *
  */
-public class BinaryRewardPerStep implements Observer{
+public class BinaryRewardPerStep extends AbsProsperityObserver{
 
+	public static final String name = "BinaryRewardPerStep";
+	public static final String explanation = "Value from [0,1] defining" +
+			"how often is a reward received per step (1=reward each step).";
+	
 	private int steps = 0;
 	private int rewards = 0;
 	
@@ -27,16 +31,7 @@ public class BinaryRewardPerStep implements Observer{
 
 	@Override
 	public void softReset(boolean randomize) {
-		steps=0;
+		super.softReset(randomize);
 		rewards=0;
-	}
-
-	@Override
-	public void hardReset(boolean randomize) { this.softReset(randomize); }
-	
-	@Override
-	public Observer[] getChilds() {
-		System.err.println("ERROR: no childs available");
-		return null;
 	}
 }

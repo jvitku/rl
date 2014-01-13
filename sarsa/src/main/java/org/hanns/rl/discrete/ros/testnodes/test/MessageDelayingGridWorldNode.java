@@ -8,7 +8,6 @@ import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
-import java.io.IOException;
 import java.util.*;
 
 import ctu.nengoros.util.SL;

@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.visualizaiton.qMatrix;
+package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
@@ -33,5 +33,4 @@ public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 		double d = (double)rd;
 		return d/how;
 	}
-
 }

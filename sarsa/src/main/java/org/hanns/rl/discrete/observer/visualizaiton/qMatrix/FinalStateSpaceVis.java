@@ -1,8 +1,7 @@
-package org.hanns.rl.discrete.visualizaiton.qMatrix;
+package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
 
 import org.hanns.rl.common.Resettable;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.visualizaiton.Visualizer;
 
 /**
  * <p>Provides textual visualization of N-dimensional state-space. The dimensions are visualized as
@@ -24,15 +23,18 @@ import org.hanns.rl.discrete.visualizaiton.Visualizer;
  * @param <E>
  *
  */
-public abstract class FinalStateSpaceVis<E> implements Visualizer{
+public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 
 	public static final int DEF_DETAILS = 7;
 	public static final int DEF_SILENT = 0;
+	
+	public static final boolean DEF_SHOULDVIS = false;
 
 	public static final int DEF_VISPERIOD = 20; // visualize each 20 steps by default
 	public static final int ROUNDTO = 1000;
-	
+
 	private boolean useRounding = true;
+	private boolean shouldVis = DEF_SHOULDVIS;
 
 	public static final String NO_ACTION = " ";
 	public static final String NO_VALUE = ".";
@@ -40,7 +42,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	public static final String LINE = "\t------------------------";
 
 	private String[] remaps = null;
-	
+
 	private final int[] dimSizes;
 	protected final int noActions;
 	private final FinalQMatrix<E> q;
@@ -62,9 +64,10 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 
 
 	@Override
-	public void performStep(int prevAction, float reward, int[] currentState, int futureAction) {
-		if( this.visPeriod<0 )
+	public void observe(int prevAction, float reward, int[] currentState, int futureAction) {
+		if( this.visPeriod < 0 || !this.shouldVis)
 			return;
+		
 		if(! (step++ % visPeriod==0 ) )
 			return;
 
@@ -156,7 +159,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	 * @return rounded value
 	 */
 	public abstract E round(E what, int how);
-	
+
 	private String writeDims(int[] dims){
 		if(dims.length==1)
 			return "[x]";
@@ -244,7 +247,7 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 	public void setRoundingEnabled(boolean enabled) {
 		this.useRounding = enabled;
 	}
-	
+
 
 	@Override
 	public void setActionRemapping(String[] remaps) {
@@ -255,7 +258,12 @@ public abstract class FinalStateSpaceVis<E> implements Visualizer{
 		}
 		this.remaps = remaps;		
 	}
-	
+
+	@Override
+	public void setShouldVis(boolean visualize) { this.shouldVis = visualize;	}
+
+	@Override
+	public boolean getShouldVis() { return this.shouldVis; }
 	
 	/**
 	 * Setup with dimension sizes. Use the {@link #next()} method

@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.observer;
 
 import static org.junit.Assert.*;
 
-import org.hanns.rl.discrete.observer.impl.BinaryCoverage;
+import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverage;
 import org.junit.Test;
 
 /**

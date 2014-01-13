@@ -4,18 +4,20 @@ import org.hanns.rl.common.Resettable;
 
 /**
  * The observer observes agents (nodes) behavior and creates some statistics
- * about it (e.g. to provide the prosperity value).
+ * about it (e.g. to provide the prosperity value). 
+ * 
+ * Observer can be also any visualization algorithm.
  *  
  * @author Jaroslav Vitku
  *
  */
-public interface Observer extends Resettable{
+public interface Observer extends Resettable {
 	
 	/**
 	 * Similar to the 
 	 * {@link org.hanns.rl.discrete.learningAlgorithm.LearningAlgorithm#performLearningStep(int, float, int[], int)},
 	 * but this does not produce any RL action, nor RL-learning. This just 
-	 * logs agents behavior. 
+	 * logs or visualizes agents behavior if conditions are met. 
 	 * 
 	 * @param prevAction previous action
 	 * @param reward reward received from the previous action
@@ -25,20 +27,26 @@ public interface Observer extends Resettable{
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction);
 	
 	/**
-	 * Value of successfulness of the agent (node). This can be computed
-	 * from the data logged by the method {@link #observe(int, float, int[], int)}.
-	 * 
-	 * Possible candidates are: measure of coverage of the available state-space,
-	 * average reward received etc. 
-	 * 
-	 * @return value from interval [0,1] determining how successful the algorithm is 
+	 * Turn on/off the visualization (logging)
+	 * @param visualize true if the node should visualize
 	 */
-	public float getProsperity();
+	public void setShouldVis(boolean visualize);
 	
 	/**
-	 * Observer value can be composed of sub-observers' values, so return all child observers.
-	 * @return array of child observers that are potebtially used to compute the observed value.
+	 * @return true if the visualization (console logging) is turned on
 	 */
-	public Observer[] getChilds();
-
+	public boolean getShouldVis();
+	
+	/**
+	 * Set how often (in the algorithm steps) the visualization should occur
+	 * @param period How often to update visualization, 1 means every simulation step, 
+	 * -1 means no visualization, 10 means visualization each 10 steps
+	 */
+	public void setVisPeriod(int period);
+	
+	/**
+	 * @see #setVisPeriod(int)
+	 * @return how often the visualization occurs
+	 */
+	public int getVisPeriod();
 }

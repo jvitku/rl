@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
+import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Ignore;
@@ -14,7 +15,8 @@ import ctu.nengoros.nodes.RosCommunicationTest;
 
 public class RosInteractionVis extends RosCommunicationTest{
 
-	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis";
+	//public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis";
+	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.QLambda";
 	public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
 	public static final String DELAYMAP = "org.hanns.rl.discrete.ros.testnodes.test.MessageDelayingGridWorldNode";
 	
@@ -47,9 +49,11 @@ public class RosInteractionVis extends RosCommunicationTest{
 		assertTrue(mapr.getNode() instanceof GridWorldNode);
 		GridWorldNode map = (GridWorldNode)mapr.getNode();
 		
-		assertTrue(rlr.getNode() instanceof HannsQLambda);
-		HannsQLambda rl = (HannsQLambda) rlr.getNode();
+		//assertTrue(rlr.getNode() instanceof HannsQLambda);
+		//HannsQLambda rl = (HannsQLambda) rlr.getNode();
 		
+		assertTrue(rlr.getNode() instanceof QLambda);
+		QLambda rl = (QLambda) rlr.getNode();
 		
 		// simulate 2000 steps
 		while(map.getStep() < 10000){
@@ -60,8 +64,8 @@ public class RosInteractionVis extends RosCommunicationTest{
 		// prosperity is measured here 50/50 of:
 		// binary coverage: how many tales of the map agent visited (has to be 1.0)
 		// binary reward per step: typically something like 0.0115
-		System.out.println("prosperity "+rl.getProsperity());
-		assertTrue(rl.getProsperity()>0.1);
+		System.out.println("prosperity "+rl.getProsperityObserver().getProsperity());
+		assertTrue(rl.getProsperityObserver().getProsperity()>0.1);
 		
 		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		
@@ -83,9 +87,11 @@ public class RosInteractionVis extends RosCommunicationTest{
 		assertTrue(mapr.getNode() instanceof GridWorldNode);
 		GridWorldNode map = (GridWorldNode)mapr.getNode();
 		
-		assertTrue(rlr.getNode() instanceof HannsQLambda);
-		HannsQLambda rl = (HannsQLambda) rlr.getNode();
+		//assertTrue(rlr.getNode() instanceof HannsQLambda);
+		//HannsQLambda rl = (HannsQLambda) rlr.getNode();
 		
+		assertTrue(rlr.getNode() instanceof QLambda);
+		QLambda rl = (QLambda) rlr.getNode();
 		
 		// simulate 2000 steps
 		while(map.getStep() < 10000){
@@ -96,8 +102,8 @@ public class RosInteractionVis extends RosCommunicationTest{
 		// prosperity is measured here 50/50 of:
 		// binary coverage: how many tales of the map agent visited (has to be 1.0)
 		// binary reward per step: typically something like 0.0115
-		System.out.println("prosperity "+rl.getProsperity());
-		assertTrue(rl.getProsperity()>0.1);
+		System.out.println("prosperity "+rl.getProsperityObserver().getProsperity());
+		assertTrue(rl.getProsperityObserver().getProsperity()>0.1);
 		
 		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		

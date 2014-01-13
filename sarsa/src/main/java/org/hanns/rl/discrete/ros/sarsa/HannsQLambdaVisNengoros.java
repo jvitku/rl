@@ -24,10 +24,10 @@ import ctu.nengoros.util.SL;
  * @author Jaroslav Vitku
  *
  */
+@Deprecated
 public class HannsQLambdaVisNengoros extends HannsQLambdaVis{
 	
 	protected MessageDerivator filter;
-	
 	public static final String filterConf = "filterLength";
 
 	@Override
@@ -91,7 +91,7 @@ public class HannsQLambdaVisNengoros extends HannsQLambdaVis{
 						state[i] = data[i+1];
 					}
 					// perform the SARSA step
-					performSARSAstep(reward, state);
+					//performSARSAstep(reward, state);
 				}
 			}
 		});

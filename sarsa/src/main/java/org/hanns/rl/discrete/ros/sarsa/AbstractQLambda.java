@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
+//import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
@@ -55,9 +55,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * Importance based Epsilon-greedy ASM configuration
 	 */
 	// probability of choosing action randomly
-	public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
-	public static final String topicEpsilon = conf+epsilonConf;
-	public static final double DEF_EPSILON=0.6;
+	//public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
+	//public static final String topicEpsilon = conf+epsilonConf;
+	//public static final double DEF_EPSILON=0.6;
 	// importance affect current value of epsilon: higher action importance, smaller eps.
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = conf+importanceConf;
@@ -183,7 +183,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		paramList.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
 		paramList.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
-		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
+		//paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		double gamma = r.getMyDouble(gammaConf, DEF_GAMMA);
 		double lambda = r.getMyDouble(lambdaConf, DEF_LAMBDA);
 		int len = r.getMyInteger(traceLenConf, DEF_TRACELEN);
-		double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
+		//double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
 
 		// dimensionality of the RL task 
 		int noStateVars = r.getMyInteger(noInputsConf, DEF_NOINPUTS);
@@ -239,7 +239,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		config.setAlpha(alpha);
 		config.setGamma(gamma);
 
-		initializeASM(epsilon);
+		initializeASM(/*epsilon*/);
 		/**
 		 *  build the RL algorithm and obtain its Q(s,a) matrix
 		 */
@@ -247,15 +247,13 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
 	
-	/**
-	 * Configure the ASM
-	 * @param epsilon 
-	 */
-	protected void initializeASM(double epsilon){
+	protected void initializeASM(/*double epsilon*/){
 		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
 		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
-		((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(epsilon);
 		asm.getConfig().setExplorationEnabled(true);
+		
+		// this forces the agent to use only greedy ASM when importance is 1 
+		//((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(0);
 	}
 
 
@@ -389,10 +387,11 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * 
 	 * @param connectedNode ROS connectedNode 
 	 */
+	
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
 		 * Epsilon
-		 */
+		 * /
 		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
 				connectedNode.newSubscriber(topicEpsilon, std_msgs.Float32MultiArray._TYPE);
 
@@ -411,7 +410,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 				}
 			}
 		});
-		
+		*/
 		/**
 		 * Importance parameter
 		 */

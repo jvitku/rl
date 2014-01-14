@@ -17,7 +17,7 @@ import org.ros.node.topic.Publisher;
 public class QLambdaConfigurator extends AbstractNodeMain{
 
 	private Publisher<std_msgs.Float32MultiArray> alphaPub, gammaPub, lambdaPub, 
-	epsilonPub, importancePub;
+	/*epsilonPub,*/ importancePub;
 
 	public float alpha = 0.5f, gamma = 0.3f, lambda = 0.7f, epsilon = 0.6f, 
 			importance = 0.5f;
@@ -38,7 +38,7 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 		alphaPub= connectedNode.newPublisher(QLambda.topicAlpha,std_msgs.Float32MultiArray._TYPE);
 		gammaPub= connectedNode.newPublisher(QLambda.topicGamma, std_msgs.Float32MultiArray._TYPE);
 		lambdaPub= connectedNode.newPublisher(QLambda.topicLambda, std_msgs.Float32MultiArray._TYPE);
-		epsilonPub= connectedNode.newPublisher(QLambda.topicEpsilon, std_msgs.Float32MultiArray._TYPE);
+		//epsilonPub= connectedNode.newPublisher(QLambda.topicEpsilon, std_msgs.Float32MultiArray._TYPE);
 		importancePub = connectedNode.newPublisher(QLambda.topicImportance, std_msgs.Float32MultiArray._TYPE);
 		
 		connectedNode.executeCancellableLoop(new CancellableLoop() {
@@ -63,8 +63,8 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 				mess.setData(new float[]{lambda});								
 				lambdaPub.publish(mess);
 
-				mess.setData(new float[]{epsilon});
-				epsilonPub.publish(mess);
+				//mess.setData(new float[]{epsilon});
+				//epsilonPub.publish(mess);
 
 				mess.setData(new float[]{importance});
 				importancePub.publish(mess);
@@ -73,7 +73,7 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 						+"\nalpha="+alpha
 						+"\ngamma="+gamma
 						+"\nlambda="+lambda
-						+"\nepsilon="+epsilon
+						//+"\nepsilon="+epsilon
 						+"\nimportance="+importance);
 						
 
@@ -91,8 +91,8 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 	
 	public void setLambda(float val){ this.lambda= val; }
 	public float getLambda(){ return this.lambda; }
-	
+	/*
 	public void setEpsilon(float val){ this.epsilon= val; }
 	public float getEpsilon(){ return this.epsilon; }
-	
+	*/
 }

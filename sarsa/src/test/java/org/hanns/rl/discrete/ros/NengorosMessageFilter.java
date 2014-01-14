@@ -3,7 +3,6 @@ package org.hanns.rl.discrete.ros;
 import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
@@ -20,8 +19,7 @@ import ctu.nengoros.nodes.RosCommunicationTest;
  */
 public class NengorosMessageFilter extends RosCommunicationTest{
 
-	//public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros";
-	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.HannsQLambda";
+	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.QLambda";
 	public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
 	
 	//public static final String RLPARAMS = "_importance:=0 _noOutputsConf:=4 _noInputsConf:=4";
@@ -52,14 +50,11 @@ public class NengorosMessageFilter extends RosCommunicationTest{
 		assertTrue(rlr.getNode() instanceof QLambda);
 		QLambda rl = (QLambda) rlr.getNode();
 		
-		//assertTrue(rlr.getNode() instanceof HannsQLambdaVisNengoros);
-		//HannsQLambdaVisNengoros rl = (HannsQLambdaVisNengoros) rlr.getNode();
-		
-		
 		// simulate 2000 steps
 		while(map.getStep() < 10000){
 			sleep(100);
 		}
+		
 		map.setSimPaused(true);
 		
 		// prosperity is measured here 50/50 of:

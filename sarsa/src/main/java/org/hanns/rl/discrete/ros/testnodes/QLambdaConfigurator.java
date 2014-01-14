@@ -1,7 +1,6 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
 import org.apache.commons.logging.Log;
-import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.namespace.GraphName;
@@ -40,7 +39,7 @@ public class QLambdaConfigurator extends AbstractNodeMain{
 		gammaPub= connectedNode.newPublisher(QLambda.topicGamma, std_msgs.Float32MultiArray._TYPE);
 		lambdaPub= connectedNode.newPublisher(QLambda.topicLambda, std_msgs.Float32MultiArray._TYPE);
 		epsilonPub= connectedNode.newPublisher(QLambda.topicEpsilon, std_msgs.Float32MultiArray._TYPE);
-		importancePub = connectedNode.newPublisher(HannsQLambda.topicImportance, std_msgs.Float32MultiArray._TYPE);
+		importancePub = connectedNode.newPublisher(QLambda.topicImportance, std_msgs.Float32MultiArray._TYPE);
 		
 		connectedNode.executeCancellableLoop(new CancellableLoop() {
 			private int poc;

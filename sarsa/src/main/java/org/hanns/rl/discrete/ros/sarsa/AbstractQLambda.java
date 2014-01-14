@@ -164,6 +164,8 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		actionPublisher.publish(fl);
 
 		prevAction = action;
+		
+		this.publishProsperity();
 	}
 
 	@Override

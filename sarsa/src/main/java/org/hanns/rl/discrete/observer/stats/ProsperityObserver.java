@@ -30,13 +30,6 @@ public interface ProsperityObserver extends Observer{
 	public ProsperityObserver[] getChilds();
 	
 	/**
-	 * Return the name of the ProsperityObserver, the name should somehow
-	 * reflect the observers purpose.
-	 * @return name of the observer
-	 */
-	public String getName();
-	
-	/**
 	 * Returns description of the observer, this should explain what the 
 	 * Observers value means in more detail.
 	 * @return explanation of a purpose the observed value.

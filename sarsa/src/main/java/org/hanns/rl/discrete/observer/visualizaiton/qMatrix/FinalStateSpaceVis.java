@@ -25,12 +25,16 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
  */
 public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 
+	public final String name = "FinalStateSpaceVis";
+	public final String me = "["+name+"] ";
+	
 	public static final int DEF_DETAILS = 7;
 	public static final int DEF_SILENT = 0;
 	
 	public static final boolean DEF_SHOULDVIS = false;
 
-	public static final int DEF_VISPERIOD = 20; // visualize each 20 steps by default
+	// visualize each 100 steps by default
+	public static final int DEF_VISPERIOD = 100; 
 	public static final int ROUNDTO = 1000;
 
 	private boolean useRounding = true;
@@ -62,16 +66,15 @@ public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 		this.softReset(false);
 	}
 
-
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction) {
 		if( this.visPeriod < 0 || !this.shouldVis)
 			return;
 		
-		if(! (step++ % visPeriod==0 ) )
+		if( step++ % visPeriod != 0 )
 			return;
 
-		System.out.println("Visalization, step no: "+step+"\n"+this.visualize());
+		System.out.println(me+"step no: "+step+"\n"+this.visualize());
 	}
 
 	private String visualize(){
@@ -210,13 +213,12 @@ public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 	 */
 	protected abstract boolean better(E a, E b);
 
-
 	public int getTypeVisualization(){ return this.type; }
 
 
 	@Override
 	public void setVisPeriod(int period) {
-		if(period<-1){
+		if(period < -1){
 			System.err.println("FinalStateSpaceVis: ERROR: period lower than -1, will disable vis.");
 			period = -1;
 		}

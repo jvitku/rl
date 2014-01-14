@@ -42,17 +42,16 @@ public class RosInteractionVis extends RosCommunicationTest{
 	@SuppressWarnings("unchecked")
 	@Test
 	public void runNodesNoDelay(){
-		RosRunner rlr = super.runNode(rlNoDel);		// run the RL
+		
+
+		/**
+		 * Run the RL node with data input filtering disabled
+		 */
+		RosRunner rlr = super.runNode(rlNoDel);
 		assertTrue(rlr.isRunning());
 		
 		assertTrue(rlr.getNode() instanceof QLambda);
 		QLambda rl = (QLambda) rlr.getNode();
-		
-		/**
-		 * Disable data input filtering here
-		 */
-		//rl.filter.setMaxClosedLoopLength(0);
-		//System.out.println("heeeeeeeeeeeeeeee ----");
 		
 		RosRunner mapr = super.runNode(MAP);	// run the map
 		assertTrue(mapr.isRunning());

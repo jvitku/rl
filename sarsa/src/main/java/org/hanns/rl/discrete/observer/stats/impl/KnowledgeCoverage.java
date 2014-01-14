@@ -20,8 +20,8 @@ import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
  */
 public class KnowledgeCoverage extends AbsProsperityObserver{
 
-	public static final String name = "KnowledgeCoverage";
-	public static final String explanation = "Value from [0,1] telling how many" +
+	public final String name = "KnowledgeCoverage";
+	public final String explanation = "Value from [0,1] telling how many" +
 			"states from the state space have non-zero utility value for some action.";
 	
 	private final int noStates;
@@ -122,5 +122,10 @@ public class KnowledgeCoverage extends AbsProsperityObserver{
 		super.softReset(randomize);
 		knowledgePresent.setAllVals(false);
 	}
+	
+	@Override
+	public String getName() { return name;	}
 
+	@Override
+	public String getDescription() { return explanation;	}
 }

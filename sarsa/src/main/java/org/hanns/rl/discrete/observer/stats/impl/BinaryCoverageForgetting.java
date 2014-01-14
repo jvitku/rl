@@ -14,8 +14,8 @@ import java.util.Random;
  */
 public class BinaryCoverageForgetting extends BinaryCoverage{
 
-	public static final String name = "BinaryCoverageForgetting";
-	public static final String explanation = "Value from [0,1] telling how many" +
+	public final String name = "BinaryCoverageForgetting";
+	public final String explanation = "Value from [0,1] telling how many" +
 			"states from the state space were visited. Each time step, one " +
 			"state is forgotten, so this value is more informative than BinaryCoverage";
 	
@@ -55,5 +55,10 @@ public class BinaryCoverageForgetting extends BinaryCoverage{
 		}
 		return rs;
 	}
+	
+	@Override
+	public String getName() { return name;	}
 
+	@Override
+	public String getDescription() { return explanation;	}
 }

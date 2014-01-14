@@ -129,6 +129,16 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		visualization.setVisPeriod(this.logPeriod);
 		visualization.setTypeVisualization(2);
 		visualization.setActionRemapping(new String[]{"<",">","^","v"});
+		
+		observers.add(visualization);
+		
+		// configure observers to log/visualize in as selected in the node
+		for(int i=0; i<observers.size(); i++){
+			System.out.println("willLog "+this.willLog+ " period: "+this.logPeriod+
+					" "+observers.get(i).getName());
+			observers.get(i).setShouldVis(this.willLog);
+			observers.get(i).setVisPeriod(this.logPeriod);
+		}
 	}
 		
 
@@ -269,7 +279,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 							(states.getNumVariables()+1));
 				else{
 					// here, the state description is decoded and one SARSA step executed
-					if(step%logPeriod==0)
+					if(step % logPeriod==0)
 						myLog(me+"<-"+topicDataIn+" Received new reinforcement &" +
 								" state description "+SL.toStr(data));
 

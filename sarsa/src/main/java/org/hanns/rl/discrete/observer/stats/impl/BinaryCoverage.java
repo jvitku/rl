@@ -13,8 +13,8 @@ import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
  */
 public class BinaryCoverage extends AbsProsperityObserver{
 
-	public static final String name = "BinaryCoverage";
-	public static final String explanation = "Value from [0,1] telling how many" +
+	public final String name = "BinaryCoverage";
+	public final String explanation = "Value from [0,1] telling how many" +
 			"states from the state space were visited at least once.";
 	
 	protected final int noStates;
@@ -107,4 +107,10 @@ public class BinaryCoverage extends AbsProsperityObserver{
 		System.err.println("ERROR: no childs available");
 		return null;
 	}
+	
+	@Override
+	public String getName() { return name;	}
+
+	@Override
+	public String getDescription() { return explanation;	}
 }

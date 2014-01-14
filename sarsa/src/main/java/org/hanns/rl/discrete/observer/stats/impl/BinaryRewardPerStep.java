@@ -10,8 +10,8 @@ import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
  */
 public class BinaryRewardPerStep extends AbsProsperityObserver{
 
-	public static final String name = "BinaryRewardPerStep";
-	public static final String explanation = "Value from [0,1] defining" +
+	public final String name = "BinaryRewardPerStep";
+	public final String explanation = "Value from [0,1] defining" +
 			"how often is a reward received per step (1=reward each step).";
 	
 	private int steps = 0;
@@ -34,4 +34,10 @@ public class BinaryRewardPerStep extends AbsProsperityObserver{
 		super.softReset(randomize);
 		rewards=0;
 	}
+	
+	@Override
+	public String getName() { return name;	}
+
+	@Override
+	public String getDescription() { return explanation;	}
 }

@@ -10,6 +10,8 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
  */
 public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 
+	public final String name = "FinalStateSpaceVisDouble";
+	
 	public FinalStateSpaceVisDouble(int[] dimSizes, int noActions, FinalQMatrix<Double> q) {
 		super(dimSizes, noActions, q);
 	}
@@ -33,4 +35,7 @@ public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 		double d = (double)rd;
 		return d/how;
 	}
+	
+	@Override
+	public String getName(){ return name; }
 }

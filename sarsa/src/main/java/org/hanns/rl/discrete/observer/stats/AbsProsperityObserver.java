@@ -8,8 +8,8 @@ package org.hanns.rl.discrete.observer.stats;
  */
 public abstract class AbsProsperityObserver implements ProsperityObserver{
 
-	public static final String name = "AbstProsperityObserver (subclass name not defined)";
-	public static final String explanation = "Meaning of observed prosperity" +
+	public final String name = "AbstProsperityObserver (subclass name not defined)";
+	public final String explanation = "Meaning of observed prosperity" +
 			"not defined.";
 	
 	public static final boolean DEF_SHOULDVIS = false;
@@ -59,11 +59,6 @@ public abstract class AbsProsperityObserver implements ProsperityObserver{
 		System.err.println("ERROR: no childs available");
 		return null;
 	}
-	
-	@Override
-	public String getName() { return name;	}
 
-	@Override
-	public String getDescription() { return explanation;	}
 
 }

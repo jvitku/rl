@@ -40,7 +40,7 @@ public abstract class AbstractHannsNode extends AbstractNodeMain {
 	public static final String topicDataIn  = Topic.baseIn+"States"; 	// inStates
 
 	// ROS node configurable parameters
-	protected PrivateRosparam r;				// parameter (command-line) reader
+	protected PrivateRosparam r;			// parameter (command-line) reader
 	protected ParamList paramList;			// parameter storage
 	
 	/**
@@ -52,7 +52,7 @@ public abstract class AbstractHannsNode extends AbstractNodeMain {
 	protected boolean willLog = DEF_LOG;
 	
 	// how often to log data (into the console)
-	public static final int DEF_LOGPERIOD =100;	// how often to log? 
+	public static final int DEF_LOGPERIOD = 100; // how often to log? 
 	public static final String logPeriodConf = "logPeriod";
 	protected int logPeriod = DEF_LOGPERIOD;
 	

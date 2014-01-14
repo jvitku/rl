@@ -12,8 +12,8 @@ import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
  */
 public class UniformAverageReward extends AbsProsperityObserver{
 
-	public static final String name = "BinaryAverageReward";
-	public static final String explanation = "Value from [0,1] telling" +
+	public final String name = "BinaryAverageReward";
+	public final String explanation = "Value from [0,1] telling" +
 			"how often some reward is received per step, 1=reward " +
 			"received each step.";
 
@@ -42,5 +42,11 @@ public class UniformAverageReward extends AbsProsperityObserver{
 		super.softReset(randomize);
 		totalReward = 0;
 	}
+	
+	@Override
+	public String getName() { return name;	}
+
+	@Override
+	public String getDescription() { return explanation;	}
 
 }

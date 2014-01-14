@@ -15,8 +15,10 @@ import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
  */
 public class BinaryCoverageReward extends AbsProsperityObserver{
 
-	public static final String name = "BinaryCoverageReward";
-	public static final String explanation = "Returns values of the " +
+	public final String name = "BinaryCoverageReward";
+	public final String me = "["+name+"] ";
+	
+	public final String explanation = "Returns values of the " +
 			"BinaryCoverage and Reward/Step weighted 50/50";
 	
 	protected ProsperityObserver cover;
@@ -37,14 +39,18 @@ public class BinaryCoverageReward extends AbsProsperityObserver{
 		rew.observe(prevAction, reward, currentState, futureAction);
 
 		if(this.shouldVis && step%this.visPeriod==0){
-			System.out.println("step: "+step+" Observer val: "+
-					this.computeProsperity() +
-					"  That is cover: "+cover.getProsperity()+
-					" reward/step: "+rew.getProsperity());
+			this.log();
 		}
 	}
+	
+	protected void log(){
+		System.out.println(me+"step: "+step+" Observer val: "+
+				this.computeProsperity() +
+				"  That is cover: "+cover.getProsperity()+
+				" reward/step: "+rew.getProsperity());
+	}
 
-	private float computeProsperity(){
+	protected float computeProsperity(){
 		return (cover.getProsperity()+rew.getProsperity())/2;
 	}
 
@@ -64,4 +70,11 @@ public class BinaryCoverageReward extends AbsProsperityObserver{
 		cover.softReset(randomize);
 		rew.softReset(randomize);
 	}
+	
+	
+	@Override
+	public String getName() { return name;	}
+
+	@Override
+	public String getDescription() { return explanation;	}
 }

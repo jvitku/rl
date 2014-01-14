@@ -56,7 +56,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	public static final String sizexConf = "sizex"; // only one size supported so far
 	public static final String sizeyConf = "sizey";
 
-	public static final int DEF_LOGPERIOD =50;			// how often to log, each 10 sim steps? 
+	public static final int DEF_LOGPERIOD =100;			// how often to log, each 10 sim steps? 
 	public static final String logPeriodConf = "logPeriod";
 
 

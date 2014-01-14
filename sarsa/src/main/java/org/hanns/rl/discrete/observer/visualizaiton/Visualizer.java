@@ -11,7 +11,6 @@ import org.hanns.rl.discrete.observer.Observer;
  */
 public interface Visualizer extends Observer{
 	
-	
 	/**
 	 * How many details to visualize
 	 * @param details the higher number, the more details, and 0 should mean totally silent

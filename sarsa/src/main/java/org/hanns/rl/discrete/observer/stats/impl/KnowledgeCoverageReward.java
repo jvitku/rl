@@ -16,8 +16,8 @@ import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
  */
 public class KnowledgeCoverageReward extends AbsProsperityObserver{
 
-	public static final String name = "KnowledgeCoverageReward";
-	public static final String explanation = "Value from [0,1] combining" +
+	public final String name = "KnowledgeCoverageReward";
+	public final String explanation = "Value from [0,1] combining" +
 			" KnowledgeCoverage and Reward/Step values 50/50.";
 	
 	KnowledgeCoverage cover;
@@ -60,5 +60,11 @@ public class KnowledgeCoverageReward extends AbsProsperityObserver{
 		cover.softReset(randomize);
 		rew.softReset(randomize);
 	}
+	
+	@Override
+	public String getName() { return name;	}
+
+	@Override
+	public String getDescription() { return explanation;	}
 
 }

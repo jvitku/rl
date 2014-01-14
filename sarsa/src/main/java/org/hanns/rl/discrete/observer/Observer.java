@@ -49,4 +49,12 @@ public interface Observer extends Resettable {
 	 * @return how often the visualization occurs
 	 */
 	public int getVisPeriod();
+	
+	/**
+	 * Return the name of the Observer, the name should somehow
+	 * reflect the observers purpose.
+	 * @return name of the observer
+	 */
+	public String getName();
 }
+

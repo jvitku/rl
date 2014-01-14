@@ -11,11 +11,12 @@ from ctu.nengoros.comm.nodeFactory import NodeGroup as NodeGroup
 from ctu.nengoros.comm.rosutils import RosUtils as RosUtils
 from ctu.nengoros.modules.impl import DefaultNeuralModule as NeuralModule
 
-from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVis as QLambda
+from org.hanns.rl.discrete.ros.sarsa import QLambda as QLambda
 
 # java classes
-node =  "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
-nodep = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVis"
+node =  "org.hanns.rl.discrete.ros.sarsa.QLambda"
+nodep = "org.hanns.rl.discrete.ros.sarsa.QLambda"
+nodedelay = "org.hanns.rl.discrete.ros.sarsa.QLambda"
 
 
 # Synchronous NeuralModule implementing QLambda algorithm
@@ -95,7 +96,7 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeri
 
 #################################################################################
 	
-nodedelay = "org.hanns.rl.discrete.ros.sarsa.HannsQLambdaVisNengoros"
+
 	
 def qlambdaDelay(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
 

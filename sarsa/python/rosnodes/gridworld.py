@@ -8,7 +8,7 @@ from ctu.nengoros.comm.nodeFactory import NodeGroup as NodeGroup
 from ctu.nengoros.comm.rosutils import RosUtils as RosUtils
 from ctu.nengoros.modules.impl import DefaultNeuralModule as NeuralModule
 
-from org.hanns.rl.discrete.ros.sarsa import HannsQLambdaVis as QLambda
+from org.hanns.rl.discrete.ros.sarsa import QLambda as QLambda
 from org.hanns.rl.discrete.ros.testnodes import BenchmarkGridWorldNode as World
 
 nodep =  "org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode"

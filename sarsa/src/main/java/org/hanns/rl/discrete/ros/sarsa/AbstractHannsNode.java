@@ -3,7 +3,6 @@ package org.hanns.rl.discrete.ros.sarsa;
 import org.apache.commons.logging.Log;
 import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
 import org.hanns.rl.discrete.ros.Topic;
-import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
@@ -26,18 +25,20 @@ public abstract class AbstractHannsNode extends AbstractNodeMain {
 	public static final String name = "AbstractHannsNode"; // redefine the nodes name
 	public final String me = "["+name+"] ";
 	public static final String s = "/";
-	public static final String ns = name+s; // namespace for config. parameters
+	//public static final String ns = name+s; // namespace for config. parameters
+	public static final String conf = "conf"+s;
+	public static final String io = "io"+s;
 
 	protected Log log;
 	protected Publisher<std_msgs.Float32MultiArray> actionPublisher;
 	
 	// actions
 	public static final String actionPrefix = "a";	// action names: a0, a1,a2,..
-	public static final String topicDataOut = Topic.baseOut+"Actions"; 	// outActions
+	public static final String topicDataOut = io+Topic.baseOut+"Actions"; 	// outActions
 	
 	// states
 	public static final String statePrefix = "s"; 	// state var. names: s0,s1,..
-	public static final String topicDataIn  = Topic.baseIn+"States"; 	// inStates
+	public static final String topicDataIn  = io+Topic.baseIn+"States"; 	// inStates
 
 	// ROS node configurable parameters
 	protected PrivateRosparam r;			// parameter (command-line) reader
@@ -58,7 +59,7 @@ public abstract class AbstractHannsNode extends AbstractNodeMain {
 	
 	// each node should be able to publish its prosperity (real time visible in the Nengoros)
 	protected Publisher<std_msgs.Float32MultiArray> prospPublisher;
-	public static final String topicProsperity = ns+"prosperity";
+	public static final String topicProsperity = conf+"prosperity";
 
 	/**
 	 * IO configuration
@@ -69,10 +70,6 @@ public abstract class AbstractHannsNode extends AbstractNodeMain {
 	// Number of actions that can be performed by the RL ASM (coding 1ofN)
 	public static final String noOutputsConf = "noOutputs";
 	public static final int DEF_NOOUTPUTS = 4;
-
-	
-	@Override
-	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
 	/**
 	 * Main entry point to the ROS node. The initialization is made here, 

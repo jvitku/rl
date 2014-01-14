@@ -20,6 +20,7 @@ import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.message.MessageListener;
+import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
@@ -36,15 +37,15 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 */
 	// learning rate
 	public static final String alphaConf = "alpha";
-	public static final String topicAlpha= ns+alphaConf;
+	public static final String topicAlpha= conf+alphaConf;
 	public static final double DEF_ALPHA = 0.5;
 	// Decay factor
 	public static final String gammaConf = "gamma";
-	public static final String topicGamma = ns+gammaConf;
+	public static final String topicGamma = conf+gammaConf;
 	public static final double DEF_GAMMA = 0.3;
 	// Trace decay factor
 	public static final String lambdaConf = "lambda";
-	public static final String topicLambda = ns+lambdaConf;
+	public static final String topicLambda = conf+lambdaConf;
 	// Length of eligibility trace
 	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
@@ -55,11 +56,11 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 */
 	// probability of choosing action randomly
 	public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
-	public static final String topicEpsilon = ns+epsilonConf;
+	public static final String topicEpsilon = conf+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
 	// importance affect current value of epsilon: higher action importance, smaller eps.
 	public static final String importanceConf = "importance";
-	public static final String topicImportance = ns+importanceConf;
+	public static final String topicImportance = conf+importanceConf;
 	public static final double DEF_IMPORTANCE = 0.7; 
 
 	/**
@@ -95,6 +96,10 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	ProsperityObserver o;						// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
 
+
+	@Override
+	public GraphName getDefaultNodeName() { return GraphName.of(name); }
+	
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		log = connectedNode.getLog();
@@ -107,6 +112,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		
 		myLog(me+"initializing ROS Node IO");
 		
+		this.buildProsperityPublisher(connectedNode);
 		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
 
@@ -308,7 +314,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		 * Alpha
 		 */
 		Subscriber<std_msgs.Float32MultiArray> alphaSub = 
-				connectedNode.newSubscriber(name+s+alphaConf, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicAlpha, std_msgs.Float32MultiArray._TYPE);
 
 		alphaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -329,7 +335,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		 * Gamma
 		 */
 		Subscriber<std_msgs.Float32MultiArray> gammaSub = 
-				connectedNode.newSubscriber(name+s+gammaConf, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicGamma, std_msgs.Float32MultiArray._TYPE);
 
 		gammaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -358,7 +364,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		 * Lambda
 		 */
 		Subscriber<std_msgs.Float32MultiArray> lambdaSub = 
-				connectedNode.newSubscriber(name+s+lambdaConf, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicLambda, std_msgs.Float32MultiArray._TYPE);
 
 		lambdaSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
@@ -386,7 +392,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		 * Epsilon
 		 */
 		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(name+s+epsilonConf, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicEpsilon, std_msgs.Float32MultiArray._TYPE);
 
 		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override

@@ -1,8 +1,9 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
-import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
+
+import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
+import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 
 /**
  * This computes binary occurrence of the agent for all states.

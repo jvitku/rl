@@ -12,8 +12,6 @@ import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
-import org.hanns.rl.discrete.observer.Observer;
-import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgettingReward;
 import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
@@ -24,6 +22,9 @@ import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.network.node.AbstractHannsNode;
+import ctu.nengoros.network.node.observer.Observer;
+import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 import ctu.nengoros.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.rosparam.manager.ParamList;
 import ctu.nengoros.util.SL;

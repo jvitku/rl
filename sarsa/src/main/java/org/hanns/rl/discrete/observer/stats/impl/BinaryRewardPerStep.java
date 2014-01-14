@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
+import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
+
 
 /**
  * Computes average binary received reinforcement per step.

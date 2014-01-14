@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.learningAlgorithm.sarsaLambda;
 
-import org.hanns.rl.common.Resettable;
+import ctu.nengoros.network.common.Resettable;
 
 /**
  * Simple memory for recently visited environment state-action pairs in the Q-matrix.

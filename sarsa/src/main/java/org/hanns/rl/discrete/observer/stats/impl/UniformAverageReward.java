@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
+import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 
 /**
  * Basic observer which logs only positive rewards without considering 

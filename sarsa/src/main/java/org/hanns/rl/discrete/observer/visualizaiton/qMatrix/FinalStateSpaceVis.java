@@ -1,7 +1,8 @@
 package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
 
-import org.hanns.rl.common.Resettable;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+
+import ctu.nengoros.network.common.Resettable;
 
 /**
  * <p>Provides textual visualization of N-dimensional state-space. The dimensions are visualized as
@@ -337,6 +338,7 @@ public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 
 		@Override
 		public void hardReset(boolean randomize) { this.softReset(randomize); }
+		
 	}
 
 }

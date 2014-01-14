@@ -2,7 +2,8 @@ package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
+
+import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 
 /**
  * <p>Similar to {@link org.hanns.rl.discrete.observer.impl.BinaryCoverage}, but here
@@ -129,3 +130,4 @@ public class KnowledgeCoverage extends AbsProsperityObserver{
 	@Override
 	public String getDescription() { return explanation;	}
 }
+

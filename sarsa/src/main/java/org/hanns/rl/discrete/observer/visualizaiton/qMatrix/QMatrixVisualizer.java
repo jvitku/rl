@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
 
-import org.hanns.rl.discrete.observer.visualizaiton.Visualizer;
+import ctu.nengoros.network.node.observer.visualization.Visualizer;
+
 
 /**
  * For visualization of Q(s,a) matrix. This represents utility values of all 

@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa.ioHelper;
 
-import org.hanns.rl.common.Resettable;
+import ctu.nengoros.network.common.Resettable;
+
 
 /**
  * <p>This should be placed between the RL and Nengoros on incoming state representation.

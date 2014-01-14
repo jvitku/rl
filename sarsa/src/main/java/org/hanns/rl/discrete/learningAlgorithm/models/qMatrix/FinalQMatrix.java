@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.learningAlgorithm.models.qMatrix;
 
-import org.hanns.rl.common.Resettable;
+import ctu.nengoros.network.common.Resettable;
+
 
 /**
  * <p>QMatrix which expects final set of state variables and final state of actions. The 

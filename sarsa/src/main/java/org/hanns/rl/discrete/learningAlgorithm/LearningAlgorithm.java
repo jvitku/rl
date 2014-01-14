@@ -1,8 +1,9 @@
 package org.hanns.rl.discrete.learningAlgorithm;
 
-import org.hanns.rl.common.Resettable;
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+
+import ctu.nengoros.network.common.Resettable;
 
 /**
  * Interface for the learning algorithm. 

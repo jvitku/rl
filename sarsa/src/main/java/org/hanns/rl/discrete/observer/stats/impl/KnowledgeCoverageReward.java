@@ -1,8 +1,9 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.observer.stats.AbsProsperityObserver;
-import org.hanns.rl.discrete.observer.stats.ProsperityObserver;
+
+import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
+import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 
 /**
  * The same as {@link org.hanns.rl.discrete.observer.impl.BinaryCoverageReward}, but instead

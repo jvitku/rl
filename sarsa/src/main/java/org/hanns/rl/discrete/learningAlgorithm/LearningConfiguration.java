@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.learningAlgorithm;
 
-import org.hanns.rl.common.Resettable;
+import ctu.nengoros.network.common.Resettable;
 
 /**
  * Configuration of general learning algorithm. 

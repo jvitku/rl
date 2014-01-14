@@ -115,6 +115,13 @@ public class QLambda extends AbstractQLambda{
 		int len = r.getMyInteger(filterConf, MessageDerivator.DEF_MAXLOOP);
 		filter = new MessageDerivator(len);
 	}
+	
+	@Override
+	protected void registerParameters(){
+		super.registerParameters();
+		paramList.addParam(filterConf, ""+MessageDerivator.DEF_MAXLOOP, "The maximum" +
+				" length (in sim. steps) of the closed loop: action->newState");
+	}
 
 }
 

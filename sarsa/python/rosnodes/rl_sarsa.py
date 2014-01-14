@@ -97,13 +97,14 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeri
 #################################################################################
 	
 
-	
-def qlambdaDelay(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
+# TODO this one will be used everywhoere with different maxDelay (1/0)
+def qlambdaDelay(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
 	command = [nodedelay, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
 	'_'+QLambda.noOutputsConf+':='+str(noActions),
 	'_'+QLambda.sampleCountConf+':='+str(noValues),
-	'_'+QLambda.logPeriodConf+':='+str(logPeriod)]
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod),
+	'_'+QLambda.filterConf+':='+str(maxDelay)]
 
 	g = NodeGroup("QLambda", True);
 	g.addNode(command, "QLambda", "java");
@@ -121,10 +122,10 @@ def qlambdaDelay(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
 
 	return module
 
-def qlambdaConfiguredDelay(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100):
+def qlambdaConfiguredDelay(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
 	# build the node
-	mod = qlambdaDelay(name, noStateVars,noActions, noValues, logPeriod)
+	mod = qlambdaDelay(name, noStateVars,noActions, noValues, logPeriod, maxDelay)
 	net.add(mod)
 
 	# define the configuration

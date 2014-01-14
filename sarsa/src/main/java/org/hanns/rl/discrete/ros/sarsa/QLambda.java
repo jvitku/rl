@@ -37,7 +37,7 @@ import org.ros.node.ConnectedNode;
  */
 public class QLambda extends AbstractQLambda{
 
-	protected MessageDerivator filter;
+	public MessageDerivator filter;
 	public static final String filterConf = "filterLength";
 	
 	/**

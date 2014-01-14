@@ -3,11 +3,9 @@ package org.hanns.rl.discrete.ros;
 import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.ros.sarsa.HannsQLambda;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ctu.nengoros.RosRunner;
@@ -26,6 +24,10 @@ public class RosInteractionVis extends RosCommunicationTest{
 	public static final String[] rl = new String[]{
 		RL,"_importance:=0","_noOutputs:=4","_noInputs:=2","_sampleCount:=10"};
 	
+	public static final String[] rlNoDel = new String[]{
+		RL,"_importance:=0","_noOutputs:=4","_noInputs:=2","_sampleCount:=10",
+		"_delay:=0"};
+	
 	/**
 	 * The tests does the following:
 	 * -runs the RL node and MAP node
@@ -36,24 +38,27 @@ public class RosInteractionVis extends RosCommunicationTest{
 	 * The filtered node should work in the same way as non-filtered (just miss n steps
 	 * (respond with NOOP) for every action with no effect on the environment).   
 	 */
-	@Ignore
+	//@Ignore
 	@SuppressWarnings("unchecked")
 	@Test
 	public void runNodesNoDelay(){
-		RosRunner rlr = super.runNode(rl);		// run the RL
+		RosRunner rlr = super.runNode(rlNoDel);		// run the RL
 		assertTrue(rlr.isRunning());
+		
+		assertTrue(rlr.getNode() instanceof QLambda);
+		QLambda rl = (QLambda) rlr.getNode();
+		
+		/**
+		 * Disable data input filtering here
+		 */
+		//rl.filter.setMaxClosedLoopLength(0);
+		//System.out.println("heeeeeeeeeeeeeeee ----");
 		
 		RosRunner mapr = super.runNode(MAP);	// run the map
 		assertTrue(mapr.isRunning());
 		
 		assertTrue(mapr.getNode() instanceof GridWorldNode);
 		GridWorldNode map = (GridWorldNode)mapr.getNode();
-		
-		//assertTrue(rlr.getNode() instanceof HannsQLambda);
-		//HannsQLambda rl = (HannsQLambda) rlr.getNode();
-		
-		assertTrue(rlr.getNode() instanceof QLambda);
-		QLambda rl = (QLambda) rlr.getNode();
 		
 		// simulate 2000 steps
 		while(map.getStep() < 10000){
@@ -75,6 +80,7 @@ public class RosInteractionVis extends RosCommunicationTest{
 		assertFalse(mapr.isRunning());
 	}
 	
+	//@Ignore
 	@Test
 	@SuppressWarnings("unchecked")
 	public void runNodesWithDelay(){

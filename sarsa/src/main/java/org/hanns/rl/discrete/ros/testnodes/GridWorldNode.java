@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.ros.testnodes;
 
 import org.apache.commons.logging.Log;
 import org.hanns.rl.common.exceptions.DecoderException;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
@@ -63,7 +63,7 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	protected BasicVariableEncoder stateEncoder;
 	protected double rangeFrom = 0, rangeTo = 1;
 	protected OneOfNEncoder actionEncoder;
-	protected final ActionSet actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
+	protected final ActionSetInt actionSet = new BasicFinalActionSet(new String[]{"<",">","^","v"}); 
 
 	// whether some message from an agent received in the past 1000ms
 	protected boolean dataExchanged = false;

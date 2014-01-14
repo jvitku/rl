@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.actions.impl;
 
 import org.hanns.rl.discrete.actions.ActionEncoder;
 import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.common.exceptions.DecoderException;
 
 /**
@@ -12,12 +13,12 @@ import org.hanns.rl.common.exceptions.DecoderException;
  */
 public class OneOfNEncoder implements ActionEncoder{
 
-	private final ActionSet set;
+	private final ActionSetInt set;
 
 	public static final float selected = 1;
 	public static final float nonselected = 0;
 
-	public OneOfNEncoder(ActionSet set){
+	public OneOfNEncoder(ActionSetInt set){
 		this.set = set;
 	}
 
@@ -27,7 +28,7 @@ public class OneOfNEncoder implements ActionEncoder{
 			System.err.println("OneOfNEncoder: incorrect index of action!" +
 					"Have only this number of actions: "+set.getNumOfActions());
 			// set no action and continue
-			no=-1;
+			no= ActionSet.NOOP;
 		}
 		float[] out = new float[set.getNumOfActions()];
 		setNotSelected(out);
@@ -42,7 +43,7 @@ public class OneOfNEncoder implements ActionEncoder{
 			throw new DecoderException("OneOfNEncoder: message has incorrect length! " +
 					"Expected "+set.getNumOfActions()+" and found "+data.length);
 
-		int index = -1;	// no action index
+		int index = ActionSet.NOOP;	// no action index
 
 		for(int i=0; i<data.length; i++){
 			if(data[i] == selected){

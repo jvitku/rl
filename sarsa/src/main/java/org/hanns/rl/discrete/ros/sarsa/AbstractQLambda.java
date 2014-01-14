@@ -5,14 +5,13 @@ import java.util.LinkedList;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-//import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
-import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgettingReward;
+import org.hanns.rl.discrete.observer.stats.combined.ForgettingCoverageChangeReward;
 import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
@@ -21,6 +20,7 @@ import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
+import org.hanns.rl.discrete.observer.stats.combined.BinaryCoverageForgettingReward;
 
 import ctu.nengoros.network.node.AbstractHannsNode;
 import ctu.nengoros.network.node.observer.Observer;
@@ -32,7 +32,7 @@ import ctu.nengoros.util.SL;
 public abstract class AbstractQLambda extends AbstractHannsNode{
 
 	public static final String name = "QLambda";
-	
+
 	/**
 	 * RL parameters
 	 */
@@ -78,7 +78,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	public static final double DEF_MIN=0, DEF_MAX=1;
 	public static final int DEF_COUNT=5;
 
-	
+
 	/**
 	 * RL instances
 	 */
@@ -100,7 +100,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
-	
+
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		log = connectedNode.getLog();
@@ -110,9 +110,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		paramList.printParams();
 		this.parseParameters(connectedNode);
 		this.registerObservers();
-		
+
 		myLog(me+"initializing ROS Node IO");
-		
+
 		this.buildProsperityPublisher(connectedNode);
 		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
@@ -127,8 +127,10 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		observers = new LinkedList<Observer>();
 
 		o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
+		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
+		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
 		observers.add(o);
-		
+
 		// initialize the visualizer
 		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
@@ -136,9 +138,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		visualization.setVisPeriod(this.logPeriod);
 		visualization.setTypeVisualization(2);
 		visualization.setActionRemapping(new String[]{"<",">","^","v"});
-		
+
 		observers.add(visualization);
-		
+
 		// configure observers to log/visualize in as selected in the node
 		for(int i=0; i<observers.size(); i++){
 			System.out.println("willLog "+this.willLog+ " period: "+this.logPeriod+
@@ -147,7 +149,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
-		
+
 
 	/**
 	 * Execute action selected by the ASM and publish over the ROS network
@@ -165,7 +167,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		actionPublisher.publish(fl);
 
 		prevAction = action;
-		
+
 		this.publishProsperity();
 	}
 
@@ -247,12 +249,12 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		rl = new FinalModelNStepQLambda(states, actions.getNumOfActions(), config);
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
-	
+
 	protected void initializeASM(/*double epsilon*/){
 		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
 		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
 		asm.getConfig().setExplorationEnabled(true);
-		
+
 		// this forces the agent to use only greedy ASM when importance is 1 
 		//((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(0);
 	}
@@ -263,7 +265,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * message with state and reward description arrives.
 	 */
 	protected abstract void onNewDataReceived(float[] data);
-	
+
 	/**
 	 * Register the {@link #actionPublisher} for publishing actions 
 	 * and the state subscriber for receiving state+reward data.
@@ -303,13 +305,13 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 */
 	@Override
 	protected void buildConfigSubscribers(ConnectedNode connectedNode){
-		
+
 		this.buildRLConfigSubscribers(connectedNode);
 		this.buildEligibilitySubscribers(connectedNode);
 		this.buildASMSumbscribers(connectedNode);
 
 	}
-	
+
 	protected void buildRLConfigSubscribers(ConnectedNode connectedNode){
 		/**
 		 * Alpha
@@ -388,7 +390,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * 
 	 * @param connectedNode ROS connectedNode 
 	 */
-	
+
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
 		 * Epsilon
@@ -411,7 +413,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 				}
 			}
 		});
-		*/
+		 */
 		/**
 		 * Importance parameter
 		 */
@@ -434,20 +436,33 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			}
 		});
 	}
-	
+
 	/**
-	 * Publishes three values, first one is the composed prosperity, 
-	 * composed of two following values.
+	 * If the prosperity observer has no childs, publish its value. 
+	 * If the prosperity observer has childs, publish its value on the first
+	 * position and values of its childs in the vector.
 	 */
 	@Override
 	protected void publishProsperity(){
-		ProsperityObserver[] childs = o.getChilds(); 
-		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();	
-		fl.setData(new float[]{o.getProsperity(),childs[0].getProsperity()
-				,childs[1].getProsperity()});								
+
+		float[] data;
+		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();
+
+		if(o.getChilds() == null){
+			data = new float[]{o.getProsperity()};
+		}else{
+			ProsperityObserver[] childs = o.getChilds();	
+			data = new float[childs.length+1];
+			data[0] = o.getProsperity();
+			
+			for(int i=0; i<childs.length; i++){
+				data[i] = childs[i].getProsperity();
+			}
+		}
+		fl.setData(data);
 		prospPublisher.publish(fl);
 	}
-	
+
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
 }

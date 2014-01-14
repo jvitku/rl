@@ -5,7 +5,7 @@ import org.hanns.rl.common.exceptions.DecoderException;
 
 /**
  * This class translates actions into real outputs. 
- * The EncoderAndActionSet holds own ActionSet which it uses. 
+ * The EncoderAndActionSet holds own ActionSetInt which it uses. 
  * 
  * @author Jaroslav Vitku
  *

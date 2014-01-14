@@ -13,7 +13,7 @@ public class EncoderAndActionSet {
 	@Test
 	public void basicFinalActionSet(){
 
-		ActionSet a = new BasicFinalActionSet(new String[]{"a","b"});
+		ActionSetInt a = new BasicFinalActionSet(new String[]{"a","b"});
 
 		assertTrue(a.getNumOfActions() == 2);
 
@@ -25,7 +25,7 @@ public class EncoderAndActionSet {
 
 	@Test
 	public void oneOfNEncoderEncode(){
-		ActionSet a = new BasicFinalActionSet(new String[]{"a","b"});
+		ActionSetInt a = new BasicFinalActionSet(new String[]{"a","b"});
 		ActionEncoder ae = new OneOfNEncoder(a);
 
 		float[] ff = ae.encode(1);	// action 1
@@ -46,7 +46,7 @@ public class EncoderAndActionSet {
 
 	@Test
 	public void oneOfNEncoderDecode(){
-		ActionSet a = new BasicFinalActionSet(new String[]{"a","b"});
+		ActionSetInt a = new BasicFinalActionSet(new String[]{"a","b"});
 		ActionEncoder ae = new OneOfNEncoder(a);
 
 		// one selected

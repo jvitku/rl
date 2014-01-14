@@ -8,7 +8,7 @@ import org.hanns.rl.common.exceptions.FinalParamException;
  * 
  * @author Jaroslav Vitku
  */
-public class BasicFinalActionSet implements ActionSet {
+public class BasicFinalActionSet extends ActionSet {
 
 	private final int numActions;
 	

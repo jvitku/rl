@@ -6,7 +6,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
@@ -30,7 +30,7 @@ public class FInalSarsaLambda {
 		/**
 		 * Build the map
 		 */
-		ActionSet actions= new BasicFinalActionSet(new String[]{
+		ActionSetInt actions= new BasicFinalActionSet(new String[]{
 				"<",">","^","v"});
 
 		int sx = 10;
@@ -109,7 +109,7 @@ public class FInalSarsaLambda {
 	 * @param startingPos starting position on the map
 	 */
 	private void navigate(FinalQMatrix<Double> q, int numActions,int numSteps, float[][] map, int[] startingPos){
-		ActionSet actions = new BasicFinalActionSet(numActions);
+		ActionSetInt actions = new BasicFinalActionSet(numActions);
 		// use the epsilon-greedy ASM with exploration disabled
 		BasicEpsilonGeedyConf econf = new BasicConfig();
 		econf.setExplorationEnabled(false);

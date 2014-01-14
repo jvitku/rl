@@ -1,4 +1,6 @@
-package org.hanns.rl.discrete.observer.stats.impl;
+package org.hanns.rl.discrete.observer.stats.combined;
+
+import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgetting;
 
 
 /**

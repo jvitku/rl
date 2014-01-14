@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.actionSelectionMethod.greedy;
 
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 /**
  * Greedy action selection method (ASM) which operates over Double values.
@@ -10,7 +10,7 @@ import org.hanns.rl.discrete.actions.ActionSet;
  */
 public class GreedyDouble extends Greedy<Double>{
 
-	public GreedyDouble(ActionSet actions) {
+	public GreedyDouble(ActionSetInt actions) {
 		super(actions);
 	}
 

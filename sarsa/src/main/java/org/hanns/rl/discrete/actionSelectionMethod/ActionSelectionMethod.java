@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.actionSelectionMethod;
 
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 /**
  * Interface for action selection method. 
@@ -14,21 +14,21 @@ public interface ActionSelectionMethod<E> {
 	 * Array of values for each action in the current set.
 	 * 
 	 * @param actionValues array of values for each action
-	 * @return index of action from the ActionSet that is currently selected
+	 * @return index of action from the ActionSetInt that is currently selected
 	 */
 	public int selectAction(E[] actionValues);
 	
 	/**
 	 * Set the action set to this action selection method. 
-	 * @param actions ActionSet which contains currently available actions
+	 * @param actions ActionSetInt which contains currently available actions
 	 */
-	public void setActionSet(ActionSet actions);
+	public void setActionSet(ActionSetInt actions);
 	
 	/**
 	 * Get the current set of actions
-	 * @return ActionSet defining set of currently available actions
+	 * @return ActionSetInt defining set of currently available actions
 	 */
-	public ActionSet getActionSet();
+	public ActionSetInt getActionSet();
 	
 	/**
 	 * Return true if the last action selected by the ASM was greedy.

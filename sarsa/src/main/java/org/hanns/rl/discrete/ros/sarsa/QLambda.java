@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
+import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
 
@@ -55,7 +56,7 @@ public class QLambda extends AbstractQLambda{
 		if(!shouldPass){
 			// publish the NOOP 
 			std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
-			fl.setData(actionEncoder.encode(-1));								
+			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
 			actionPublisher.publish(fl);
 			return;
 		}

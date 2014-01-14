@@ -1,4 +1,7 @@
-package org.hanns.rl.discrete.observer.stats.impl;
+package org.hanns.rl.discrete.observer.stats.combined;
+
+import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverage;
+import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;

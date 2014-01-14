@@ -4,7 +4,7 @@ import java.util.Random;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 /**
  * Abstract implementation of the Greedy action selection mechanism. 
@@ -17,9 +17,9 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 
 	private boolean wasgreedy;
 	private Random r;
-	private ActionSet actions;
+	private ActionSetInt actions;
 
-	public Greedy(ActionSet actions){
+	public Greedy(ActionSetInt actions){
 		this.actions = actions;
 		r = new Random();
 		wasgreedy = false;
@@ -64,10 +64,10 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 	protected abstract boolean allEqual(E[] acitonValues);
 
 	@Override
-	public void setActionSet(ActionSet actions) {this.actions = actions; }
+	public void setActionSet(ActionSetInt actions) {this.actions = actions; }
 
 	@Override
-	public ActionSet getActionSet() { return this.actions; }
+	public ActionSetInt getActionSet() { return this.actions; }
 
 	@Override
 	public boolean actionWasGreedy() { return this.wasgreedy; }

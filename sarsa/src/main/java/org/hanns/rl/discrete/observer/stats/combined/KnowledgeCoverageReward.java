@@ -1,12 +1,14 @@
-package org.hanns.rl.discrete.observer.stats.impl;
+package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
+import org.hanns.rl.discrete.observer.stats.impl.KnowledgeCoverage;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 
 /**
- * The same as {@link org.hanns.rl.discrete.observer.impl.BinaryCoverageReward}, but instead
+ * The same as {@link org.hanns.rl.discrete.observer.stats.combined.impl.BinaryCoverageReward}, but instead
  * of BinaryCoverage, the KnowledgeCoverage is used.
  * 
  * The {@link KnowledgeCoverage} and the {@link BinaryRewardPerStep} are weighted 50 to 50.

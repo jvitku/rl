@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.EpsilonGreedy;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 /**
  * Epsilon greedy for double utility values.
@@ -12,7 +12,7 @@ import org.hanns.rl.discrete.actions.ActionSet;
  */
 public class EpsilonGreedyDouble extends EpsilonGreedy<Double>{
 
-	public EpsilonGreedyDouble(ActionSet actions, BasicEpsilonGeedyConf config) {
+	public EpsilonGreedyDouble(ActionSetInt actions, BasicEpsilonGeedyConf config) {
 		super(actions, config);
 	}
 

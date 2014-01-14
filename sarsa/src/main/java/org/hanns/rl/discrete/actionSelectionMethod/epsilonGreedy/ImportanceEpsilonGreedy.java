@@ -6,7 +6,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 
 /**
@@ -24,10 +24,10 @@ public abstract class ImportanceEpsilonGreedy<E> implements ActionSelectionMetho
 
 	private boolean wasgreedy;
 	protected Random r;
-	protected ActionSet acitons;
+	protected ActionSetInt acitons;
 	protected ImportanceBasedConfig config;
 
-	public ImportanceEpsilonGreedy(ActionSet actions, ImportanceBasedConfig config){
+	public ImportanceEpsilonGreedy(ActionSetInt actions, ImportanceBasedConfig config){
 		r = new Random();
 		this.acitons = actions;
 		this.config = config;
@@ -69,10 +69,10 @@ public abstract class ImportanceEpsilonGreedy<E> implements ActionSelectionMetho
 	protected abstract boolean better(E a, E b);
 
 	@Override
-	public void setActionSet(ActionSet actions) { this.acitons = actions;	}
+	public void setActionSet(ActionSetInt actions) { this.acitons = actions;	}
 
 	@Override
-	public ActionSet getActionSet() { return this.acitons;	}
+	public ActionSetInt getActionSet() { return this.acitons;	}
 
 	@Override
 	public ImportanceBasedConfig getConfig(){ return this.config; }

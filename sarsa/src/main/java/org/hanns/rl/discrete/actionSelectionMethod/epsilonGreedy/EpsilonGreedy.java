@@ -5,7 +5,7 @@ import java.util.Random;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethodConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
-import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.actions.ActionSetInt;
 
 /**
  * The Epsilon-Greedy action selection method weights between exploration and exploitation.
@@ -20,10 +20,10 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
 	private boolean wasgreedy;
 	protected Random r;
-	protected ActionSet acitons;
+	protected ActionSetInt acitons;
 	protected BasicEpsilonGeedyConf config;
 
-	public EpsilonGreedy(ActionSet actions, BasicEpsilonGeedyConf config){
+	public EpsilonGreedy(ActionSetInt actions, BasicEpsilonGeedyConf config){
 		r = new Random();
 		this.acitons = actions;
 		this.config = config;
@@ -65,10 +65,10 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 	protected abstract boolean better(E a, E b);
 
 	@Override
-	public void setActionSet(ActionSet actions) { this.acitons = actions;	}
+	public void setActionSet(ActionSetInt actions) { this.acitons = actions;	}
 
 	@Override
-	public ActionSet getActionSet() { return this.acitons;	}
+	public ActionSetInt getActionSet() { return this.acitons;	}
 
 	@Override
 	public BasicEpsilonGeedyConf getConfig(){ return this.config; }

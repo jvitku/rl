@@ -16,16 +16,19 @@ import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.Importan
 public class ImportanceBasedConfig extends AbstractASMConfig 
 implements ImportanceBasedEpsilonGreedyConf{
 
-	public static final double DEF_EPSILON = 0.5;
 	// even in case of maximum importance, the randomization should occur  
 	public static final double DEF_MINEPSILON = 0.1;
+	public static final float DEF_IMPORTANCE = 0.5f;
 
-
-	private double epsilon = DEF_EPSILON;
+	private double epsilon;
 	private double minEpsilon = DEF_MINEPSILON;
 	private boolean explorationEnabled = true;
 
-	private float importance = 0;
+	private float importance = DEF_IMPORTANCE;
+
+	public ImportanceBasedConfig(){
+		this.fireParamChanged();
+	}
 
 	@Override
 	public void setMinEpsilon(double min) {
@@ -62,12 +65,19 @@ implements ImportanceBasedEpsilonGreedyConf{
 		return epsilon;
 	}
 
+	/**
+	 * Compute the epsilon as inverted importance, 
+	 * the values of epsilon can be from the interval: [minEpsilon,1].
+	 */
 	@Override
 	public void fireParamChanged() {
-		double rand = 1-importance; // how much randomize we can?
-		if(rand<minEpsilon)
-			epsilon = minEpsilon;
-		epsilon = rand;
+			
+		if(importance==0){
+			epsilon = 1;
+			return;
+		}
+		double interval = 1-minEpsilon;
+		epsilon = minEpsilon + interval * (1-importance);
 	}
 
 	@Override

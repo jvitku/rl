@@ -14,7 +14,7 @@ from org.hanns.rl.discrete.ros.testnodes import BenchmarkGridWorldNode as World
 nodep =  "org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode"
 
 # Synchronous Discrete Simulator with 2D map
-def benchmark(name, logPeriod=100):
+def benchmark(name, logPeriod=200):
 	
 	command = [nodep, '_'+World.logPeriodConf+':='+str(logPeriod)]
 	

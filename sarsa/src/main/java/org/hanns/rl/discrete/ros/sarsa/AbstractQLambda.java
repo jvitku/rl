@@ -61,7 +61,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	// importance affect current value of epsilon: higher action importance, smaller eps.
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = conf+importanceConf;
-	public static final double DEF_IMPORTANCE = 0.7; 
+	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE; 
 
 	/**
 	 * Default sampling parameters, TODO: customize each variable sampling 

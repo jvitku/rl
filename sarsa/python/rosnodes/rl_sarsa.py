@@ -32,7 +32,7 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDela
 
 	g = NodeGroup("RL", True);
 	g.addNode(command, "RL", "java");
-	module = NeuralModule(name+'_RL', g, False)
+	module = NeuralModule(name+'_QLambda', g, False)
 
 	module.createEncoder(QLambda.topicAlpha,"float",1); 				# alpha config
 	module.createEncoder(QLambda.topicGamma,"float",1);

@@ -28,7 +28,7 @@ net.add_to_nengo()
 #RosUtils.setAutorun(False)     # Do we want to autorun roscore and rxgraph? (tru by default)
 #RosUtils.prefferJroscore(True)  # preffer jroscore before the roscore? 
 
-finderA = rl_sarsa.qlambdaConfiguredDelay("RL", net, 2, 4)   # 2 state variables, 5 actions
+finderA = rl_sarsa.qlambdaConfigured("RL", net, 2, 4)   # 2 state variables, 5 actions
 #many=net.add(finderA)
 
 #Create a white noise input function with params: baseFreq, maxFreq [rad/s], RMS, seed

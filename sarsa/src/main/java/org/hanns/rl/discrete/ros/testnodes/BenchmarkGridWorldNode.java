@@ -86,5 +86,5 @@ public class BenchmarkGridWorldNode extends GridWorldNode{
 		System.out.println("--------------- " +GridWorldObstacle.vis(map));
 	}
 
-
 }
+

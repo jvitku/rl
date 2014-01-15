@@ -14,7 +14,7 @@ from org.hanns.rl.discrete.ros.testnodes import BenchmarkGridWorldNode as World
 nodep =  "org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode"
 
 # Synchronous Discrete Simulator with 2D map
-def benchmark(name, logPeriod=200):
+def example(name, logPeriod=200):
 	
 	command = [nodep, '_'+World.logPeriodConf+':='+str(logPeriod)]
 	
@@ -28,5 +28,25 @@ def benchmark(name, logPeriod=200):
 	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
 	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
 	
+	return module
+
+
+package =  "org.hanns.rl.discrete.ros.testnodes.benchmark."
+benchA =  "BenchmarkGridWorldNodeA"
+benchB =  "BenchmarkGridWorldNodeB"	
+# Synchronous Discrete Simulator with 2D map
+# mapName specifies the name of the GridWorld node under package and it will load it 
+def benchmarkA(name, mapName = benchA, logPeriod=200): 
+
+	command = [package+mapName, '_'+World.logPeriodConf+':='+str(logPeriod)]
+
+	noActions = 4;		# hardcoded
+	noStateVars = 2;
+
+	g = NodeGroup(mapName, True);
+	g.addNode(command, name, "java");
+	module = NeuralModule(name+'_GridWorld', g, False)
+	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
+	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
 	return module
 

@@ -64,7 +64,9 @@ public class ForgettingCoverageChangeReward extends AbsProsperityObserver{
 
 	@Override
 	public float getProsperity() {
-		return (cover.getProsperity()+rew.getProsperity()+ch.getProsperity())/3;
+		return (float)(((double)cover.getProsperity()
+				+(double)rew.getProsperity()
+				+(double)ch.getProsperity())/3.0);
 	}
 
 	@Override

@@ -49,7 +49,8 @@ public class KnowledgeCoverageReward extends AbsProsperityObserver{
 
 	@Override
 	public float getProsperity() {
-		return (cover.getProsperity()+rew.getProsperity())/2;
+		return (float)(((double)cover.getProsperity()
+				+(double)rew.getProsperity())/2.0);
 	}
 
 	@Override

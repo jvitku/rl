@@ -55,7 +55,10 @@ public class BinaryCoverageReward extends AbsProsperityObserver{
 	}
 
 	protected float computeProsperity(){
-		return (cover.getProsperity()+rew.getProsperity())/2;
+		
+		float result = (float)(((double)cover.getProsperity()+(double)rew.getProsperity())/2.0);
+				
+		return result;
 	}
 
 	@Override

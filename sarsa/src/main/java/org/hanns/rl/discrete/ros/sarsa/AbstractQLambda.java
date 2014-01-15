@@ -20,7 +20,7 @@ import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
-import org.hanns.rl.discrete.observer.stats.combined.BinaryCoverageForgettingReward;
+//import org.hanns.rl.discrete.observer.stats.combined.BinaryCoverageForgettingReward;
 
 import ctu.nengoros.network.node.AbstractHannsNode;
 import ctu.nengoros.network.node.observer.Observer;
@@ -126,9 +126,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	protected void registerObservers(){
 		observers = new LinkedList<Observer>();
 
-		o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
+		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
 		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
-		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
+		o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
 		observers.add(o);
 
 		// initialize the visualizer
@@ -456,7 +456,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			data[0] = o.getProsperity();
 			
 			for(int i=0; i<childs.length; i++){
-				data[i] = childs[i].getProsperity();
+				data[i+1] = childs[i].getProsperity();
 			}
 		}
 		fl.setData(data);
@@ -465,6 +465,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
+	
 }
 
 

@@ -46,6 +46,33 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDela
 
 	return module
 
+classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward" 
+# publishes: main prosperity, BinaryCoverageForgetting, BinaryRewardPerStep, KnowledgeChange
+
+def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
+
+	command = [classMOO, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
+	'_'+QLambda.noOutputsConf+':='+str(noActions),
+	'_'+QLambda.sampleCountConf+':='+str(noValues),
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod),
+	'_'+QLambda.filterConf+':='+str(maxDelay)]
+
+	g = NodeGroup("RL", True);
+	g.addNode(command, "RL", "java");
+	module = NeuralModule(name+'_QLambda', g, False)
+
+	module.createEncoder(QLambda.topicAlpha,"float",1); 				# alpha config
+	module.createEncoder(QLambda.topicGamma,"float",1);
+	module.createEncoder(QLambda.topicLambda,"float",1);
+	module.createEncoder(QLambda.topicImportance,"float",1);
+
+	module.createDecoder(QLambda.topicProsperity,"float", 4);			# float[]{prosperity, coverage, reward/step}?
+
+	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
+	module.createEncoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
+
+	return module
+	
 def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
 	# build the node

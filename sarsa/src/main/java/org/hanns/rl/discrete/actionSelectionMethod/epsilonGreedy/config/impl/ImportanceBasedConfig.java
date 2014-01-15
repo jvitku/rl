@@ -18,7 +18,7 @@ implements ImportanceBasedEpsilonGreedyConf{
 
 	// even in case of maximum importance, the randomization should occur  
 	public static final double DEF_MINEPSILON = 0.1;
-	public static final float DEF_IMPORTANCE = 0.1f;
+	public static final float DEF_IMPORTANCE = 0.3f;
 
 	private double epsilon;
 	private double minEpsilon = DEF_MINEPSILON;

@@ -49,6 +49,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 10;
+	
 
 	/**
 	 * Importance based Epsilon-greedy ASM configuration

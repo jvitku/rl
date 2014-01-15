@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
 
@@ -40,7 +41,7 @@ public class QLambda extends AbstractQLambda{
 
 	public MessageDerivator filter;
 	public static final String filterConf = "filterLength";
-	
+
 	/**
 	 * Called by the asynchronous data subscriber when new data
 	 * sample is received. Typically, the first value is reward, 
@@ -51,7 +52,7 @@ public class QLambda extends AbstractQLambda{
 
 		// check whether the message should be passed through
 		boolean shouldPass = filter.newMessageShouldBePassed(data);
-		
+
 		// if the message should not be processed, send NOOP and wait for new state
 		if(!shouldPass){
 			// publish the NOOP 
@@ -60,7 +61,7 @@ public class QLambda extends AbstractQLambda{
 			actionPublisher.publish(fl);
 			return;
 		}
-		
+
 		// decode data (first value is reinforcement..
 		// ..the rest are values of state variables
 		float reward = data[0];
@@ -71,7 +72,7 @@ public class QLambda extends AbstractQLambda{
 		// perform the SARSA step
 		performSARSAstep(reward, state);		
 	}
-	
+
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
 		int action = this.learn(reward);
@@ -89,6 +90,19 @@ public class QLambda extends AbstractQLambda{
 	}
 
 	/**
+	 * Instantiate the ProsperityObserver
+	 */
+	@Override
+	protected void registerProsperityObserver(){
+		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
+		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
+		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
+		o = new BinaryRewardPerStep();
+
+		observers.add(o);
+	}
+
+	/**
 	 * Select action, perform learning step, return selected action.
 	 * 
 	 * @param reward reward received during the previous simulation step
@@ -98,25 +112,25 @@ public class QLambda extends AbstractQLambda{
 
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
-		
+
 		// run all observers
 		for(int i=0; i<observers.size(); i++)
 			observers.get(i).observe(prevAction, reward, states.getValues(), action);
 
 		return action;
 	}
-	
+
 	/**
 	 * Parse configuration of the filter.
 	 */
 	@Override
 	protected void parseParameters(ConnectedNode connectedNode){
 		super.parseParameters(connectedNode);
-		
+
 		int len = r.getMyInteger(filterConf, MessageDerivator.DEF_MAXLOOP);
 		filter = new MessageDerivator(len);
 	}
-	
+
 	@Override
 	protected void registerParameters(){
 		super.registerParameters();

@@ -11,7 +11,6 @@ import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
 import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
-import org.hanns.rl.discrete.observer.stats.combined.ForgettingCoverageChangeReward;
 import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
@@ -20,7 +19,6 @@ import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
-//import org.hanns.rl.discrete.observer.stats.combined.BinaryCoverageForgettingReward;
 
 import ctu.nengoros.network.node.AbstractHannsNode;
 import ctu.nengoros.network.node.observer.Observer;
@@ -94,7 +92,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	protected int prevAction;					// index of the last action executed
 	protected int step = 0;
 
-	ProsperityObserver o;						// observes the prosperity of node
+	protected ProsperityObserver o;						// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
 
 
@@ -126,11 +124,8 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	protected void registerObservers(){
 		observers = new LinkedList<Observer>();
 
-		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
-		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
-		o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
-		observers.add(o);
-
+		this.registerProsperityObserver();
+		
 		// initialize the visualizer
 		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
@@ -140,7 +135,6 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		visualization.setActionRemapping(new String[]{"<",">","^","v"});
 
 		observers.add(visualization);
-
 		// configure observers to log/visualize in as selected in the node
 		for(int i=0; i<observers.size(); i++){
 			System.out.println("willLog "+this.willLog+ " period: "+this.logPeriod+
@@ -149,6 +143,12 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
+	
+	/**
+	 * Instatntiate the Observer {@link #o} to the resider one. 
+	 */
+	protected abstract void registerProsperityObserver();
+
 
 
 	/**
@@ -454,7 +454,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			ProsperityObserver[] childs = o.getChilds();	
 			data = new float[childs.length+1];
 			data[0] = o.getProsperity();
-			
+
 			for(int i=0; i<childs.length; i++){
 				data[i+1] = childs[i].getProsperity();
 			}
@@ -465,7 +465,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
-	
+
 }
 
 

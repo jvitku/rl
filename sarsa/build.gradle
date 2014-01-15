@@ -24,7 +24,7 @@ repositories {
 }
 
 // Define the version and name of my stack (ROS convention)
-version             = '0.0.0-SNAPSHOT'
+version             = '0.0.3-SNAPSHOT'
 group               = 'ctu.hanns.rl'
 
 // This project depends on compilation of rosjava_core

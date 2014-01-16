@@ -47,7 +47,7 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDela
 	return module
 
 classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward" 
-# publishes: main prosperity, BinaryCoverageForgetting, BinaryRewardPerStep, KnowledgeChange
+#  Publishes: {composed prosperity, BinaryCoverageForgetting, BinaryRewardPerStep}
 
 def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
@@ -66,7 +66,7 @@ def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxD
 	module.createEncoder(QLambda.topicLambda,"float",1);
 	module.createEncoder(QLambda.topicImportance,"float",1);
 
-	module.createDecoder(QLambda.topicProsperity,"float", 4);			# float[]{prosperity, coverage, reward/step}?
+	module.createDecoder(QLambda.topicProsperity,"float", 3);			# float[]{prosperity, coverage, reward/step}
 
 	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
 	module.createEncoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)

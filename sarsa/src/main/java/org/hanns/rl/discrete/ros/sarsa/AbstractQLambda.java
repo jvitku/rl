@@ -163,9 +163,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 					+SL.toStr(actionEncoder.encode(action)));
 
 		// publish action selected by the ASM
-		std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
+		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
 		fl.setData(actionEncoder.encode(action));								
-		actionPublisher.publish(fl);
+		dataPublisher.publish(fl);
 
 		prevAction = action;
 
@@ -274,7 +274,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * @param connectedNode
 	 */
 	protected void buildDataIO(ConnectedNode connectedNode){
-		actionPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
+		dataPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
 
 		Subscriber<std_msgs.Float32MultiArray> dataSub = 
 				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);

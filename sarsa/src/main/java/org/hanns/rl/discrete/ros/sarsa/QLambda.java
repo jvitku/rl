@@ -56,9 +56,9 @@ public class QLambda extends AbstractQLambda{
 		// if the message should not be processed, send NOOP and wait for new state
 		if(!shouldPass){
 			// publish the NOOP 
-			std_msgs.Float32MultiArray fl = actionPublisher.newMessage();	
+			std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
 			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
-			actionPublisher.publish(fl);
+			dataPublisher.publish(fl);
 			return;
 		}
 

@@ -137,6 +137,15 @@ public class QLambda extends AbstractQLambda{
 		paramList.addParam(filterConf, ""+MessageDerivator.DEF_MAXLOOP, "The maximum" +
 				" length (in sim. steps) of the closed loop: action->newState");
 	}
+	
+	@Override
+	public boolean isReady(){
+		if(!super.isReady())
+			return false;
+		if(filter==null)
+			return false;
+		return true;
+	}
 
 }
 

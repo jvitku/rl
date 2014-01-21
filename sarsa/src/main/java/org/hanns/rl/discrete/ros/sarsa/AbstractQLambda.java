@@ -467,6 +467,21 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
 
+
+	@Override
+	protected boolean isReady() {
+		if(log==null)
+			return false;
+		if(prospPublisher==null)
+			return false;
+		if(dataPublisher==null)
+			return false;
+		if(asm==null || q==null || rl==null)
+			return false;
+		if(observers==null)
+			return false;
+		return true;
+	}
 }
 
 

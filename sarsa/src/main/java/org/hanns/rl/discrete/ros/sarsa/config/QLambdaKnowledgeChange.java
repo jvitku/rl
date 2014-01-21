@@ -21,5 +21,4 @@ public class QLambdaKnowledgeChange extends QLambda{
 		o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
 		observers.add(o);
 	}
-
 }

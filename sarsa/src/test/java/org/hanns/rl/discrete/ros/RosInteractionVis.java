@@ -108,7 +108,8 @@ public class RosInteractionVis extends RosCommunicationTest{
 		// binary coverage: how many tales of the map agent visited (has to be 1.0)
 		// binary reward per step: typically something like 0.0115
 		System.out.println("prosperity "+rl.getProsperityObserver().getProsperity());
-		assertTrue(rl.getProsperityObserver().getProsperity()>0.1);
+		
+		assertTrue(rl.getProsperityObserver().getProsperity()>0.05);
 		
 		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
 		

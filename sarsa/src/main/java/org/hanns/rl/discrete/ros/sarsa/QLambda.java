@@ -147,6 +147,12 @@ public class QLambda extends AbstractQLambda{
 		return true;
 	}
 
+	@Override
+	public float getProsperity() { return o.getProsperity(); }
+
+	@Override
+	public String listParams() { return this.paramList.listParams(); }
+
 }
 
 

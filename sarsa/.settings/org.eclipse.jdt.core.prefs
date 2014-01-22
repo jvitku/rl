@@ -1,5 +1,9 @@
 #
+<<<<<<< HEAD
 #Wed Jan 22 23:26:49 CET 2014
+=======
+#Wed Jan 22 23:13:10 CET 2014
+>>>>>>> nengoros-master-v0.0.3
 org.eclipse.jdt.core.compiler.debug.localVariable=generate
 org.eclipse.jdt.core.compiler.compliance=1.6
 org.eclipse.jdt.core.compiler.codegen.unusedLocal=preserve

@@ -3,8 +3,8 @@ package org.hanns.rl.discrete.ros.testnodes;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorldObstacle;
 import org.ros.node.ConnectedNode;
 
-import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamList;
+import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
+import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 
 /**
  * The same as GrodWorldNode, but this one has predefined map with obstacles and rewards.

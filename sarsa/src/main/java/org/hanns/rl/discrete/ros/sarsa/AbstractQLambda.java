@@ -21,10 +21,10 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.network.node.AbstractHannsNode;
+import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
+import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 import ctu.nengoros.network.node.observer.Observer;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
-import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamList;
 import ctu.nengoros.util.SL;
 
 public abstract class AbstractQLambda extends AbstractHannsNode{

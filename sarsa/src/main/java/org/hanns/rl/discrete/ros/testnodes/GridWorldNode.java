@@ -12,14 +12,14 @@ import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
-import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
-import ctu.nengoros.nodes.HannsNode;
-import ctu.nengoros.rosparam.impl.PrivateRosparam;
-import ctu.nengoros.rosparam.manager.ParamList;
+import ctu.nengoros.network.node.AbstractHannsNode;
+import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
+import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
+import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 import ctu.nengoros.util.SL;
 
 /**
@@ -29,7 +29,7 @@ import ctu.nengoros.util.SL;
  * @author Jaroslav Vitku
  *
  */
-public class GridWorldNode extends AbstractNodeMain implements HannsNode{
+public class GridWorldNode extends AbstractHannsNode{
 
 	public static final String name = "GridWorldNode";
 	public final String me = "["+name+"] ";
@@ -273,5 +273,32 @@ public class GridWorldNode extends AbstractNodeMain implements HannsNode{
 	public String listParams() { return this.paramList.listParams(); }
 
 	@Override
-	public void setImportance(float arg0) { } // TODO, service providers should have importance?
+	protected void buildConfigSubscribers(ConnectedNode arg0) {
+		// made before HannsNode
+	}
+
+	@Override
+	protected void buildDataIO(ConnectedNode arg0) {
+		// made before HannsNode
+	}
+
+	@Override
+	public ProsperityObserver getProsperityObserver() {
+		// no prosperity observer here
+		return null;
+	}
+
+	@Override
+	protected boolean isReady() {
+		return (paramList!=null && log!=null && actionEncoder!=null && stateEncoder!=null);
+	}
+
+	@Override
+	protected void publishProsperity() { }
+
+	@Override
+	protected void registerParameters() {
+		// made before HannsNode
+	}
+
 }

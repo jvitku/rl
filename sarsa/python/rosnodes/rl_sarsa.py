@@ -16,8 +16,6 @@ from org.hanns.rl.discrete.ros.sarsa import QLambda as QLambda
 # java classes
 classs = "org.hanns.rl.discrete.ros.sarsa.QLambda"
 
-
-
 # Synchronous NeuralModule implementing QLambda algorithm
 # noStateVars = how many state variables is used
 # noActions = how much actions the agent has available
@@ -76,7 +74,7 @@ def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxD
 def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
 	# build the node
-	mod = qlambda(name, noStateVars,noActions, noValues, logPeriod, maxDelay)
+	mod = qlambda(name, noStateVars, noActions, noValues, logPeriod, maxDelay)
 	net.add(mod)
 
 	# define the configuration

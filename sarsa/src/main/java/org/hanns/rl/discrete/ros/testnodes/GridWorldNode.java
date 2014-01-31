@@ -97,6 +97,7 @@ public class GridWorldNode extends AbstractHannsNode{
 
 		state = new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
 
+		super.fullName = super.getFullName(connectedNode);
 		log.info(me+"Node configured and ready to provide simulator services!");
 		this.waitForConnections(connectedNode);
 	}
@@ -289,16 +290,19 @@ public class GridWorldNode extends AbstractHannsNode{
 	}
 
 	@Override
-	protected boolean isReady() {
+	public boolean isStarted() {
 		return (paramList!=null && log!=null && actionEncoder!=null && stateEncoder!=null);
 	}
 
 	@Override
-	protected void publishProsperity() { }
+	public void publishProsperity() { }
 
 	@Override
 	protected void registerParameters() {
 		// made before HannsNode
 	}
+
+	@Override
+	public String getFullName() { return this.fullName; }
 
 }

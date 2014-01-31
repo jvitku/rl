@@ -33,4 +33,6 @@ net.add(world)
 net.connect(world.getOrigin(QLambda.topicDataIn), rl.newTerminationFor(QLambda.topicDataIn))
 net.connect(rl.getOrigin(QLambda.topicDataOut), world.getTermination(QLambda.topicDataOut))
 
+net.view()
+net.run(1,0.001)
 print 'Configuration complete.'

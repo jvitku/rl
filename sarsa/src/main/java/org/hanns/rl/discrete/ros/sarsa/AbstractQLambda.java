@@ -49,7 +49,6 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 10;
-	
 
 	/**
 	 * Importance based Epsilon-greedy ASM configuration
@@ -110,13 +109,15 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		this.parseParameters(connectedNode);
 		this.registerObservers();
 
-		myLog(me+"initializing ROS Node IO");
+		System.out.println(me+"initializing ROS Node IO");
 
 		this.buildProsperityPublisher(connectedNode);
 		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
 
-		myLog(me+"Node configured and ready now!");
+		super.fullName = super.getFullName(connectedNode);
+		
+		System.out.println(me+"Node configured and ready now!");
 	}
 
 	/**
@@ -138,9 +139,9 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		observers.add(visualization);
 		// configure observers to log/visualize in as selected in the node
 		for(int i=0; i<observers.size(); i++){
-			System.out.println("willLog "+this.willLog+ " period: "+this.logPeriod+
+			System.out.println("willLogToFile "+this.logToFile+ " period: "+this.logPeriod+
 					" "+observers.get(i).getName());
-			observers.get(i).setShouldVis(this.willLog);
+			observers.get(i).setShouldVis(this.logPeriod>=0);
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
@@ -181,7 +182,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		paramList.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
 		paramList.addParam(noOutputsConf, ""+DEF_NOOUTPUTS,"Number of actions available to the agent (1ofN coded)");
 
-		paramList.addParam(shouldLog, ""+DEF_LOG, "Enables logging");
+		paramList.addParam(logToFileConf, ""+DEF_LTF, "Enables logging into file");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
 		paramList.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
 		paramList.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
@@ -194,10 +195,10 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	@SuppressWarnings("unchecked")
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
-		willLog = r.getMyBoolean(shouldLog, DEF_LOG);
+		logToFile = r.getMyBoolean(logToFileConf, DEF_LTF);
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
 
-		this.myLog(me+"parsing parameters");
+		System.out.println(me+"parsing parameters");
 
 		// RL parameters (default alpha and gamma, but can be also modified online)
 		double alpha = r.getMyDouble(alphaConf, DEF_ALPHA);
@@ -215,7 +216,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 		double sampleMx = r.getMyDouble(sampleMaxConf, DEF_MAX);
 		int sampleC = r.getMyInteger(sampleCountConf, DEF_COUNT);
 
-		this.myLog(me+"Creating data structures.");
+		System.out.println(me+"Creating data structures.");
 
 		/**
 		 *  build variable set (each variable has own encoder (shared for now))
@@ -290,7 +291,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 				else{
 					// here, the state description is decoded and one SARSA step executed
 					if(step % logPeriod==0)
-						myLog(me+"<-"+topicDataIn+" Received new reinforcement &" +
+						System.out.println(me+"<-"+topicDataIn+" Received new reinforcement &" +
 								" state description "+SL.toStr(data));
 
 					// implement this
@@ -444,7 +445,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * position and values of its childs in the vector.
 	 */
 	@Override
-	protected void publishProsperity(){
+	public void publishProsperity(){
 
 		float[] data;
 		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();
@@ -467,9 +468,8 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
 
-
 	@Override
-	protected boolean isReady() {
+	public boolean isStarted() {
 		if(log==null)
 			return false;
 		if(prospPublisher==null)
@@ -482,6 +482,10 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String getFullName() { return this.fullName; }
+
 }
 
 

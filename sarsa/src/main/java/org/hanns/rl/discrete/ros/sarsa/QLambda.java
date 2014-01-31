@@ -139,8 +139,8 @@ public class QLambda extends AbstractQLambda{
 	}
 	
 	@Override
-	public boolean isReady(){
-		if(!super.isReady())
+	public boolean isStarted(){
+		if(!super.isStarted())
 			return false;
 		if(filter==null)
 			return false;
@@ -152,6 +152,8 @@ public class QLambda extends AbstractQLambda{
 
 	@Override
 	public String listParams() { return this.paramList.listParams(); }
+
+
 
 }
 

@@ -137,7 +137,7 @@ public class QLambda extends AbstractQLambda{
 		paramList.addParam(filterConf, ""+MessageDerivator.DEF_MAXLOOP, "The maximum" +
 				" length (in sim. steps) of the closed loop: action->newState");
 	}
-	
+
 	@Override
 	public boolean isStarted(){
 		if(!super.isStarted())
@@ -152,6 +152,30 @@ public class QLambda extends AbstractQLambda{
 
 	@Override
 	public String listParams() { return this.paramList.listParams(); }
+
+	@Override
+	public void hardReset(boolean randomize) {
+		System.out.println(me+"hardReset called, discarding all data");
+		filter.hardReset(randomize);
+		rl.hardReset(randomize);
+		asm.hardReset(randomize);
+		for(int i=0; i<observers.size(); i++){
+			observers.get(i).hardReset(randomize);
+		}
+		o.hardReset(randomize);
+	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		System.out.println(me+"softReset called, returning to the initial state.");
+		filter.softReset(randomize);
+		rl.softReset(randomize);
+		asm.softReset(randomize);
+		for(int i=0; i<observers.size(); i++){
+			observers.get(i).softReset(randomize);
+		}
+		o.softReset(randomize);
+	}
 
 
 

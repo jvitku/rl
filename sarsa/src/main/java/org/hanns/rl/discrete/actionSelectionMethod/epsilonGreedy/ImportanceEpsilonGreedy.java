@@ -88,4 +88,14 @@ public abstract class ImportanceEpsilonGreedy<E> implements ActionSelectionMetho
 
 	@Override
 	public boolean actionWasGreedy() { return this.wasgreedy; }
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
 }

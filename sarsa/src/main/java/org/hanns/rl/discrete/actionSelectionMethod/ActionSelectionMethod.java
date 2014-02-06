@@ -2,13 +2,15 @@ package org.hanns.rl.discrete.actionSelectionMethod;
 
 import org.hanns.rl.discrete.actions.ActionSetInt;
 
+import ctu.nengoros.network.common.Resettable;
+
 /**
  * Interface for action selection method. 
  * 
  * @author Jaroslav Vitku
  *
  */
-public interface ActionSelectionMethod<E> {
+public interface ActionSelectionMethod<E> extends Resettable{
 
 	/**
 	 * Array of values for each action in the current set.

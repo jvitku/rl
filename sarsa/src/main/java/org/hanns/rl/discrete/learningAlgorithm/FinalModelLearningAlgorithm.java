@@ -3,6 +3,8 @@ package org.hanns.rl.discrete.learningAlgorithm;
 import org.hanns.rl.common.exceptions.IncorrectDimensionsException;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
+import ctu.nengoros.network.common.Resettable;
+
 /**
  * Learning algorithm with a final model of the world. 
  * This means final number of actions and number of state variables 
@@ -12,7 +14,7 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
  * @author Jaroslav Vitku
  *
  */
-public interface FinalModelLearningAlgorithm extends LearningAlgorithm{
+public interface FinalModelLearningAlgorithm extends LearningAlgorithm, Resettable{
 	
 	/**
 	 * Similar to the {@link #setMatrix(FinalQMatrix)}, but this setups entire 

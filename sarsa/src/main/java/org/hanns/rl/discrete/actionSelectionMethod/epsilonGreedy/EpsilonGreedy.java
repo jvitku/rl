@@ -84,4 +84,14 @@ public abstract class EpsilonGreedy<E> implements ActionSelectionMethod<E>{
 
 	@Override
 	public boolean actionWasGreedy() { return this.wasgreedy; }
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
 }

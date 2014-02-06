@@ -1,5 +1,6 @@
 package org.hanns.rl.discrete.ros.sarsa.ioHelper;
 
+
 public class MessageDerivator implements MessageDerivationFilter{
 
 	public static final int DEF_MAXLOOP = 2;	// wait max 2 steps by default

@@ -82,4 +82,14 @@ public abstract class Greedy<E> implements ActionSelectionMethod<E>{
 	public void setConfig(ActionSelectionMethodConfig config) {
 		System.err.println("Greedy ASM: ERROD: I do not need any config");
 	}
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
+
+	@Override
+	public void softReset(boolean randomize) {
+		this.wasgreedy = false;
+	}
 }

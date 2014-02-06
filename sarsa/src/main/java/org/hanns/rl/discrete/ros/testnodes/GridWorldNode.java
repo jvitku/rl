@@ -68,7 +68,7 @@ public class GridWorldNode extends AbstractHannsNode{
 	// whether some message from an agent received in the past 1000ms
 	protected boolean dataExchanged = false;
 	protected int step;
-	protected boolean simPaused = false;
+	protected volatile boolean simPaused = false;
 
 	protected ParamList paramList;			// parameter storage
 
@@ -95,13 +95,17 @@ public class GridWorldNode extends AbstractHannsNode{
 		this.defineMap();
 		this.initData();
 
-		state = new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
+		state = this.getStartingPosition();
 
 		super.fullName = super.getFullName(connectedNode);
 		log.info(me+"Node configured and ready to provide simulator services!");
 		this.waitForConnections(connectedNode);
 	}
 
+	private int[] getStartingPosition(){
+		return new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
+	}
+	
 	protected void defineMap(){
 		// create map, place the reinforcements
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
@@ -304,5 +308,22 @@ public class GridWorldNode extends AbstractHannsNode{
 
 	@Override
 	public String getFullName() { return this.fullName; }
+
+	/**
+	 * Pause the simulation, place the agent to the starting position, 
+	 * set simulation step to 0 and resume the simulation
+	 */
+	@Override
+	public void hardReset(boolean arg0) {
+		this.simPaused = true;
+		this.step = 0;
+		this.state = this.getStartingPosition();
+		this.simPaused = false;
+	}
+
+	@Override
+	public void softReset(boolean arg0) {
+		
+	}
 
 }

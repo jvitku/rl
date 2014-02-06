@@ -45,7 +45,7 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDela
 	return module
 
 classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward" 
-#  Publishes: {composed prosperity, BinaryCoverageForgetting, BinaryRewardPerStep}
+#  Publishes: {composed prosperity, BinaryCoverage, BinaryRewardPerStep}
 
 def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 

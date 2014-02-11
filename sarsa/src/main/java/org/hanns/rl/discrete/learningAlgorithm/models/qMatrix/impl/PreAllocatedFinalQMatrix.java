@@ -6,6 +6,8 @@ import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.MultiDimensionMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
 
+import ctu.nengoros.util.SL;
+
 /**
  * An implementation of the QMatrix. This one uses 
  * {@link org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension} 
@@ -187,19 +189,24 @@ public class PreAllocatedFinalQMatrix implements FinalQMatrix<Double>{
 	 * @param depth current depth of recursion, should be called externaly with value of 0
 	 */
 	private void randomizeDimension(int[] indexes, int depth){
+		System.out.println("dept: "+depth+" dim sizes "+this.dimensionSizes.length);
 		// recursion done
 		if(depth==this.dimensionSizes.length){
 			
 			// generate double in the range
 			Double v = this.minRand+(r.nextDouble()*this.range);
 			d.setValue(indexes, v);
+			return;
 		}
 		int[] tmp;
 		
 		// randomize all participants in this dimension
 		for(int i=0; i<this.dimensionSizes[depth]; i++){
+			System.out.println(SL.toStr(dimensionSizes));
 			tmp = indexes;
 			tmp[depth] = i;
+			System.out.println("depth "+depth+" dim size is: "+dimensionSizes[depth]+
+					" indexes "+SL.toStr(indexes)+" "+SL.toStr(tmp));
 			this.randomizeDimension(tmp, depth+1);
 		}
 	}

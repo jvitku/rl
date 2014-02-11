@@ -20,14 +20,14 @@ import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
-import ctu.nengoros.network.node.AbstractHannsNode;
+import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 import ctu.nengoros.network.node.observer.Observer;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 import ctu.nengoros.util.SL;
 
-public abstract class AbstractQLambda extends AbstractHannsNode{
+public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 
 	public static final String name = "QLambda";
 
@@ -111,6 +111,7 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 
 		System.out.println(me+"initializing ROS Node IO");
 
+		this.registerSimulatorCommunication(connectedNode);
 		this.buildProsperityPublisher(connectedNode);
 		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
@@ -150,8 +151,6 @@ public abstract class AbstractQLambda extends AbstractHannsNode{
 	 * Instatntiate the Observer {@link #o} to the resider one. 
 	 */
 	protected abstract void registerProsperityObserver();
-
-
 
 	/**
 	 * Execute action selected by the ASM and publish over the ROS network

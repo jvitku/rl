@@ -16,7 +16,7 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
-import ctu.nengoros.network.node.AbstractHannsNode;
+import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
@@ -29,7 +29,7 @@ import ctu.nengoros.util.SL;
  * @author Jaroslav Vitku
  *
  */
-public class GridWorldNode extends AbstractHannsNode{
+public class GridWorldNode extends AbstractConfigurableHannsNode{
 
 	public static final String name = "GridWorldNode";
 	public final String me = "["+name+"] ";
@@ -105,7 +105,7 @@ public class GridWorldNode extends AbstractHannsNode{
 	private int[] getStartingPosition(){
 		return new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
 	}
-	
+
 	protected void defineMap(){
 		// create map, place the reinforcements
 		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
@@ -323,7 +323,7 @@ public class GridWorldNode extends AbstractHannsNode{
 
 	@Override
 	public void softReset(boolean arg0) {
-		
+
 	}
 
 }

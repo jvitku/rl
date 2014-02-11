@@ -155,6 +155,9 @@ public class QLambda extends AbstractQLambda{
 
 	@Override
 	public void hardReset(boolean randomize) {
+		if(!this.randomizeAllowed)
+			randomize = false;
+			
 		System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
@@ -167,6 +170,9 @@ public class QLambda extends AbstractQLambda{
 
 	@Override
 	public void softReset(boolean randomize) {
+		if(!this.randomizeAllowed)
+			randomize = false;
+		
 		System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);
@@ -176,8 +182,6 @@ public class QLambda extends AbstractQLambda{
 		}
 		o.softReset(randomize);
 	}
-
-
 
 }
 

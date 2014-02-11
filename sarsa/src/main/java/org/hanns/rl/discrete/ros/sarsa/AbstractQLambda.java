@@ -60,7 +60,12 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 	// importance affect current value of epsilon: higher action importance, smaller eps.
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = conf+importanceConf;
-	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE; 
+	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE;
+	
+	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
+	public static final String randomizeConf = "randomize";
+	public static final boolean DEF_RANDOMIZE = false;
+	protected boolean randomizeAllowed;
 
 	/**
 	 * Default sampling parameters, TODO: customize each variable sampling 
@@ -187,6 +192,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 		paramList.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
 		paramList.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
+		paramList.addParam(randomizeConf, ""+DEF_RANDOMIZE, "Should allow RANDOMIZED reset from Nengo?");
 		//paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
 	}
 
@@ -214,6 +220,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 		double sampleMn = r.getMyDouble(sampleMinConf, DEF_MIN);
 		double sampleMx = r.getMyDouble(sampleMaxConf, DEF_MAX);
 		int sampleC = r.getMyInteger(sampleCountConf, DEF_COUNT);
+		randomizeAllowed = r.getMyBoolean(randomizeConf, DEF_RANDOMIZE);
 
 		System.out.println(me+"Creating data structures.");
 

@@ -38,4 +38,5 @@ public class FinalStateSpaceVisDouble extends FinalStateSpaceVis<Double>{
 	
 	@Override
 	public String getName(){ return name; }
+
 }

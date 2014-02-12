@@ -143,6 +143,7 @@ After launching the node:
 
 ## TODO
 
+* Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)
 

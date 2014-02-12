@@ -1,9 +1,10 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
+import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.SarsaProsperityObserver;
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverage;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 
-import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 
 
@@ -17,7 +18,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * @author Jaroslav Vitku
  * @see ctu.nengoros.nodes.HannsNode
  */
-public class BinaryCoverageReward extends AbsProsperityObserver{
+public class BinaryCoverageReward extends AbsSardaProspObserver{
 
 	public final String name = "BinaryCoverageReward";
 	public final String me = "["+name+"] ";
@@ -25,8 +26,8 @@ public class BinaryCoverageReward extends AbsProsperityObserver{
 	public final String explanation = "Returns values of the " +
 			"BinaryCoverage and Reward/Step weighted 50/50";
 	
-	protected ProsperityObserver cover;
-	protected ProsperityObserver rew;
+	protected SarsaProsperityObserver cover;
+	protected SarsaProsperityObserver rew;
 
 	public BinaryCoverageReward(int[] varSizes){
 		cover = new BinaryCoverage(varSizes);

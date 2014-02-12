@@ -2,6 +2,7 @@ package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
+import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
@@ -115,7 +116,7 @@ public class QLambda extends AbstractQLambda{
 
 		// run all observers
 		for(int i=0; i<observers.size(); i++)
-			observers.get(i).observe(prevAction, reward, states.getValues(), action);
+			((SarsaObserver)observers.get(i)).observe(prevAction, reward, states.getValues(), action);
 
 		return action;
 	}

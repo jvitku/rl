@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
-import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
+import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+
 
 /**
  * Basic observer which logs only positive rewards without considering 
@@ -10,7 +11,7 @@ import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
  * @author Jaroslav Vitku
  *
  */
-public class UniformAverageReward extends AbsProsperityObserver{
+public class UniformAverageReward extends AbsSardaProspObserver{
 
 	public final String name = "BinaryAverageReward";
 	public final String explanation = "Value from [0,1] telling" +

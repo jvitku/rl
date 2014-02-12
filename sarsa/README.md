@@ -136,7 +136,7 @@ These **online** configurations determine the parameters of the algorithm, namel
 
 After launching the node:
 
-* the algorithm is setup (if no configuration parameters foud, the defualt ones are loaded) 
+* the algorithm is setup (if no configuration parameters found, the default ones are loaded) 
 * and the node waits for data.
 * if the data sample is received, this is considered as a simulation step, which means:
 	* one algorithm step is made and output values are updated

@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.ros.sarsa;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
-import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
+import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
 
@@ -97,7 +97,7 @@ public class QLambda extends AbstractQLambda{
 		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
 		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
 		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
-		o = new BinaryRewardPerStep();
+		o = new MCR();
 
 		observers.add(o);
 	}

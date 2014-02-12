@@ -4,7 +4,7 @@ import org.hanns.rl.discrete.observer.stats.combined.ForgettingCoverageChangeRew
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 
 /**
- * Publishes: {composed prosperity, BinaryCoverageForgetting, BinaryRewardPerStep, KnowledgeChange}
+ * Publishes: {composed prosperity, BinaryCoverageForgetting, MCR, KnowledgeChange}
  *  
  * @author Jaroslav Vitku
  *

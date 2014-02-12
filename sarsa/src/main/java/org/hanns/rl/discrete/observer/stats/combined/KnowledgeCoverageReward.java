@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
+import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.observer.stats.impl.KnowledgeCoverage;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
@@ -11,7 +11,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * The same as {@link org.hanns.rl.discrete.observer.stats.combined.impl.BinaryCoverageReward}, but instead
  * of BinaryCoverage, the KnowledgeCoverage is used.
  * 
- * The {@link KnowledgeCoverage} and the {@link BinaryRewardPerStep} are weighted 50 to 50.
+ * The {@link KnowledgeCoverage} and the {@link MCR} are weighted 50 to 50.
  * 
  * @author Jaroslav Vitku
  * 
@@ -24,11 +24,11 @@ public class KnowledgeCoverageReward extends AbsProsperityObserver{
 			" KnowledgeCoverage and Reward/Step values 50/50.";
 	
 	KnowledgeCoverage cover;
-	BinaryRewardPerStep rew;
+	MCR rew;
 
 	public KnowledgeCoverageReward(int[] varSizes, FinalQMatrix<Double> q){
 		cover = new KnowledgeCoverage(varSizes,q);
-		rew = new BinaryRewardPerStep();
+		rew = new MCR();
 	}
 
 	@Override

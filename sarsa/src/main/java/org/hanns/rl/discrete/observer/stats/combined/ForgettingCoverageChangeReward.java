@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgetting;
-import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
+import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.observer.stats.impl.KnowledgeChange;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
@@ -13,7 +13,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * Combines these, each by 1/3:
  * 
  * {@link org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgetting}
- * {@link org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep}
+ * {@link org.hanns.rl.discrete.observer.stats.impl.MCR}
  * {@link org.hanns.rl.discrete.observer.stats.impl.KnowledgeChange},
  *  
  * this says that the ideally RL algorithm should:
@@ -35,12 +35,12 @@ public class ForgettingCoverageChangeReward extends AbsProsperityObserver{
 			" BinaryCoverageForgetting, Reward/Step and 1-KnowledgeChange values, each by 1/3.";
 	
 	BinaryCoverageForgetting cover;
-	BinaryRewardPerStep rew;
+	MCR rew;
 	KnowledgeChange ch;
 
 	public ForgettingCoverageChangeReward(int[] varSizes, FinalQMatrix<Double> q){
 		cover = new BinaryCoverageForgetting(varSizes);
-		rew = new BinaryRewardPerStep();
+		rew = new MCR();
 		ch = new KnowledgeChange(varSizes, q);
 	}
 

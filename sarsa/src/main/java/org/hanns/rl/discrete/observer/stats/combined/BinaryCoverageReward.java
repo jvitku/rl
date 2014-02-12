@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverage;
-import org.hanns.rl.discrete.observer.stats.impl.BinaryRewardPerStep;
+import org.hanns.rl.discrete.observer.stats.impl.MCR;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
@@ -30,7 +30,7 @@ public class BinaryCoverageReward extends AbsProsperityObserver{
 
 	public BinaryCoverageReward(int[] varSizes){
 		cover = new BinaryCoverage(varSizes);
-		rew = new BinaryRewardPerStep();
+		rew = new MCR();
 	}
 
 	@Override

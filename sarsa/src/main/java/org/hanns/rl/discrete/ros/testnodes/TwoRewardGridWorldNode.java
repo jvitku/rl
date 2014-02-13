@@ -127,6 +127,8 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 						statePublisher.publish(fl);	// send a response with reinforcement and new state 
 						state = newState.clone();
 
+						//System.out.println("publishing "+SL.toStr(encodeStateRewardMessage(rewardA, rewardB ,newState)));
+						
 						if((step++)%logPeriod==0){
 							System.out.println(me+"Responding with this state "+SL.toStr(newState)+
 									" .. that is "+SL.toStr(encodeStateRewardMessage(rewardA, rewardB,newState)));
@@ -182,8 +184,8 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 		float[] f = new float[vars.length+2];
 		f[0] = rewardA;
 		f[1] = rewardB;
-		for(int i=2; i<=vars.length; i++){
-			f[i] = stateEncoder.encode(vars[i-1]); 
+		for(int i=2; i<=vars.length+1; i++){
+			f[i] = stateEncoder.encode(vars[i-2]); 
 		}
 		return f;
 	}

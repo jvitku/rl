@@ -25,7 +25,8 @@ public class BenchmarkGridWorldNodeC extends BenchmarkGridWorldNode{
 
 		map = new float[sizex][sizey];
 		map[3][4] = mapReward;
-		map[16][15] = mapReward;
+		//map[16][15] = mapReward;
+		//map[16][4] = mapReward;
 
 		GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{0,5}, map);
 		GridWorldObstacle.drawObstacle(new int[]{sizex-6,sizex-6}, new int[]{sizey-5,sizey-1}, map);

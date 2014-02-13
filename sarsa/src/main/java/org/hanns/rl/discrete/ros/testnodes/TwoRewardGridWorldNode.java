@@ -27,15 +27,15 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 
 	public static final String name = "TwoRewardGridWorldNode";
 	
-	protected float[][] map;		// map of rewards
+	//protected float[][] map;		// map of rewards
 	public static final float DEF_REWARDVAL = 15;
 	protected float rewardAVal = 11;	// this value produces (represents) rewardA
 	protected float rewardBVal = 12;	// this value produces rewardB
 	
-	protected int sizex, sizey;	// default dimensions of the map
-	protected int[] state;		// current state
+	//protected int sizex, sizey;	// default dimensions of the map
+	//protected int[] state;		// current state
 
-	protected final int noActions = 4;	// 4 actions -> {<,>,^,v}
+	//protected final int noActions = 4;	// 4 actions -> {<,>,^,v}
 	//private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
 	
 	@Override

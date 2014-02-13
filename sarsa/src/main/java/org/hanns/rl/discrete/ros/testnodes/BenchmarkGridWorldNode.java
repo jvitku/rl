@@ -36,6 +36,7 @@ public class BenchmarkGridWorldNode extends GridWorldNode{
 		state = new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
 
 		log.info(me+"Node configured and ready to provide simulator services!");
+		this.registerSimulatorCommunication(connectedNode);
 		this.waitForConnections(connectedNode);
 	}
 	

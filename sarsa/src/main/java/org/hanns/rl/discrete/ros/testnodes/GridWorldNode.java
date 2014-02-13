@@ -1,6 +1,8 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
 
+import java.util.LinkedList;
+
 import org.apache.commons.logging.Log;
 import org.hanns.rl.common.exceptions.DecoderException;
 import org.hanns.rl.discrete.actions.ActionSetInt;
@@ -19,6 +21,7 @@ import org.ros.node.topic.Subscriber;
 import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
+import ctu.nengoros.network.node.observer.Observer;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 import ctu.nengoros.util.SL;
 
@@ -71,6 +74,8 @@ public class GridWorldNode extends AbstractConfigurableHannsNode{
 	protected volatile boolean simPaused = false;
 
 	protected ParamList paramList;			// parameter storage
+	
+	protected LinkedList<Observer> observers;	
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -96,9 +101,11 @@ public class GridWorldNode extends AbstractConfigurableHannsNode{
 		this.initData();
 
 		state = this.getStartingPosition();
+		this.observers = new LinkedList<Observer>();	// TODO: note that observing is not supported so far!
 
 		super.fullName = super.getFullName(connectedNode);
 		log.info(me+"Node configured and ready to provide simulator services!");
+		this.registerSimulatorCommunication(connectedNode);
 		this.waitForConnections(connectedNode);
 	}
 
@@ -325,5 +332,8 @@ public class GridWorldNode extends AbstractConfigurableHannsNode{
 	public void softReset(boolean arg0) {
 
 	}
+
+	@Override
+	public LinkedList<Observer> getObservers() { return observers; }
 
 }

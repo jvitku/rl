@@ -492,6 +492,8 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 	@Override
 	public String getFullName() { return this.fullName; }
 
+	@Override
+	public LinkedList<Observer> getObservers() { return observers; }
 }
 
 

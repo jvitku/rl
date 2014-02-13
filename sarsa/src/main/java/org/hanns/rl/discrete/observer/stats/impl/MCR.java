@@ -23,7 +23,7 @@ public class MCR extends AbsSardaProspObserver{
 			int futureAction) {
 		
 		step++;
-		rewards++;
+		rewards += reward;
 	}
 
 	@Override
@@ -37,6 +37,11 @@ public class MCR extends AbsSardaProspObserver{
 	public void softReset(boolean randomize) {
 		super.softReset(randomize);
 		rewards=0;
+	}
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
 	}
 
 	@Override

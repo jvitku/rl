@@ -102,6 +102,12 @@ public class BinaryCoverage extends AbsSardaProspObserver{
 		super.softReset(randomize);
 		visited.setAllVals(false);
 	}
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
+	}
+	
 
 	@Override
 	public ProsperityObserver[] getChilds() {

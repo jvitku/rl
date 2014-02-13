@@ -44,9 +44,11 @@ def qlambda(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDela
 
 	return module
 
-classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward" 
 #  Publishes: {composed prosperity, BinaryCoverage, BinaryRewardPerStep}
+classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward" 
 
+
+# to the topic QLambda.topicDataIn publishes noStateVars+1, where the first value in the vector is reward 
 def qlambdaMOO(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
 
 	command = [classMOO, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 

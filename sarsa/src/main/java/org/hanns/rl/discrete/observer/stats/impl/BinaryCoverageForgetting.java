@@ -57,6 +57,17 @@ public class BinaryCoverageForgetting extends BinaryCoverage{
 	}
 	
 	@Override
+	public void softReset(boolean randomize) {
+		super.softReset(randomize);
+		visited.setAllVals(false);
+	}
+	
+	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
+	}
+	
+	@Override
 	public String getName() { return name;	}
 
 	@Override

@@ -143,6 +143,9 @@ After launching the node:
 
 ## TODO
 
+* Make some generally usable way how to add observer (e.g. writer) to a ROS node 
+* Define the Observer interface for the GridWorldNode, call observers.observe() each step..
+* Implement read/save of the GridWorldMap (currently, each map has own class..)
 * Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)

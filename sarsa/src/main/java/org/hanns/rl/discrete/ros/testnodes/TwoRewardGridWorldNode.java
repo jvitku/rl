@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import org.hanns.rl.common.exceptions.DecoderException;
 import org.hanns.rl.discrete.ros.sarsa.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
+import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
@@ -16,6 +17,8 @@ import ctu.nengoros.util.SL;
 /**
  * Provides very similar map to the one from src/test/java (used for testing) in for of a ROS node
  * compatible with RL ROS nodes. 
+ * 
+ * Note that this may not accept sizex parameter!
  * 
  * @author Jaroslav Vitku
  *
@@ -34,10 +37,6 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 
 	protected final int noActions = 4;	// 4 actions -> {<,>,^,v}
 	//private final int stateLen = 2;		// 2 state variables -> x,y (published as raw floats from [0,1])
-	
-	protected float mapReward = 15;	// how much reward agent receives? // TODO
-
-	public static final int DEF_SIZEX =10, DEF_SIZEY=10;
 	
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
@@ -60,7 +59,8 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 		this.initData();
 
 		state = this.getStartingPosition();
-		this.observers = new LinkedList<Observer>();	// TODO: note that observing is not supported so far!
+		System.out.println("state is "+SL.toStr(state)+" and size "+sizex);
+		this.observers = new LinkedList<Observer>();	
 
 		super.fullName = super.getFullName(connectedNode);
 		log.info(me+"Node configured and ready to provide simulator services!");
@@ -68,11 +68,14 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 		this.waitForConnections(connectedNode);
 	}
 
+	protected int[] getStartingPosition(){
+		return new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
+	}
 
-	// TODO define custom map here!
+	// TODO define custom map here! override this..
 	protected void defineMap(){
 		// create map, place the reinforcements
-		map = GridWorld.simpleRewardMap(sizex, sizey, null, mapReward);
+		map = GridWorld.simpleRewardMap(sizex, sizey, null, 1);
 		map[2][2] = rewardAVal;	// place reward A on the map
 		map[5][5] = rewardBVal;	// place reward B on the map
 	}
@@ -140,6 +143,33 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 	}
 
 
+
+	/**
+	 * This method is used for waiting for receiving communication.
+	 * The node publishes current state of the environment, if in the 
+	 * last second no message with action received. Newly connected agents 
+	 * will respond with their action to this message.  
+	 * 
+	 * @param connectedNode
+	 */
+	protected void waitForConnections(ConnectedNode connectedNode){
+		connectedNode.executeCancellableLoop(new CancellableLoop() {
+			@Override
+			protected void setup() {}
+			@Override
+			protected void loop() throws InterruptedException {
+				Thread.sleep(1000);
+				if(!dataExchanged){
+					log.info(me+"No agent detected, publishing the current state"+SL.toStr(state));
+					std_msgs.Float32MultiArray fl = statePublisher.newMessage();
+					fl.setData(encodeStateRewardMessage(0,0,state)); // state vars. to float[] 
+					statePublisher.publish(fl);
+				}
+				dataExchanged = false;
+			}
+		});
+	}
+	
 	/**
 	 * Encode the description on a current state to agent. This is represented by vector of length 4.
 	 * 
@@ -157,6 +187,5 @@ public class TwoRewardGridWorldNode extends GridWorldNode{
 		}
 		return f;
 	}
-
 
 }

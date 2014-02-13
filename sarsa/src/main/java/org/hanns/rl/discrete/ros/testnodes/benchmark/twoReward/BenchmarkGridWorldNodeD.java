@@ -26,7 +26,7 @@ public class BenchmarkGridWorldNodeD extends TwoRewardGridWorldNode{
 		 * Obstacles identical to the BenchmarkGridWorldNodeC
 		 */
 		GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{0,5}, map);
-		GridWorldObstacle.drawObstacle(new int[]{sizex-6,sizex-6}, new int[]{sizey-5,sizey-1}, map);
+		GridWorldObstacle.drawObstacle(new int[]{sizex-7,sizex-7}, new int[]{sizey-5,sizey-1}, map);
 		
 		// two types of reward here 
 		map[3][4] 	= rewardAVal;	// place reward A on the map

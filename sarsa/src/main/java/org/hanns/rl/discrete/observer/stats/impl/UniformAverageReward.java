@@ -45,6 +45,12 @@ public class UniformAverageReward extends AbsSardaProspObserver{
 	}
 	
 	@Override
+	public void hardReset(boolean randomize) {
+		this.softReset(randomize);
+	}
+	
+	
+	@Override
 	public String getName() { return name;	}
 
 	@Override

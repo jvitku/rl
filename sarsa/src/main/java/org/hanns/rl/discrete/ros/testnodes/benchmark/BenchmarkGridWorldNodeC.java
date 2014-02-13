@@ -4,7 +4,7 @@ import org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorldObstacle;
 
 /**
- * The same as {@linkBenchmarkGridWorldNodeA}, but the map is 20x20
+ * The same as {@linkBenchmarkGridWorldNodeC}, but the map contains two different attractors here!
  * 
  * @author Jaroslav Vitku
  *
@@ -25,7 +25,7 @@ public class BenchmarkGridWorldNodeC extends BenchmarkGridWorldNode{
 
 		map = new float[sizex][sizey];
 		map[3][4] = mapReward;
-		//map[25][25] = mapReward;
+		map[16][15] = mapReward;
 
 		GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{0,5}, map);
 		GridWorldObstacle.drawObstacle(new int[]{sizex-6,sizex-6}, new int[]{sizey-5,sizey-1}, map);

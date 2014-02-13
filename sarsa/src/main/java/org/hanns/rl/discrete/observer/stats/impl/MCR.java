@@ -16,14 +16,15 @@ public class MCR extends AbsSardaProspObserver{
 	public final String explanation = "Value from [0,1] defining" +
 			"how often is a reward received per step (1=reward each step).";
 
-	private int rewards = 0;
+	private float rewards = 0;
 
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState,
 			int futureAction) {
-		
+
 		step++;
-		rewards += reward;
+		if(reward>0)
+			rewards = rewards + reward;
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class MCR extends AbsSardaProspObserver{
 		super.softReset(randomize);
 		rewards=0;
 	}
-	
+
 	@Override
 	public void hardReset(boolean randomize) {
 		this.softReset(randomize);

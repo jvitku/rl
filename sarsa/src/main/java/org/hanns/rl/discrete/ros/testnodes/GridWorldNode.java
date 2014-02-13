@@ -109,7 +109,7 @@ public class GridWorldNode extends AbstractConfigurableHannsNode{
 		this.waitForConnections(connectedNode);
 	}
 
-	private int[] getStartingPosition(){
+	protected int[] getStartingPosition(){
 		return new int[]{(int)sizex/2, (int)sizey/2};	// start roughly in the center
 	}
 

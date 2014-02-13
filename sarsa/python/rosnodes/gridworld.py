@@ -50,3 +50,17 @@ def benchmarkA(name, mapName = benchA, logPeriod=200):
 	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
 	return module
 
+bench =  "org.hanns.rl.discrete.ros.testnodes.benchmark.twoReward.BenchmarkGridWorldNodeD"
+def benchmarkTwoR(name, mapName = "benchmark", logPeriod=200): 
+
+	command = [bench, '_'+World.logPeriodConf+':='+str(logPeriod)]
+
+	noActions = 4;		# hardcoded
+	noStateVars = 2;
+
+	g = NodeGroup(mapName, True);
+	g.addNode(command, name, "java");
+	module = NeuralModule(name+'_GridWorld', g, False)
+	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
+	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+2) 	# encode states (first is reward)
+	return module

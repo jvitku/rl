@@ -1,8 +1,8 @@
 // @author Jaroslav Vitku
 
-task wrapper(type: Wrapper) {
-	gradleVersion      = '1.7'
-}
+//task wrapper(type: Wrapper) {
+//	gradleVersion      = '1.7'
+//}
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
@@ -24,7 +24,7 @@ repositories {
 }
 
 // Define the version and name of my stack (ROS convention)
-version             = '0.0.4-SNAPSHOT'
+version             = '0.0.5-SNAPSHOT'
 group               = 'ctu.hanns.rl'
 
 // This project depends on compilation of rosjava_core
@@ -37,8 +37,8 @@ dependencies {
 	compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
 	testCompile 'junit:junit:4.10'
 	
-	compile 'ctu.nengoros:jroscore:0.0.10-SNAPSHOT' 
-	runtime 'ctu.nengoros:jroscore:0.0.10-SNAPSHOT' 
-    testCompile 'ctu.nengoros:jroscore:0.0.10-SNAPSHOT'
+	compile 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT' 
+	runtime 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT' 
+    testCompile 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT'
 }
 

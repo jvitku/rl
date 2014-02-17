@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
 	<classpathentry kind="lib" path="/Users/j/.m2/repository/ros/rosjava_core/rosjava/0.0.0-SNAPSHOT/rosjava-0.0.0-SNAPSHOT.jar" exported="true"/>
-	<classpathentry kind="lib" path="/Users/j/.m2/repository/ctu/nengoros/jroscore/0.0.10-SNAPSHOT/jroscore-0.0.10-SNAPSHOT.jar" exported="true"/>
+	<classpathentry kind="lib" path="/Users/j/.m2/repository/ctu/nengoros/jroscore/0.0.11-SNAPSHOT/jroscore-0.0.11-SNAPSHOT.jar" exported="true"/>
 	<classpathentry sourcepath="/Users/j/.gradle/caches/artifacts-26/filestore/junit/junit/4.10/source/6c98d6766e72d5575f96c9479d1c1d3b865c6e25/junit-4.10-sources.jar" kind="lib" path="/Users/j/.gradle/caches/artifacts-26/filestore/junit/junit/4.10/jar/e4f1766ce7404a08f45d859fb9c226fc9e41a861/junit-4.10.jar" exported="true"/>
 	<classpathentry sourcepath="/Users/j/.gradle/caches/artifacts-26/filestore/commons-pool/commons-pool/1.6/source/9376f5559455b8fe1b15308d3ad9c545f6905b1a/commons-pool-1.6-sources.jar" kind="lib" path="/Users/j/.gradle/caches/artifacts-26/filestore/commons-pool/commons-pool/1.6/jar/4572d589699f09d866a226a14b7f4323c6d8f040/commons-pool-1.6.jar" exported="true"/>
 	<classpathentry kind="lib" path="/Users/j/.gradle/caches/artifacts-26/filestore/com.google.code.findbugs/jsr305/1.3.9/jar/40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf/jsr305-1.3.9.jar" exported="true"/>

@@ -92,3 +92,49 @@ def qlambdaConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeri
 	net.connect('importance', mod.getTermination(QLambda.topicImportance))
 
 	return mod
+
+# to the topic QLambda.topicDataIn publishes noStateVars+1, where the first value in the vector is reward 
+def qlambdaMOOPredefined(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
+
+	command = [classMOO, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars), 
+	'_'+QLambda.noOutputsConf+':='+str(noActions),
+	'_'+QLambda.sampleCountConf+':='+str(noValues),
+	'_'+QLambda.logPeriodConf+':='+str(logPeriod),
+	'_'+QLambda.filterConf+':='+str(maxDelay)]
+
+	g = NodeGroup("RL", True);
+	g.addNode(command, "RL", "java");
+	module = NeuralModule(name+'_QLambda', g, False)
+
+	module.createConfigEncoder(QLambda.topicAlpha,"float",QLambda.DEF_ALPHA); 	#	alpha config, def value is DEF_ALPHA
+	module.createConfigEncoder(QLambda.topicGamma,"float",QLambda.DEF_GAMMA);
+	module.createConfigEncoder(QLambda.topicLambda,"float",QLambda.DEF_LAMBDA);
+	module.createEncoder(QLambda.topicImportance,"float",1);					# default value is 0
+
+	module.createDecoder(QLambda.topicProsperity,"float", 3);			# float[]{prosperity, coverage, reward/step}
+
+	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
+	module.createEncoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
+
+	return module
+
+	
+def qlambdaPredefined(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1):
+
+    # build the node
+    mod = qlambdaMOOPredefined(name, noStateVars, noActions, noValues, logPeriod, maxDelay)
+    net.add(mod)
+
+    # define the configuration
+    #net.make_input('alpha',[QLambda.DEF_ALPHA])
+    #net.make_input('gamma',[QLambda.DEF_GAMMA])
+    #net.make_input('lambda',[QLambda.DEF_LAMBDA])
+    net.make_input('importance',[QLambda.DEF_IMPORTANCE])
+
+    # wire it
+    #net.connect('alpha', mod.getTermination(QLambda.topicAlpha))
+    #net.connect('gamma', mod.getTermination(QLambda.topicGamma))
+    #net.connect('lambda', mod.getTermination(QLambda.topicLambda))
+    net.connect('importance', mod.getTermination(QLambda.topicImportance))
+
+    return mod

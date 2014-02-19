@@ -143,6 +143,7 @@ After launching the node:
 
 ## TODO
 
+* Make the jython scripts nicer
 * Make some generally usable way how to add observer (e.g. writer) to a ROS node 
 * Define the Observer interface for the GridWorldNode, call observers.observe() each step..
 * Implement read/save of the GridWorldMap (currently, each map has own class..)

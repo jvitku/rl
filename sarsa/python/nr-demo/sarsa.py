@@ -28,8 +28,7 @@ net.add_to_nengo()
 #RosUtils.setAutorun(False)     # Do we want to autorun roscore and rxgraph? (tru by default)
 #RosUtils.prefferJroscore(True)  # preffer jroscore before the roscore? 
 
-finderA = rl_sarsa.qlambdaConfigured("RL", net, 2, 4)   # 2 state variables, 5 actions
-#many=net.add(finderA)
+finderA = rl_sarsa.qlambdaASMConfigured("RL", net, 2, 4)   # 2 state variables, 4 actions
 
 #Create a white noise input function with params: baseFreq, maxFreq [rad/s], RMS, seed
 # first dimension is reward, do not generate signal (ignored in the connection matrix)
@@ -43,9 +42,21 @@ reward=FunctionInput('RewardGenerator', [FourierFunction(.1, 10,1, 12),
 net.add(generator)
 net.add(reward)
 
+tx=[[0 for j in range(3)] for i in range(3)]
+tx[1][1] = 1;
+tx[2][2] = 1;	# identity transform without first dimension (do not connect reward directly!)
+
+
+tr=[[0 for j in range(3)] for i in range(3)]
+tr[0][0] = 1;	# identity transform where only the dimension is connected
+
+
 # data
-net.connect(generator,	finderA.newTerminationFor(QLambda.topicDataIn,[0,1,1]))
-net.connect(reward,		finderA.newTerminationFor(QLambda.topicDataIn,[1,0,0]))
+#net.connect(generator,	finderA.newTerminationFor(QLambda.topicDataIn,[0,1,1]))
+#net.connect(reward,		finderA.newTerminationFor(QLambda.topicDataIn,[1,0,0]))
+net.connect(generator,	finderA.newTerminationFor(QLambda.topicDataIn,tx))
+net.connect(reward,		finderA.newTerminationFor(QLambda.topicDataIn,tr))
 
-
-print 'Configuration complete.'
+print 'Done'
+print 'Demo: two generators: one for states and one for reward.'
+print 'Note that learning will not converge here.'

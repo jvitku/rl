@@ -143,8 +143,10 @@ After launching the node:
 
 ## TODO
 
+* Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda
+* Reinforcement and the state description (data inputs to the RL module) should be in one message (potentially asynchronous comm.) but these could be splited in the Nengo interface into two inputs (also on other places)
 * Make the jython scripts nicer
-* Make some generally usable way how to add observer (e.g. writer) to a ROS node 
+* Make some generally usable way how to add observer (e.g. writer) to a ROS node
 * Define the Observer interface for the GridWorldNode, call observers.observe() each step..
 * Implement read/save of the GridWorldMap (currently, each map has own class..)
 * Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.

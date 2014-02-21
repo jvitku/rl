@@ -25,7 +25,7 @@ import gridworld
 class ProsperitySaver(nef.SimpleNode):
 	def init(self):
 		self.val = [0];
-	def termination_data(self,values):
+	def termination_data(self,values, dimensions=1):
 		self.val = values;
 	def tick(self):
 		#f=file('data.txt','a+')
@@ -34,11 +34,12 @@ class ProsperitySaver(nef.SimpleNode):
 		f.close()
 
 # build configuration of the experiment with given RL parameters
-def buildSimulation(alpha, gamma, lambdaa, importance,expName='test0'):
+def buildSimulation(alpha, gamma, lambdaa, importance, expName='test0'):
 	net=nef.Network('HandWired parameters of RL node to bias')
 	net.add_to_nengo()  
 
-	rl = rl_sarsa.qlambda("RL", noStateVars=2, noActions=4, noValues=20, logPeriod=2000)
+	rl = rl_sarsa.qlambdaASM("RL", noStateVars=2, noActions=4, noValues=20, logPeriod=2000,
+	classname="org.hanns.rl.discrete.ros.sarsa.QLambda", prospLen=1)
 	world = gridworld.benchmarkA("map_20x20","BenchmarkGridWorldNodeC",10000);
 	net.add(rl)									    # place them into the network
 	net.add(world)
@@ -60,7 +61,7 @@ def buildSimulation(alpha, gamma, lambdaa, importance,expName='test0'):
 	net.connect('importance', rl.getTermination(QLambda.topicImportance))
 	
 	saver = net.add(ProsperitySaver('data_'+expName+'.txt'))
-	net.connect(rl.getOrigin(QLambda.topicProsperity),saver.getTermination("data"));
+	net.connect(rl.getOrigin(QLambda.topicProsperity), saver.getTermination("data"));
 	return net
 	
 # build configuration and run the eperiment for given amount of time, return the prosperity
@@ -85,7 +86,7 @@ for i in range(runs):
 	prosp = evalConfiguration(QLambda.DEF_ALPHA,QLambda.DEF_GAMMA,QLambda.DEF_LAMBDA,QLambda.DEF_IMPORTANCE,t,dt,name)
 	print '----------------- exp named: '+name+' done, the value is '+str(prosp[0])
 	
-net = buildSimulation(QLambda.DEF_ALPHA,QLambda.DEF_GAMMA,QLambda.DEF_LAMBDA,QLambda.DEF_IMPORTANCE,expName='01_defaultParams'):
+net = buildSimulation(QLambda.DEF_ALPHA,QLambda.DEF_GAMMA,QLambda.DEF_LAMBDA,QLambda.DEF_IMPORTANCE,expName='01_defaultParams')
 
 
 

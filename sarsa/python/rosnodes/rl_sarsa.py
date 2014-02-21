@@ -19,7 +19,7 @@ classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"
 	
 
 def qlambdaASM(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1,
-classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
+classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3):
 	"""Method that returns synchronous NeuralModule implementing the QLambda algorithm with 
 	the ASM inbuilt. Configuration parameters of the node can be found in 
 	the javadoc. Number of data inputs (size of the vector) to the module 
@@ -40,6 +40,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
 	:param integer logPeriod: how often to print out the data
 	:param integer maxDelay: max delay in the closed-loop learning
 	:param string classname: full className of the ROS node to be launched
+	:param integer prospLen: size of the vector expected from the nodes prosperity publisher
 	:returns: NeuralModule that should be added into the network, the node represents the QLambda ROS node 
 	"""
 	# this command is used to launch the ROSjava node
@@ -61,7 +62,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
 	module.createEncoder(QLambda.topicImportance,"float",1);					# default value is 0
 
 	# QLambdaCoverageReward classname => float[]{prosperity, coverage, reward/step}
-	module.createDecoder(QLambda.topicProsperity,"float", 3);			
+	module.createDecoder(QLambda.topicProsperity,"float", prospLen);			
 
 	# create data IO
 	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
@@ -71,7 +72,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
 
 
 def qlambdaASMConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1,
-classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
+classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3):
 	"""
 	Similarly to the :func:`rl_sarsa:qlambdaASM`, this method builds the QLambda NeuralModule. 
 	But this method takes the nef.Network, creates NeuralModule, adds it into the network, 
@@ -85,6 +86,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"):
 	:param integer logPeriod: how often to print out the data
 	:param integer maxDelay: max delay in the closed-loop learning
 	:param string classname: full className of the ROS node to be launched
+	:param integer prospLen: size of the vector expected from the nodes prosperity publisher
 	:returns: NeuralModule that is added into the net, the node represents the QLambda ROS node
 	"""
 	# build the node

@@ -143,6 +143,7 @@ After launching the node:
 
 ## TODO
 
+* Add the config input (to the QLambda) specifying sample size (0,1] for sampling state variables
 * Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda
 * Reinforcement and the state description (data inputs to the RL module) should be in one message (potentially asynchronous comm.) but these could be splited in the Nengo interface into two inputs (also on other places)
 * Make some generally usable way how to add observer (e.g. writer) to a ROS node

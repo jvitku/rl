@@ -4,20 +4,19 @@ import org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorldObstacle;
 
 /**
- * GridWorld Node map with 30x30 tales and one attractor hidden behind the obstacle.
- * 
+ * The same as {@linkBenchmarkGridWorldNodeC}, different map (size).
+ *  
  * @author Jaroslav Vitku
  *
  */
-public class BenchmarkGridWorldNodeA extends BenchmarkGridWorldNode{
+public class BenchmarkGridWorldNodeD extends BenchmarkGridWorldNode{
 
-	
 	/**
 	 * Define the map, and store it in the memory
 	 */
 	@Override
 	protected void defineMap(){
-		sizex = 30;
+		sizex = 15;
 		sizey = sizex; 
 
 		mapReward = 15;
@@ -25,17 +24,17 @@ public class BenchmarkGridWorldNodeA extends BenchmarkGridWorldNode{
 		log.info(me+"Parameters parsed, creating the map of size: "+sizex+"x"+sizey+"\n\n");
 
 		map = new float[sizex][sizey];
-		map[5][5] = mapReward;
-		//map[25][25] = mapReward;
+		map[2][3] = mapReward;
+		//map[16][15] = mapReward;
+		//map[16][4] = mapReward;
 
-		GridWorldObstacle.drawObstacle(new int[]{11,11}, new int[]{0,7}, map);
-		GridWorldObstacle.drawObstacle(new int[]{19,19}, new int[]{sizey-8,sizey-1}, map);
+		GridWorldObstacle.drawObstacle(new int[]{4,4}, new int[]{0,3}, map);
+		GridWorldObstacle.drawObstacle(new int[]{sizex-5,sizex-5}, new int[]{sizey-4,sizey-1}, map);
 
 		//GridWorldObstacle.drawObstacle(new int[]{3,3}, new int[]{0,2}, map);
 		//GridWorldObstacle.drawObstacle(new int[]{6,6}, new int[]{sizey-3,sizey-1}, map);
 		
 		System.out.println("--------------- " +GridWorldObstacle.vis(map));
 	}
-
 
 }

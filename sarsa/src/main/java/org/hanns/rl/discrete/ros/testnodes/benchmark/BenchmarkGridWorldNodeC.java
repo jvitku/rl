@@ -4,8 +4,8 @@ import org.hanns.rl.discrete.ros.testnodes.BenchmarkGridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorldObstacle;
 
 /**
- * The same as {@linkBenchmarkGridWorldNodeC}, but the map contains two different attractors here!
- * 
+ * The same as {@linkBenchmarkGridWorldNodeB}, different map (size).
+ *  
  * @author Jaroslav Vitku
  *
  */

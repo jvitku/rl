@@ -19,7 +19,7 @@ classMOO = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward"
 	
 
 def qlambdaASM(name, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1,
-classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3):
+classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3,synchornous=True):
 	"""Method that returns synchronous NeuralModule implementing the QLambda algorithm with 
 	the ASM inbuilt. Configuration parameters of the node can be found in 
 	the javadoc. Number of data inputs (size of the vector) to the module 
@@ -53,7 +53,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLe
 	# represent the ROS node by means of Neural Module
 	g = NodeGroup("RL", True);
 	g.addNode(command, "RL", "java");
-	module = NeuralModule(name+'_QLambda', g, False)
+	module = NeuralModule(name+'_QLambda', g, synchronous)
 
 	# create config IO
 	module.createConfigEncoder(QLambda.topicAlpha,"float",QLambda.DEF_ALPHA); 	# alpha config input, def. value is DEF_ALPHA
@@ -72,7 +72,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLe
 
 
 def qlambdaASMConfigured(name, net, noStateVars=2, noActions=4, noValues=5, logPeriod=100, maxDelay=1,
-classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3):
+classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLen=3, synchronous=True):
 	"""
 	Similarly to the :func:`rl_sarsa:qlambdaASM`, this method builds the QLambda NeuralModule. 
 	But this method takes the nef.Network, creates NeuralModule, adds it into the network, 
@@ -90,7 +90,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward",prospLe
 	:returns: NeuralModule that is added into the net, the node represents the QLambda ROS node
 	"""
 	# build the node
-	mod = qlambdaASM(name, noStateVars, noActions, noValues, logPeriod, maxDelay, classname)
+	mod = qlambdaASM(name, noStateVars, noActions, noValues, logPeriod, maxDelay, classname, synchronous)
 	net.add(mod)
 
 	# define the configuration inputs

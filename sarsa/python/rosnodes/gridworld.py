@@ -23,7 +23,7 @@ def example(name, logPeriod=200):
 	
 	g = NodeGroup("GridWorld", True);
 	g.addNode(command, "GridWorld", "java");
-	module = NeuralModule(name+'_GridWorld', g, False)
+	module = NeuralModule(name+'_GridWorld', g, True)
 	
 	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
 	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
@@ -45,7 +45,7 @@ def benchmarkA(name, mapName = benchA, logPeriod=200):
 
 	g = NodeGroup(mapName, True);
 	g.addNode(command, name, "java");
-	module = NeuralModule(name+'_GridWorld', g, False)
+	module = NeuralModule(name+'_GridWorld', g, True)
 	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
 	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+1) 	# encode states (first is reward)
 	return module
@@ -60,7 +60,7 @@ def benchmarkTwoR(name, mapName = "benchmark", logPeriod=200):
 
 	g = NodeGroup(mapName, True);
 	g.addNode(command, name, "java");
-	module = NeuralModule(name+'_GridWorld', g, False)
+	module = NeuralModule(name+'_GridWorld', g, True)
 	module.createEncoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
 	module.createDecoder(QLambda.topicDataIn, "float", noStateVars+2) 	# encode states (first is reward)
 	return module

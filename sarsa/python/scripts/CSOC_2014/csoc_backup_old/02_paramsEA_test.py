@@ -122,7 +122,6 @@ for expNo in range(numRuns):
       # poc++ and check end of ea
       ea.nextIndividual();
 
-
   f.close()
 
 # load the best one found

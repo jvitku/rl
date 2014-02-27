@@ -80,6 +80,11 @@ public class KnowledgeCoverage extends AbsSardaProspObserver{
 	@Override
 	public float getProsperity() {
 		int vis = this.getNoCoveredStates();
+		if(vis/noStates>1){	// this would mean some error
+			System.err.println("KnowledgeCoverage: WARNING: visited more states than "
+					+ "there is expected in the state space!");
+			return 1;
+		}
 		return (float)vis/(float)noStates;
 	}
 

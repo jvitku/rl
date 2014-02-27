@@ -114,6 +114,8 @@ public class KnowledgeChange extends AbsSardaProspObserver{
 		if(changes==0)
 			return 0;
 		double result = 1-(double)changes/(double)step;;
+		if(result>1)
+			return 1;
 		return (float)result;
 	}
 

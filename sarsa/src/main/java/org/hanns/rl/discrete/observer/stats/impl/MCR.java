@@ -31,6 +31,8 @@ public class MCR extends AbsSardaProspObserver{
 	public float getProsperity() { 
 		if(step==0)
 			return 0;
+		if(rewards/step>1)
+			return 1;
 		return (float)(rewards/step);
 	}
 
@@ -49,5 +51,5 @@ public class MCR extends AbsSardaProspObserver{
 	public String getName() { return name;	}
 
 	@Override
-	public String getDescription() { return explanation;	}
+	public String getDescription() { return explanation; }
 }

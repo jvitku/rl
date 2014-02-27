@@ -33,9 +33,11 @@ public class UniformAverageReward extends AbsSardaProspObserver{
 
 	@Override
 	public float getProsperity() {
-		if(steps>0)
-			return totalReward/steps;
-		return 0;
+		if(steps==0)
+			return 0;
+		if(totalReward/steps>1)
+			return 1;
+		return totalReward/steps;
 	}
 
 	@Override
@@ -43,13 +45,13 @@ public class UniformAverageReward extends AbsSardaProspObserver{
 		super.softReset(randomize);
 		totalReward = 0;
 	}
-	
+
 	@Override
 	public void hardReset(boolean randomize) {
 		this.softReset(randomize);
 	}
-	
-	
+
+
 	@Override
 	public String getName() { return name;	}
 

@@ -59,6 +59,11 @@ public class BinaryCoverage extends AbsSardaProspObserver{
 	@Override
 	public float getProsperity() {
 		int vis = this.getNoVisitedStates();
+		if(vis/noStates>1){
+			System.err.println("BinaryCOverage: WARNING: visited more states than there"
+					+ " is expected in the state space!");
+			return 1;
+		}
 		return (float)vis/(float)noStates;
 	}
 

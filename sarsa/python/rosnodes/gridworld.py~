@@ -51,7 +51,7 @@ def benchmarkA(name, mapName = benchA, logPeriod=200,synchronous=True):
 	return module
 
 bench =  "org.hanns.rl.discrete.ros.testnodes.benchmark.twoReward.BenchmarkGridWorldNodeD"
-def benchmarkTwoR(name, mapName = "benchmark", logPeriod=200,synchronous=True): 
+def benchmarkTwoR(name, mapName = "benchmark", logPeriod=200): 
 
 	command = [bench, '_'+World.logPeriodConf+':='+str(logPeriod)]
 

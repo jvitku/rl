@@ -143,6 +143,10 @@ After launching the node:
 
 ## TODO
 
+* rl_sarsa node (communication??) sometimes somehow crashes and:
+	
+		* it the node sends mostly only one action (sometimes action is changed or two actions periodically change)
+		
 * rl_sarsa does not work in the synchronous mode! Some component is not ready at all. Also: e.g. on Macbook two models have problems with synchronization, while on stronger computer everything is OK !!! 
 * Add the config input (to the QLambda) specifying sample size (0,1] for sampling state variables
 * Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda

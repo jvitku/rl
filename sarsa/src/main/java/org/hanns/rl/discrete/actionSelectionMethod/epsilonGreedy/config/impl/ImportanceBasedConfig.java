@@ -51,7 +51,7 @@ implements ImportanceBasedEpsilonGreedyConf{
 
 	@Override
 	public void setImportance(float importance) { 
-		super.checkRange("importance", 0, 1, importance);
+		importance = super.checkRange("importance", 0, 1, importance);
 		this.importance = importance;
 		this.fireParamChanged();
 	}

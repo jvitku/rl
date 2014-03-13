@@ -494,6 +494,13 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 
 	@Override
 	public LinkedList<Observer> getObservers() { return observers; }
+	
+	
+	private boolean lg = false;
+	public void logg(String what) {
+		if(lg)
+			System.out.println(" ------- "+what);		
+	}
 }
 
 

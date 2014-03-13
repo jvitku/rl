@@ -23,5 +23,18 @@ public class AbstractASMConfig {
 		}
 		return newVal;
 	}
+	
+	protected float checkRange(String paramName, float from, float to, float newVal){
+		if(!(newVal>=from && newVal<=to)){
+
+			//System.err.println("Config WARNING, the parameter "+paramName+
+			//		" should be from the interval ["+from+","+to+"], not "+newVal);
+			if(newVal<from)
+				return from;
+			if(newVal>to)
+				return to;
+		}
+		return newVal;
+	}
 
 }

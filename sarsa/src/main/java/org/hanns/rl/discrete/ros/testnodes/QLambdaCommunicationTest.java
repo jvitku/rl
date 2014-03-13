@@ -1,46 +1,18 @@
-package org.hanns.rl.discrete.ros.sarsa;
-
+package org.hanns.rl.discrete.ros.testnodes;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
-import org.hanns.rl.discrete.observer.stats.impl.MCR;
+import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
+import org.hanns.rl.discrete.ros.sarsa.AbstractQLambda;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
 
-/**
- * Implements QLambda algorithm in the ROS node. This algorithm uses:
- * <ul>
- * <li>Q(lambda) discrete RL Q-learning algorithm with eligibility trace of given length.</li>
- * <li>ASM (action selection method) is modified epsilon-greedy, where the epsilon is 
- * affected by the value of importance, if action importance is high, epsilon gets small.</li>
- * <li>ROS actions are encoded by the 1ofN encoding (one value 1 on the output vector means 
- * a particular action)</li>
- * <li>ROS input is evaluated as follows: first value is reward received, the rest of values
- * determines the current state of the environment (states are encoded on the specified interval
- * ([0,1] by default) with given number of samples. Number of samples determines number of
- * values of given variable, therefore also size of the resulting state space.</li>
- * <li>In addition, this algorithm uses {@link #filter} on input data, see below.</li>
- * </ul>
- * 
- * 
- * The filtering of input data is made in the following way:
- * <ul>
- * <li>Only state changes are registered as new state (that is e.g. response from the GridWorld)</li>
- * <li>There is specified maximum numbed of steps without response (to executed action). 
- * This defines the maximum length of closed loop where the RL is (max. delay between 
- * action->new state)</li>
- * <li>If the response is not received in the predefined number of steps, the situation 
- * is evaluated as the following case: the action executed did not have effect, RL&ASM: continue.</li>
- * </ul>
- * 
- * @see {@link org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivationFilter}
- * 
- * @author Jaroslav Vitku
- *
- */
-public class QLambda extends AbstractQLambda{
+import ctu.nengoros.util.SL;
 
+public class QLambdaCommunicationTest extends AbstractQLambda{
+	
 	public MessageDerivator filter;
 	public static final String filterConf = "filterLength";
 
@@ -61,9 +33,10 @@ public class QLambda extends AbstractQLambda{
 			std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
 			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
 			dataPublisher.publish(fl);
+			
+			super.logg("NOOP");
 			return;
 		}
-
 		// decode data (first value is reinforcement..
 		// ..the rest are values of state variables
 		float reward = data[0];
@@ -78,6 +51,7 @@ public class QLambda extends AbstractQLambda{
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
 		int action = this.learn(reward);
+		super.logg("state reward is: "+SL.toStr(state)+" will make: "+action);
 		this.executeAction(action);
 	}
 
@@ -93,7 +67,7 @@ public class QLambda extends AbstractQLambda{
 
 	/**
 	 * Instantiate the ProsperityObserver
-	 */
+	 *
 	@Override
 	protected void registerProsperityObserver(){
 		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
@@ -102,7 +76,7 @@ public class QLambda extends AbstractQLambda{
 		o = new MCR();
 
 		observers.add(o);
-	}
+	}*/
 
 	/**
 	 * Select action, perform learning step, return selected action.
@@ -112,6 +86,12 @@ public class QLambda extends AbstractQLambda{
 	 */
 	protected int learn(float reward){
 
+		ImportanceEpsGreedyDouble aa = (ImportanceEpsGreedyDouble)asm;
+		
+		logg("ASM: selecting action in the state "+SL.toStr(states.getValues())+
+				" imp"+aa.getConfig().getImportance()+" "+
+				aa.getConfig().getMinEpsilon()+"< "+aa.getConfig().getEpsilon());
+		
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
@@ -159,7 +139,7 @@ public class QLambda extends AbstractQLambda{
 	public void hardReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-			
+
 		System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
@@ -174,7 +154,7 @@ public class QLambda extends AbstractQLambda{
 	public void softReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-		
+
 		System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);
@@ -184,7 +164,22 @@ public class QLambda extends AbstractQLambda{
 		}
 		o.softReset(randomize);
 	}
-}
+	
 
+	/**
+	 * Instantiate the ProsperityObserver
+	 */
+	@Override
+	protected void registerProsperityObserver(){
+		//o = new BinaryCoverageReward(this.states.getDimensionsSizes());
+		o = new KnowledgeCoverageReward(this.states.getDimensionsSizes(), q);
+		
+		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
+		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
+		observers.add(o);
+	}
+
+
+}
 
 

@@ -23,6 +23,31 @@ public class ImportanceConfigTest {
 		ibc.setImportance(1);
 		assertTrue(ibc.getEpsilon()==ibc.getMinEpsilon());
 	}
+	
+	/**
+	 * Solves the bug: if importance>1 (should not happen?), the epsilon <0 
+	 */
+	@Test
+	public void importanceBug(){
+		ImportanceBasedConfig ibc = new ImportanceBasedConfig();
+
+
+		double sampling = 0.1;
+		double boundary = 100;
+		
+		double pos = -boundary;
+		
+		while(pos<boundary){
+			
+			ibc.setImportance((float)pos);
+
+
+			assertTrue(ibc.getImportance()<=1 && ibc.getImportance()>=0);
+			assertTrue(ibc.getEpsilon()>=ibc.getMinEpsilon() && ibc.getEpsilon()<=1);
+			
+			pos+=sampling;
+		}
+	}
 
 }
 

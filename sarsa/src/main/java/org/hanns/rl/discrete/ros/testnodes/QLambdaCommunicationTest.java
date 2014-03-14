@@ -1,7 +1,6 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
@@ -12,7 +11,8 @@ import org.ros.node.ConnectedNode;
 import ctu.nengoros.util.SL;
 
 public class QLambdaCommunicationTest extends AbstractQLambda{
-	
+
+
 	public MessageDerivator filter;
 	public static final String filterConf = "filterLength";
 
@@ -34,9 +34,10 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
 			dataPublisher.publish(fl);
 			
-			super.logg("NOOP");
+			logg("NOOP");
 			return;
 		}
+
 		// decode data (first value is reinforcement..
 		// ..the rest are values of state variables
 		float reward = data[0];
@@ -44,6 +45,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 		for(int i=0; i<state.length; i++){
 			state[i] = data[i+1];
 		}
+		logg("state reward is: "+SL.toStr(data));
 		// perform the SARSA step
 		performSARSAstep(reward, state);		
 	}
@@ -51,7 +53,6 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
 		int action = this.learn(reward);
-		super.logg("state reward is: "+SL.toStr(state)+" will make: "+action);
 		this.executeAction(action);
 	}
 
@@ -86,12 +87,6 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 	 */
 	protected int learn(float reward){
 
-		ImportanceEpsGreedyDouble aa = (ImportanceEpsGreedyDouble)asm;
-		
-		logg("ASM: selecting action in the state "+SL.toStr(states.getValues())+
-				" imp"+aa.getConfig().getImportance()+" "+
-				aa.getConfig().getMinEpsilon()+"< "+aa.getConfig().getEpsilon());
-		
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
@@ -178,8 +173,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
 		observers.add(o);
 	}
-
-
+	
 }
 
 

@@ -28,8 +28,6 @@ public class ActionReceiver extends AbstractConfigurableHannsNode{
 
 	public int getNoActions(){ return this.noActions; }
 
-
-
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
 

@@ -3,9 +3,7 @@ package org.hanns.rl.discrete.ros.rl;
 
 import java.util.LinkedList;
 
-import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
@@ -15,6 +13,8 @@ import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDo
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
+import org.hanns.rl.discrete.utilityRescaling.ImportanceBasedRescaler;
+import org.hanns.rl.discrete.utilityRescaling.impl.DirectUtilityRescale;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
@@ -57,8 +57,13 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = conf+importanceConf;
 	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE;
-	
-	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
+
+	/**
+	 * Re-scale the utility values according to the current value of Node importance
+	 */
+	protected ImportanceBasedRescaler rescaler;
+
+	// enable randomization from the NengoROS simulator? (override the hardreset(true) to false?)
 	public static final String randomizeConf = "randomize";
 	public static final boolean DEF_RANDOMIZE = false;
 	protected boolean randomizeAllowed;
@@ -83,22 +88,19 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 	 */
 	public FinalModelNStepQLambda rl;			// RL algorithm
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
-	//protected ActionSelectionMethod<Double> asm;// action selection methods
 
-	
-	// TODO get rid of this
+	// TODO solve this synch problem
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
-
-	protected BasicFinalStateSet states;		// state variables (each has encoder)
 
 	// TODO synchronization
 	protected int prevAction;					// index of the last action executed
 	protected int step = 0;
 
+	protected BasicFinalStateSet states;		// state variables (each has encoder)
+
 	protected ProsperityObserver o;						// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
-
 
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
@@ -121,18 +123,18 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 		this.buildDataIO(connectedNode);
 
 		super.fullName = super.getFullName(connectedNode);
-		
+
 		System.out.println(me+"Node configured and ready now!");
 	}
 
 	/**
-	 * Adds arbitrary observers/visualizators to the node/algorithms
+	 * Adds arbitrary observers/visualizers to the node/algorithms
 	 */
 	protected void registerObservers(){
 		observers = new LinkedList<Observer>();
 
 		this.registerProsperityObserver();
-		
+
 		// initialize the visualizer
 		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
@@ -150,28 +152,31 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
-	
+
 	/**
-	 * Instatntiate the Observer {@link #o} to the resider one. 
+	 * Instantiate the Observer {@link #o} to the resider one. 
 	 */
 	protected abstract void registerProsperityObserver();
 
 	/**
-	 * Execute action selected by the ASM and publish over the ROS network
-	 * 
-	 * @param action index of selected action, this action is encoded and sent
+	 * Publish the current action utilities to outputs (ASM receives data and selects the action
+	 * based on its particular strategy).
 	 */
-	protected void executeAction(int action){
+	protected void publishActionUtilities(float[] utilities){
+		
+		float[] rescaled = rescaler.rescale(utilities);
+		
 		if((step++) % logPeriod==0) 
-			log.info(me+"Step: "+step+"-> responding with the following action: "
-					+SL.toStr(actionEncoder.encode(action)));
+			log.info(me+"Step: "+step+"-> my aciton utilities are: "
+					+SL.toStr(utilities)+" rescaling to: "+SL.toStr(rescaled));
 
 		// publish action selected by the ASM
 		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
-		fl.setData(actionEncoder.encode(action));								
+		fl.setData(rescaled);								
 		dataPublisher.publish(fl);
 
-		prevAction = action;
+		// TODO solve this problem
+		//prevAction = action;
 
 		this.publishProsperity();
 	}
@@ -183,7 +188,10 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 		paramList.addParam(sampleCountConf, ""+DEF_COUNT, "Number of samples for variables, that is: number of values!");
 		paramList.addParam(sampleMinConf, ""+DEF_MIN,"Min. value on the state input");
 		paramList.addParam(sampleMaxConf, ""+DEF_MAX,"Max. value on the state input");
-		paramList.addParam(noOutputsConf, ""+DEF_NOOUTPUTS,"Number of actions available to the agent (1ofN coded)");
+		paramList.addParam(noOutputsConf, ""+DEF_NOOUTPUTS,"Number of actions available to the agent (publishes their prosperities)");
+		
+		paramList.addParam(importanceConf, ""+DEF_IMPORTANCE, "Importance of behaviour represented by this node " +
+				"(higher->higher actionUtils published)");
 
 		paramList.addParam(logToFileConf, ""+DEF_LTF, "Enables logging into file");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
@@ -192,7 +200,6 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 		paramList.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
 		paramList.addParam(randomizeConf, ""+DEF_RANDOMIZE, "Should allow RANDOMIZED reset from Nengo?");
-		//paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomizing selected action");
 	}
 
 	@Override
@@ -220,6 +227,8 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 		int sampleC = r.getMyInteger(sampleCountConf, DEF_COUNT);
 		randomizeAllowed = r.getMyBoolean(randomizeConf, DEF_RANDOMIZE);
 
+		double importance = r.getMyDouble(importanceConf, DEF_IMPORTANCE);
+		
 		System.out.println(me+"Creating data structures.");
 
 		/**
@@ -235,11 +244,17 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 		/**
 		 * Build the action set & action encoder
 		 */
+		// TODO
 		String[] names = new String[noActions];
 		for(int i=0; i<noActions; i++)
 			names[i] = actionPrefix+i;
 		actions = new BasicFinalActionSet(names);
 		actionEncoder = new OneOfNEncoder(actions);
+
+		/**
+		 * Set the default/read importance to the utility rescaler
+		 */
+		rescaler = new DirectUtilityRescale((float)importance, noActions);
 
 		/**
 		 * build the RL algorithm configuration
@@ -387,28 +402,7 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 	 */
 
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
-		/**
-		 * Epsilon
-		 * /
-		Subscriber<std_msgs.Float32MultiArray> epsilonSub = 
-				connectedNode.newSubscriber(topicEpsilon, std_msgs.Float32MultiArray._TYPE);
 
-		epsilonSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
-			@Override
-			public void onNewMessage(std_msgs.Float32MultiArray message) {
-				float[] data = message.getData();
-				if(data.length != 1)
-					log.error("Epsilon config: Received message has " +
-							"unexpected length of"+data.length+"!");
-				else{
-
-					logParamChange("RECEIVED chage of value EPSILON",
-							((EpsilonGreedyDouble)asm).getConfig().getEpsilon(),data[0]);
-					((EpsilonGreedyDouble)asm).getConfig().setEpsilon(data[0]);
-				}
-			}
-		});
-		 */
 		/**
 		 * Importance parameter
 		 */
@@ -423,10 +417,8 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 					log.error("Importance input: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value IMPORTANCE",
-							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
-
-					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
+					logParamChange("RECEIVED chage of value IMPORTANCE", rescaler.getImportance(), data[0]);
+					rescaler.setImportance(data[0]);
 				}
 			}
 		});
@@ -473,16 +465,18 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 			return false;
 		if(observers==null)
 			return false;
+		if(rescaler==null)
+			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String getFullName() { return this.fullName; }
 
 	@Override
 	public LinkedList<Observer> getObservers() { return observers; }
-	
-	
+
+
 	private boolean lg = false;
 	public void logg(String what) {
 		if(lg)

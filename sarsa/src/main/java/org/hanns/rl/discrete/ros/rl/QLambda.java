@@ -3,7 +3,6 @@ package org.hanns.rl.discrete.ros.rl;
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
-import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
@@ -74,7 +73,9 @@ public class QLambda extends AbstractQLambdaLearning{
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
 		int action = this.learn(reward);
-		this.executeAction(action);
+		// TODO impement this:
+		//this.publishActionUtilities(utilities)
+		//this.executeAction(action);
 	}
 
 	protected void decodeState(float[] state){
@@ -107,7 +108,8 @@ public class QLambda extends AbstractQLambdaLearning{
 	 * @return selected action
 	 */
 	protected int learn(float reward){
-
+		// TODO solve this
+/*
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 
@@ -116,6 +118,8 @@ public class QLambda extends AbstractQLambdaLearning{
 			((SarsaObserver)observers.get(i)).observe(prevAction, reward, states.getValues(), action);
 
 		return action;
+		*/
+		return 0;
 	}
 
 	/**
@@ -159,7 +163,7 @@ public class QLambda extends AbstractQLambdaLearning{
 		System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
-		asm.hardReset(randomize);
+		//asm.hardReset(randomize);
 		for(int i=0; i<observers.size(); i++){
 			observers.get(i).hardReset(randomize);
 		}
@@ -174,7 +178,7 @@ public class QLambda extends AbstractQLambdaLearning{
 		System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);
-		asm.softReset(randomize);
+		//asm.softReset(randomize);
 		for(int i=0; i<observers.size(); i++){
 			observers.get(i).softReset(randomize);
 		}

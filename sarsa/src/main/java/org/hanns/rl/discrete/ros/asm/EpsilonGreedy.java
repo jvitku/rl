@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.ros.asm;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.greedy.GreedyFloat;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyFloat;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
@@ -20,12 +20,12 @@ import org.ros.node.topic.Subscriber;
 public class EpsilonGreedy extends AbstractASMNode{
 
 	// sets the Epsilon: higher Epsilon -> higher randomization
-	public static final String epsilonConf = "importance";
+	public static final String epsilonConf = "epsilon";
 	public static final String topicEpsilon =  conf+epsilonConf;
 	public static final double DEF_EPSILON = BasicConfig.DEF_EPSILON;
 
 	private BasicConfig config;
-	private GreedyFloat selection;// action selection methods
+	private EpsilonGreedyFloat selection;// action selection methods
 	Float[] tmp;
 
 	@Override
@@ -64,17 +64,32 @@ public class EpsilonGreedy extends AbstractASMNode{
 			}
 		});
 	}
+	
+	@Override()
+	protected void parseParameters(ConnectedNode connectedNode) {
+		/**
+		 * Parse default parameters and call the {@link #initializeASM()} method  
+		 */
+		super.parseParameters(connectedNode);
+		
+		double epsilon = r.getMyDouble(epsilonConf, DEF_EPSILON);
+		config.setEpsilon(epsilon);
+	}
+	
+	@Override
+	protected void registerParameters() {
+		super.registerParameters();
+		paramList.addParam(epsilonConf,""+DEF_EPSILON,"The higher epsilon, the higher randomization ASM uses.");
+	}
+
 
 	@Override
 	protected void initializeASM() {
 
 		config = new BasicConfig();
-
-		selection = new GreedyFloat(this.actions);
+		selection = new EpsilonGreedyFloat(this.actions, config);
 		asm = selection;	// handled in the parent
 		
-		selection.setConfig(config);	// define the configuration
-
 		tmp = new Float[this.actions.getNumOfActions()];
 	}
 

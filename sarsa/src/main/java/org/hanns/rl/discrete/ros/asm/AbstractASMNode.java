@@ -30,7 +30,6 @@ import ctu.nengoros.util.SL;
  */
 public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 
-
 	protected int noActions;	// N actions to select from
 
 	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
@@ -246,7 +245,6 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	 * message with state and reward description arrives.
 	 */
 	protected abstract void onNewDataReceived(float[] data);
-
 
 	@Override
 	protected void parseParameters(ConnectedNode connectedNode) {

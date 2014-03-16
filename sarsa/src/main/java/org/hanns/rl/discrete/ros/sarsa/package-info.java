@@ -1,5 +1,5 @@
 /**
- * ROS nodes implementing the RL algorithms.
+ * ROS nodes implementing complete SARSA algorithms (learning and selection in one node, as opposed to rl&asm packages).
  */
 /**
  * @author Jaroslav Vitku

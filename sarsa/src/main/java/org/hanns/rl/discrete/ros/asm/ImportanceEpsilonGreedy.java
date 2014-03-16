@@ -1,12 +1,43 @@
 package org.hanns.rl.discrete.ros.asm;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyFloat;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+/**
+ * Similar to the {@link org.hanns.rl.discrete.ros.asm.EpsilonGreedy}, but here, the Epsilon
+ * parameter is based on the action importance: the bigger importance the smaller randomization (epsilon).
+ * 
+ * @author Jaroslav Vitku
+ */
 public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 
+	private ImportanceBasedConfig config;
+	private ImportanceEpsGreedyFloat selection;// action selection methods
+	Float[] tmp;
+
+	@Override
+	protected void onNewDataReceived(float[] data) {
+
+		for(int i=0; i<data.length; i++)	// TODO, make this nicer
+			tmp[i] = data[i];
+
+		int selected = selection.selectAction(tmp);
+		super.executeAction(selected);
+	}
+
+	@Override
+	protected void initializeASM() {
+
+		config = new ImportanceBasedConfig();
+		selection = new ImportanceEpsGreedyFloat(this.actions, config);
+		asm = selection;	// handled in the parent
+		
+		tmp = new Float[this.actions.getNumOfActions()];
+	}
+	
 	@Override
 	protected void buildConfigSubscribers(ConnectedNode connectedNode) {
 		/**
@@ -31,29 +62,4 @@ public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 			}
 		});
 	}
-
-	@Override
-	public float getProsperity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	protected void registerProsperityObserver() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void initializeASM() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void onNewDataReceived(float[] data) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

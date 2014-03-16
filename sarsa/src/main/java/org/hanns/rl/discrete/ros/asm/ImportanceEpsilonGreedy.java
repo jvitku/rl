@@ -14,7 +14,14 @@ import ctu.nengoros.util.SL;
  * 
  * @author Jaroslav Vitku
  */
-public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
+public class ImportanceEpsilonGreedy extends AbstractASMNode{
+
+	/**
+	 * Amount of randomization in the ASM (how important the proper selection of action is?)
+	 */
+	public static final String importanceConf = "importance";
+	public static final String topicImportance = conf+importanceConf;
+	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE;
 
 	private ImportanceBasedConfig config;
 	private ImportanceEpsGreedyFloat selection;// action selection methods
@@ -27,10 +34,10 @@ public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 			tmp[i] = data[i];
 
 		int selected = selection.selectAction(tmp);
-		
-		if(logPeriod%(step)==0)
+
+		if(logPeriod % step ==0)
 			System.out.println("Received these utilities: "+SL.toStr(data)+" selecting the action no.: "+selected);
-		
+
 		super.executeAction(selected);
 	}
 
@@ -40,10 +47,10 @@ public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 		config = new ImportanceBasedConfig();
 		selection = new ImportanceEpsGreedyFloat(this.actions, config);
 		asm = selection;	// handled in the parent
-		
+
 		tmp = new Float[this.actions.getNumOfActions()];
 	}
-	
+
 	@Override
 	protected void buildConfigSubscribers(ConnectedNode connectedNode) {
 		/**
@@ -60,12 +67,30 @@ public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 					log.error("Importance input: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value IMPORTANCE",
-							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
+					logParamChange("RECEIVED change of value IMPORTANCE",
+							config.getImportance(), data[0]);
 
-					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
+					config.setImportance(data[0]);
 				}
 			}
 		});
+	}
+
+	@Override
+	protected void registerParameters(){
+		super.registerParameters();
+
+		paramList.addParam(importanceConf, ""+DEF_IMPORTANCE, "How important is selection of the optimal action?");
+	}
+
+	@Override()
+	protected void parseParameters(ConnectedNode connectedNode) {
+		/**
+		 * Parse default parameters and call the {@link #initializeASM()} method  
+		 */
+		super.parseParameters(connectedNode);
+		double importance = r.getMyDouble(importanceConf, DEF_IMPORTANCE);
+
+		config.setImportance((float)importance);
 	}
 }

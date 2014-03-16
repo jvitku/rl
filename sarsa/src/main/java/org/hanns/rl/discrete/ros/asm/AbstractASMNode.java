@@ -3,63 +3,51 @@ package org.hanns.rl.discrete.ros.asm;
 import java.util.LinkedList;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.FinalModelNStepQLambda;
-import org.hanns.rl.discrete.learningAlgorithm.sarsaLambda.impl.NStepQLambdaConfImpl;
-import org.hanns.rl.discrete.observer.visualizaiton.qMatrix.FinalStateSpaceVisDouble;
-import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
-import org.hanns.rl.discrete.states.impl.BasicStateVariable;
-import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
+import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Subscriber;
 
 import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 import ctu.nengoros.network.node.observer.Observer;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
+import ctu.nengoros.util.SL;
 
 /**
- * Implements common functionalities of ROS node which does the Action Selection Methods (ASM).  
+ * <p>Implements common functionalities of ROS node which does the Action Selection Methods (ASM).</p>
+ * 
+ * <p>ASM node takes N inputs, each corresponding to one possible action. Value on each input
+ * represents current utility of an action (higher value, higher reward expected, negative values, 
+ * punishment). The node has N outputs, where the code 1ofN is used to represent the action that is 
+ * selected by the ASM.</p>   
  * 
  * @author Jaroslav Vitku
  *
  */
 public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 
-	/**
-	 * Importance based Epsilon-greedy ASM configuration
-	 */
-	// importance affect current value of epsilon: higher action importance, smaller eps.
-	
-	public static final String importanceConf = "importance";
-	public static final String topicImportance = conf+importanceConf;
-	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE;
-	
+
+	protected int noActions;	// N actions to select from
+
 	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
 	public static final String randomizeConf = "randomize";
 	public static final boolean DEF_RANDOMIZE = false;
 	protected boolean randomizeAllowed;
 	
-
-	protected ActionSelectionMethod<Double> asm;// action selection methods
+	protected ActionSelectionMethod<Float> asm;	// action selection methods
 	
-	// TODO synchronization
-	protected int prevAction;					// index of the last action executed
+	protected int prevAction = 0;
 	protected int step = 0;
 
-	
-	// TODO ??
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
 	
-	protected ProsperityObserver o;						// observes the prosperity of node
+	protected ProsperityObserver o;				// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
-
-	
 
 	@Override
 	public void onStart(ConnectedNode connectedNode) {
@@ -85,7 +73,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	}
 	
 	/**
-	 * Adds arbitrary observers/visualizators to the node/algorithms
+	 * Adds arbitrary observers/visualizers to the node/algorithms
 	 */
 	protected void registerObservers(){
 		observers = new LinkedList<Observer>();
@@ -111,17 +99,50 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
+	
 
 	/**
-	 * Instatntiate the Observer {@link #o} to the resider one. 
+	 * Execute action selected by the ASM and publish over the ROS network
+	 * 
+	 * @param action index of selected action, this action is encoded and sent
 	 */
-	protected abstract void registerProsperityObserver();
-	
-	@Override
-	public String listParams() {
-		// TODO Auto-generated method stub
-		return null;
+	protected void executeAction(int action){
+		if((step++) % logPeriod==0) 
+			log.info(me+"Step: "+step+"-> the following action is selected "
+					+SL.toStr(actionEncoder.encode(action)));
+
+		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
+		fl.setData(actionEncoder.encode(action));								
+		dataPublisher.publish(fl);
+
+		prevAction = action;
+		this.publishProsperity();
 	}
+
+	/**
+	 * Different AMSs can be used here, here subscribe for importance; epsilon etc..
+	 * 
+	 * @param connectedNode ROS connectedNode 
+	 */
+	@Override
+	protected abstract void buildConfigSubscribers(ConnectedNode connectedNode);
+	
+	/**
+	 * Instantiate the Observer {@link #o} to the resider one. 
+	 */
+	protected void registerProsperityObserver() {
+		// TODO implement some prosperity observers
+	}
+
+	@Override
+	public float getProsperity() {
+		// TODO implement some prosperity observer
+		return 0;
+	}
+	
+
+	@Override
+	public String listParams() { return this.paramList.listParams(); }
 
 
 	@Override
@@ -143,16 +164,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	}
 
 	@Override
-	public abstract void hardReset(boolean randomize);
-
-	@Override
-	public abstract void softReset(boolean randomize);
-
-	@Override
 	public LinkedList<Observer> getObservers() { return observers; }
-
-	@Override
-	public abstract float getProsperity();
 
 	/**
 	 * If the prosperity observer has no childs, publish its value. 
@@ -183,20 +195,46 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
-
 	@Override
-	protected void buildConfigSubscribers(ConnectedNode connectedNode) {
-		//dataPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
-		//TODO
+	protected void buildDataIO(ConnectedNode connectedNode) {
+		dataPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
+
+		Subscriber<std_msgs.Float32MultiArray> dataSub = 
+				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
+
+		dataSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
+			@Override
+			public void onNewMessage(std_msgs.Float32MultiArray message) {
+				float[] data = message.getData();
+				if(data.length != noActions)
+					log.error(me+":"+topicDataIn+": Received array of action utilities has" +
+							"unexpected length of"+data.length+"! Expected: "+noActions);
+				else{
+					// here, the state description is decoded and one SARSA step executed
+					if(step % logPeriod==0)
+						System.out.println(me+"<-"+topicDataIn+" Received new array of action" +
+								" utilities, these are: "+SL.toStr(data));
+
+					// implement this
+					onNewDataReceived(data);
+				}
+			}
+		});
 	}
 
-
 	@Override
-	protected void buildDataIO(ConnectedNode arg0) {
-		// TODO Auto-generated method stub
-		
+	public void hardReset(boolean randomize) {
+		if(!this.randomizeAllowed)
+			randomize = false;
+		asm.hardReset(randomize);
 	}
 
+	@Override
+	public void softReset(boolean randomize) {
+		if(!this.randomizeAllowed)
+			randomize = false;
+		asm.softReset(randomize);
+	}
 
 	@Override
 	public ProsperityObserver getProsperityObserver() { return o; }
@@ -218,13 +256,12 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 
 		System.out.println(me+"parsing parameters");
 
-		// dimensionality of the RL task 
-		int noActions = r.getMyInteger(noOutputsConf, DEF_NOOUTPUTS);
-
 		randomizeAllowed = r.getMyBoolean(randomizeConf, DEF_RANDOMIZE);
 		System.out.println(me+"Creating data structures.");
+		
 
-		// TODO 
+		// parse the number of actions to select from 
+		noActions = r.getMyInteger(noInputsConf, DEF_NOINPUTS);
 		/**
 		 * Build the action set & action encoder
 		 */
@@ -241,8 +278,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	@Override
 	protected void registerParameters() {
 		paramList = new ParamList();
-		paramList.addParam(noInputsConf, ""+DEF_NOINPUTS,"Number of state variables");
-
+		paramList.addParam(noInputsConf, ""+DEF_NOINPUTS,"N-Number of actions to select from (output: 1ofN code)");
 		paramList.addParam(logToFileConf, ""+DEF_LTF, "Enables logging into file");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
 		paramList.addParam(randomizeConf, ""+DEF_RANDOMIZE, "Should allow RANDOMIZED reset from Nengo?");

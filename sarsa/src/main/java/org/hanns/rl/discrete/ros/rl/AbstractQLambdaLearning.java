@@ -51,14 +51,13 @@ public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsN
 	public static final int DEF_TRACELEN = 10;
 
 	/**
-	 * Importance based Epsilon-greedy ASM configuration
+	 * Importance of the node: how big will be the amount of action utility produced by this predictor?
 	 */
 	// importance affect current value of epsilon: higher action importance, smaller eps.
-	/*
 	public static final String importanceConf = "importance";
 	public static final String topicImportance = conf+importanceConf;
 	public static final double DEF_IMPORTANCE = ImportanceBasedConfig.DEF_IMPORTANCE;
-	*/
+	
 	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
 	public static final String randomizeConf = "randomize";
 	public static final boolean DEF_RANDOMIZE = false;

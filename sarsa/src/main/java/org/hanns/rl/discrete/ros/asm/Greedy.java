@@ -1,41 +1,41 @@
 package org.hanns.rl.discrete.ros.asm;
 
+import org.hanns.rl.discrete.actionSelectionMethod.greedy.GreedyFloat;
+import org.ros.node.ConnectedNode;
+
+/**
+ * Greedy Action Selection Method: select the action with the highest utility.
+ * 
+ * Importance input is ignored in this case.
+ *  
+ * @author Jaroslav Vitku
+ */
 public class Greedy extends AbstractASMNode{
 
+	protected GreedyFloat selection;// action selection methods
+	Float[] tmp;
+	
 	@Override
-	protected void registerProsperityObserver() {
-		// TODO Auto-generated method stub
+	protected void onNewDataReceived(float[] data) {
 		
-	}
-
-	@Override
-	public void hardReset(boolean randomize) {
-		// TODO Auto-generated method stub
+		for(int i=0; i<data.length; i++)	// TODO, make this nicer
+			tmp[i] = data[i];
 		
+		int selected = selection.selectAction(tmp);
+		super.executeAction(selected);
 	}
-
+	
+	/**
+	 * No configuration needed here
+	 */
 	@Override
-	public void softReset(boolean randomize) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public float getProsperity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	protected void buildConfigSubscribers(ConnectedNode connectedNode){}
 
 	@Override
 	protected void initializeASM() {
-		// TODO Auto-generated method stub
+		selection = new GreedyFloat(this.actions);
+		asm = selection;	// handled in the parent
 		
+		tmp = new Float[this.actions.getNumOfActions()];
 	}
-
-	@Override
-	protected void onNewDataReceived(float[] data) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

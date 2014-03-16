@@ -31,6 +31,8 @@ import ctu.nengoros.util.SL;
  */
 public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	
+	public static final String name = "ASMNode";
+	
 	public static final String topicDataIn  = io+Topic.baseIn+"Actions"; 	// inActions
 	public static final String topicDataOut = io+Topic.baseOut+"Actions"; 	// outActions
 	

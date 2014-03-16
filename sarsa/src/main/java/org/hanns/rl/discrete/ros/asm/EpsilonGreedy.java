@@ -21,6 +21,8 @@ import ctu.nengoros.util.SL;
  */
 public class EpsilonGreedy extends AbstractASMNode{
 
+	public static final String name = "EpsilonGreedyASM";
+	
 	// sets the Epsilon: higher Epsilon -> higher randomization
 	public static final String epsilonConf = "epsilon";
 	public static final String topicEpsilon =  conf+epsilonConf;

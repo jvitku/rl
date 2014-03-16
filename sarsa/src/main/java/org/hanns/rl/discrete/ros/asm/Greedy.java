@@ -14,6 +14,8 @@ import ctu.nengoros.util.SL;
  */
 public class Greedy extends AbstractASMNode{
 
+	public static final String name = "GreedyASM";
+	
 	protected GreedyFloat selection;// action selection methods
 	Float[] tmp;
 	

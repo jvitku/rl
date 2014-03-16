@@ -29,7 +29,7 @@ import ctu.nengoros.util.SL;
 
 public abstract class AbstractQLambdaLearning extends AbstractConfigurableHannsNode{
 
-	public static final String name = "QLambda";
+	public static final String name = "QLambdaLearning";
 
 	/**
 	 * RL parameters

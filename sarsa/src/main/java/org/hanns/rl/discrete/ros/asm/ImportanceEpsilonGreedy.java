@@ -16,6 +16,8 @@ import ctu.nengoros.util.SL;
  */
 public class ImportanceEpsilonGreedy extends AbstractASMNode{
 
+	public static final String name = "ImportanceGreedyASM";
+	
 	/**
 	 * Amount of randomization in the ASM (how important the proper selection of action is?)
 	 */

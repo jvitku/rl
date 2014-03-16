@@ -6,6 +6,8 @@ import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.util.SL;
+
 /**
  * Randomized version of the {@link org.hanns.rl.discrete.ros.asm.Greedy} ASM:
  * 
@@ -35,6 +37,10 @@ public class EpsilonGreedy extends AbstractASMNode{
 			tmp[i] = data[i];
 
 		int selected = selection.selectAction(tmp);
+		
+		if(logPeriod % step==0)
+			System.out.println("Step: "+step+" Received these utilities: "+SL.toStr(data)+" selecting the action no.: "+selected);
+		
 		super.executeAction(selected);
 	}
 
@@ -57,8 +63,7 @@ public class EpsilonGreedy extends AbstractASMNode{
 					log.error("Epsilon config: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
-					logParamChange("RECEIVED chage of value EPSILON",
-							config.getEpsilon(),data[0]);
+					logParamChange("RECEIVED chage of value EPSILON",config.getEpsilon(),data[0]);
 					config.setEpsilon(data[0]);
 				}
 			}

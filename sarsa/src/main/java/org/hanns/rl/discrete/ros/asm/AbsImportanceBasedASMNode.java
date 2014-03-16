@@ -4,7 +4,6 @@ import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.Imp
 
 public abstract class AbsImportanceBasedASMNode extends AbstractASMNode{
 
-
 	/**
 	 * Amount of randomization in the ASM (how important the proper selection of action is?)
 	 */

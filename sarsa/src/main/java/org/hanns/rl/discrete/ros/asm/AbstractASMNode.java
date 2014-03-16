@@ -10,6 +10,7 @@ import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.network.Topic;
 import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
@@ -29,10 +30,14 @@ import ctu.nengoros.util.SL;
  *
  */
 public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
-
+	
+	public static final String topicDataIn  = io+Topic.baseIn+"Actions"; 	// inActions
+	public static final String topicDataOut = io+Topic.baseOut+"Actions"; 	// outActions
+	
+	public static final int DEF_NOINPUTS = 4;
 	protected int noActions;	// N actions to select from
 
-	// enable randomization from the Nengoros simulator? (override the hardreset(true) to false?)
+	// enable randomization from the NengoROS simulator? (override the hardreset(true) to false?)
 	public static final String randomizeConf = "randomize";
 	public static final boolean DEF_RANDOMIZE = false;
 	protected boolean randomizeAllowed;
@@ -52,7 +57,6 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	public void onStart(ConnectedNode connectedNode) {
 		log = connectedNode.getLog();
 		
-
 		log.info(me+"started, parsing parameters");
 		this.registerParameters();
 		paramList.printParams();
@@ -98,7 +102,6 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 			observers.get(i).setVisPeriod(this.logPeriod);
 		}
 	}
-	
 
 	/**
 	 * Execute action selected by the ASM and publish over the ROS network
@@ -106,7 +109,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	 * @param action index of selected action, this action is encoded and sent
 	 */
 	protected void executeAction(int action){
-		if((step++) % logPeriod==0) 
+		if(step % logPeriod==0) 
 			log.info(me+"Step: "+step+"-> the following action is selected "
 					+SL.toStr(actionEncoder.encode(action)));
 
@@ -138,11 +141,9 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 		// TODO implement some prosperity observer
 		return 0;
 	}
-	
 
 	@Override
 	public String listParams() { return this.paramList.listParams(); }
-
 
 	@Override
 	public String getFullName() { return this.fullName; }
@@ -172,7 +173,8 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 	 */
 	@Override
 	public void publishProsperity(){
-
+		//TODO
+		/*
 		float[] data;
 		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();
 
@@ -189,6 +191,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 		}
 		fl.setData(data);
 		prospPublisher.publish(fl);
+		*/
 	}
 
 	@Override
@@ -210,8 +213,8 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 							"unexpected length of"+data.length+"! Expected: "+noActions);
 				else{
 					// here, the state description is decoded and one SARSA step executed
-					if(step % logPeriod==0)
-						System.out.println(me+"<-"+topicDataIn+" Received new array of action" +
+					if(++step % logPeriod==0)
+						System.out.println(me+"<-"+topicDataIn+" step: "+step+" Received new array of action" +
 								" utilities, these are: "+SL.toStr(data));
 
 					// implement this
@@ -248,6 +251,7 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 
 	@Override
 	protected void parseParameters(ConnectedNode connectedNode) {
+		
 		r = new PrivateRosparam(connectedNode);
 		logToFile = r.getMyBoolean(logToFileConf, DEF_LTF);
 		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
@@ -257,7 +261,6 @@ public abstract class AbstractASMNode extends AbstractConfigurableHannsNode{
 		randomizeAllowed = r.getMyBoolean(randomizeConf, DEF_RANDOMIZE);
 		System.out.println(me+"Creating data structures.");
 		
-
 		// parse the number of actions to select from 
 		noActions = r.getMyInteger(noInputsConf, DEF_NOINPUTS);
 		/**

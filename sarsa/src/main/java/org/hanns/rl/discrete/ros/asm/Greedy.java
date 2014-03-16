@@ -3,6 +3,8 @@ package org.hanns.rl.discrete.ros.asm;
 import org.hanns.rl.discrete.actionSelectionMethod.greedy.GreedyFloat;
 import org.ros.node.ConnectedNode;
 
+import ctu.nengoros.util.SL;
+
 /**
  * Greedy Action Selection Method: select the action with the highest utility.
  * 
@@ -22,6 +24,10 @@ public class Greedy extends AbstractASMNode{
 			tmp[i] = data[i];
 		
 		int selected = selection.selectAction(tmp);
+		
+		if(logPeriod%(step)==0)
+			System.out.println("Received these utilities: "+SL.toStr(data)+" selecting the action no.: "+selected);
+		
 		super.executeAction(selected);
 	}
 	

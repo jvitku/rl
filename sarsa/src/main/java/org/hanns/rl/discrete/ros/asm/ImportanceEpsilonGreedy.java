@@ -6,6 +6,8 @@ import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
+import ctu.nengoros.util.SL;
+
 /**
  * Similar to the {@link org.hanns.rl.discrete.ros.asm.EpsilonGreedy}, but here, the Epsilon
  * parameter is based on the action importance: the bigger importance the smaller randomization (epsilon).
@@ -25,6 +27,10 @@ public class ImportanceEpsilonGreedy extends AbsImportanceBasedASMNode{
 			tmp[i] = data[i];
 
 		int selected = selection.selectAction(tmp);
+		
+		if(logPeriod%(step)==0)
+			System.out.println("Received these utilities: "+SL.toStr(data)+" selecting the action no.: "+selected);
+		
 		super.executeAction(selected);
 	}
 

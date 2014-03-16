@@ -19,8 +19,5 @@ public interface BasicEpsilonGeedyConf extends EpsilonGreedyConf {
 	 * @param value probability of selecting the action randomly.
 	 */
 	public void setEpsilon(double value);
-	
-	
-	
 
 }

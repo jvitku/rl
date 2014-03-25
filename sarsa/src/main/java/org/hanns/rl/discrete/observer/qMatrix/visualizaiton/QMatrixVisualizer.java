@@ -1,8 +1,6 @@
-package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
+package org.hanns.rl.discrete.observer.qMatrix.visualizaiton;
 
-import org.hanns.rl.discrete.observer.SarsaObserver;
-
-import ctu.nengoros.network.node.observer.visualization.Visualizer;
+import org.hanns.rl.discrete.observer.qMatrix.QMatrixObserver;
 
 
 /**
@@ -13,7 +11,7 @@ import ctu.nengoros.network.node.observer.visualization.Visualizer;
  * @author Jaroslav Vitku
  *
  */
-public interface QMatrixVisualizer extends Visualizer, SarsaObserver{
+public interface QMatrixVisualizer extends QMatrixObserver{
 	
 	/**
 	 * If the rounding is disabled, the true value of action values is displayed

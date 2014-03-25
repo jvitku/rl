@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.observer.visualizaiton.qMatrix;
+package org.hanns.rl.discrete.observer.qMatrix.visualizaiton;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 

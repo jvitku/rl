@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.observer.qMatrix.stats;
 
-import java.io.IOException;
+import java.util.Locale;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
@@ -34,8 +34,12 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	public static final int DEF_ROUND = 10000;
 	//private int round;
 
-	private boolean append = false;
-	private boolean formatting = false;
+	// append new data to the end of the file or overwrite?
+	public static final boolean DEF_APPEND = false;	
+	private boolean append = DEF_APPEND;
+
+	public static final boolean DEF_FORMATTING = false;
+	private boolean formatting = DEF_FORMATTING;
 
 	SL logger;
 
@@ -88,13 +92,20 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 		// while there is still something to iterate
 		while(true){
 
-			out = out + "\n"+LINE+" these dimensions of Q matrix are displayed: "
-					+this.writeDims(coords);
+			if(this.formatting)
+				out = out + LINE+" these dimensions of Q matrix are displayed: "
+						+this.writeDims(coords);
 
 			// the y dimension, from the biggest index towards 0 
 			for(int j=dimSizes[1]-1; j>=0; j--){
 				coords[1] = j;
-				out = out + "\n"+j+"\t| ";
+
+				if(this.formatting)				// draws the y axis
+					out = out + "\n"+j+"\t| ";
+				
+				else if(j != dimSizes[1]-1)		// omit the first enter
+					out = out + "\n";
+
 				// the x dimension, from the left to right, from 0 towards end
 				for(int i=0; i<dimSizes[0]; i++){
 					coords[0] = i;
@@ -109,32 +120,34 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
 					// TODO rounding param ignored so far
 					//out = out + sep + (double)Math.round(val * round) / round; 
-					String no = String.format("%f", val);
+					String no = String.format(Locale.ENGLISH,"%f", val);
 					out = out + sep + no;
 				}
 			}
 
 			// append X axis
-			out = out+"\nY \t_____";
-			for(int i=1; i<dimSizes[0]; i++){
-				out = out +SEPARATOR+ "______";
-			}
-			out = out +"\n   X \t 0";
-			for(int i=1; i<dimSizes[0]; i++){
-				out = out +SEPARATOR+ i;
+			if(this.formatting){
+				out = out+"\nY \t_____";
+				for(int i=1; i<dimSizes[0]; i++){
+					out = out +SEPARATOR+ "______";
+				}
+				out = out +"\n   X \t 0";
+				for(int i=1; i<dimSizes[0]; i++){
+					out = out +SEPARATOR+ i;
+				}
 			}
 			coords = dc.next();
 			if(coords==null)
 				break;
 		}
 
-		System.out.println(" "+out+"\n");
+		System.out.println(out+"\n");
 
 		//logger.printToFile(false);
 
 		if(!this.append)
 			logger.cleanupFile();
-		logger.pl(" "+out+"\n");
+		logger.pl(out+"\n");
 
 
 		//return out+"\n";

@@ -141,6 +141,11 @@ After launching the node:
 * if the data sample is received, this is considered as a simulation step, which means:
 	* one algorithm step is made and output values are updated
 
+
+## Changelog
+
+* working on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
+
 ## TODO
 
 * rl_sarsa node (communication??) sometimes somehow crashes and:

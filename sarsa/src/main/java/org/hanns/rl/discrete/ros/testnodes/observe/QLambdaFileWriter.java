@@ -88,6 +88,7 @@ public class QLambdaFileWriter extends AbstractQLambda{
 		Observer fw = new FinalMaxActionUtilDouble(super.states.getDimensionsSizes(), 
 				super.actions.getNumOfActions(), 
 				super.q, "generated-data/test.txt");
+				//super.q, "test.txt");
 		
 		
 		observers.add(o);

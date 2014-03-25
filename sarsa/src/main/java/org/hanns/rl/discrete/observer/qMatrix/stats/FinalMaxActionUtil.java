@@ -1,8 +1,11 @@
 package org.hanns.rl.discrete.observer.qMatrix.stats;
 
+import java.io.IOException;
+
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 
 import ctu.nengoros.network.common.Resettable;
+import ctu.nengoros.util.SL;
 
 public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
@@ -31,16 +34,30 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	public static final int DEF_ROUND = 10000;
 	//private int round;
 
+	private boolean append = false;
+	private boolean formatting = false;
+
+	SL logger;
+
 	public FinalMaxActionUtil(int[] dimSizes, int noActions, FinalQMatrix<E> q, String filename){
 		this.dimSizes = dimSizes.clone();
 		this.noActions = noActions;
 		this.q = q;
 
 		this.filename = filename;
+		logger = new SL(filename, false);
+
+
 		//this.round = DEF_ROUND;
 
 		this.softReset(false);
 	}
+
+	@Override
+	public void setAppendData(boolean append) { this.append = append; }
+
+	@Override
+	public void setUseFormatting(boolean useFormatting) { this.formatting = useFormatting; }
 
 	@Override
 	public void observe(int prevAction, float reward, int[] currentState, int futureAction) {
@@ -48,9 +65,6 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 			return;
 
 		if( step++ % visPeriod != 0 )
-			return;
-
-		if(!this.shouldWrite)
 			return;
 
 		this.write();
@@ -63,6 +77,8 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	public static final String LINE = "\t------------------------";
 
 	private void write(){
+
+
 		String out = "";
 
 		DimCounter dc = new DimCounter(dimSizes);
@@ -89,14 +105,12 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 						sep=SEPARATOR;
 
 					int ind = this.getMaxActionInd(coords);
-					//double e = (Double)q.getActionValsInState(coords)[ind];
 					double val = (Double)q.getActionValsInState(coords)[ind];
-					
-					//out = out + sep + (double)Math.round(val * round) / round; // TODO rounding ignored so far
+
+					// TODO rounding param ignored so far
+					//out = out + sep + (double)Math.round(val * round) / round; 
 					String no = String.format("%f", val);
-
 					out = out + sep + no;
-
 				}
 			}
 
@@ -115,9 +129,16 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 		}
 
 		System.out.println(" "+out+"\n");
+
+		//logger.printToFile(false);
+
+		if(!this.append)
+			logger.cleanupFile();
+		logger.pl(" "+out+"\n");
+
+
 		//return out+"\n";
 	}
-
 
 	private String writeDims(int[] dims){
 		if(dims.length==1)
@@ -281,7 +302,7 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
 	@Override
 	public int getRounding() { return this.round; }
-*/
+	 */
 
 }
 

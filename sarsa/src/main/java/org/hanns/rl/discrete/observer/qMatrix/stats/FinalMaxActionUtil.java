@@ -29,7 +29,7 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	private int step;
 
 	public static final int DEF_ROUND = 10000;
-	private int round;
+	//private int round;
 
 	public FinalMaxActionUtil(int[] dimSizes, int noActions, FinalQMatrix<E> q, String filename){
 		this.dimSizes = dimSizes.clone();
@@ -37,7 +37,7 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 		this.q = q;
 
 		this.filename = filename;
-		this.round = DEF_ROUND;
+		//this.round = DEF_ROUND;
 
 		this.softReset(false);
 	}

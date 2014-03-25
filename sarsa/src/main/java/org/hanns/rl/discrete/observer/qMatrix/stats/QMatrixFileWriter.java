@@ -15,8 +15,9 @@ public interface QMatrixFileWriter extends QMatrixObserver{
 	/**
 	 * Set rounding to the file (e.g. avoid no. formatting as: 2.25E-12)
 	 * @param round e.g. 10, 100, 100000
-	 */
+	 *
 	public void setRounding(int round);
 	
 	public int getRounding();
+	*/
 }

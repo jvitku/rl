@@ -32,4 +32,5 @@ public class FinalMaxActionUtilDouble extends FinalMaxActionUtil<Double> {
 	@Override
 	public String getName(){ return name; }
 
+
 }

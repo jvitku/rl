@@ -1,6 +1,7 @@
 package org.hanns.rl.discrete.observer.qMatrix.stats;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+
 import ctu.nengoros.network.common.Resettable;
 
 public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
@@ -27,13 +28,17 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
 	private int step;
 
+	public static final int DEF_ROUND = 10000;
+	private int round;
+
 	public FinalMaxActionUtil(int[] dimSizes, int noActions, FinalQMatrix<E> q, String filename){
 		this.dimSizes = dimSizes.clone();
 		this.noActions = noActions;
 		this.q = q;
 
 		this.filename = filename;
-		
+		this.round = DEF_ROUND;
+
 		this.softReset(false);
 	}
 
@@ -83,13 +88,15 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 					else
 						sep=SEPARATOR;
 
-					// visualize values?
-					if(!this.foundNonZero(q.getActionValsInState(coords))){
-						out = out + sep + NO_ACTION;
-					}else{
-						int ind = this.getMaxActionInd(coords);
-						out = out + sep + ind;
-					}
+					int ind = this.getMaxActionInd(coords);
+					//double e = (Double)q.getActionValsInState(coords)[ind];
+					double val = (Double)q.getActionValsInState(coords)[ind];
+					
+					//out = out + sep + (double)Math.round(val * round) / round; // TODO rounding ignored so far
+					String no = String.format("%f", val);
+
+					out = out + sep + no;
+
 				}
 			}
 
@@ -260,9 +267,21 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
 	@Override
 	public String getName() { return name; }
-	
+
 	@Override
 	public String getFileName() { return this.filename; }
+
+	/*
+	@Override
+	public void setRounding(int round) { 
+		if(round<0)
+			round =1;
+		this.round = round;
+	}
+
+	@Override
+	public int getRounding() { return this.round; }
+*/
 
 }
 

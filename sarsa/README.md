@@ -144,7 +144,7 @@ After launching the node:
 
 ## Changelog
 
-* working on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
+* added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
 
 ## TODO
 

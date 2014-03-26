@@ -30,11 +30,10 @@ public interface QMatrixFileWriter extends QMatrixObserver{
 	public String getFileName();	
 	
 	/**
-	 * Set rounding to the file (e.g. avoid no. formatting as: 2.25E-12)
-	 * @param round e.g. 10, 100, 100000
-	 *
-	public void setRounding(int round);
+	 * Set precision to the file (e.g. avoid no. formatting as: 2.25E-12)
+	 * @param digits set the number of digits after dot
+	 */
+	public void setPrecision(int digits);
 	
-	public int getRounding();
-	*/
+	public int getPrecision();
 }

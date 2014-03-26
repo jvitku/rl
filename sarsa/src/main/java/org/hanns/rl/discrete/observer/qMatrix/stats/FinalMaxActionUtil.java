@@ -1,5 +1,7 @@
 package org.hanns.rl.discrete.observer.qMatrix.stats;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
@@ -31,8 +33,8 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 
 	private int step;
 
-	public static final int DEF_ROUND = 10000;
-	//private int round;
+	public static final int DEF_PRECISION = 15;	// how many digits after dot?
+	private int precision;
 
 	// append new data to the end of the file or overwrite?
 	public static final boolean DEF_APPEND = false;	
@@ -41,6 +43,8 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	public static final boolean DEF_FORMATTING = false;
 	private boolean formatting = DEF_FORMATTING;
 
+	private DecimalFormat format;
+	
 	SL logger;
 
 	public FinalMaxActionUtil(int[] dimSizes, int noActions, FinalQMatrix<E> q, String filename){
@@ -51,10 +55,20 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 		this.filename = filename;
 		logger = new SL(filename, false);
 
-
-		//this.round = DEF_ROUND;
+		this.precision = DEF_PRECISION;
+		this.generateFormat();
 
 		this.softReset(false);
+	}
+	
+	private void generateFormat(){
+		String pat = "#.";
+		for(int i=0; i<this.precision; i++)
+			pat +="#";
+		
+		DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
+		otherSymbols.setDecimalSeparator('.');
+		format = new DecimalFormat(pat,otherSymbols);
 	}
 
 	@Override
@@ -118,10 +132,15 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 					int ind = this.getMaxActionInd(coords);
 					double val = (Double)q.getActionValsInState(coords)[ind];
 
-					// TODO rounding param ignored so far
-					//out = out + sep + (double)Math.round(val * round) / round; 
-					String no = String.format(Locale.ENGLISH,"%f", val);
-					out = out + sep + no;
+					//String no = String.format(Locale.ENGLISH,"%f", val);
+					/*
+					DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.ENGLISH);
+					otherSymbols.setDecimalSeparator('.');
+					DecimalFormat format = new DecimalFormat(pattern,otherSymbols);
+					*/
+					
+					//String no = new DecimalFormat(pattern,otherSymbols).format(val);
+					out = out + sep + format.format(val);
 				}
 			}
 
@@ -305,17 +324,18 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	@Override
 	public String getFileName() { return this.filename; }
 
-	/*
+	
 	@Override
-	public void setRounding(int round) { 
-		if(round<0)
-			round =1;
-		this.round = round;
+	public void setPrecision(int precision) { 
+		if(precision<0)
+			precision =1;
+		this.precision = precision;
+		this.generateFormat();
+		
 	}
 
 	@Override
-	public int getRounding() { return this.round; }
-	 */
+	public int getPrecision() { return this.precision; }
 
 }
 

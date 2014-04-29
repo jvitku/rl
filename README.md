@@ -34,3 +34,10 @@ Installation
 ------------------
 
 The best way how to install these nodes so far, is to use them as a part of the NengoRos project (see: https://github.com/jvitku/nengoros )
+
+TODO
+----------
+
+- rename the project SARSA
+- restructuralize the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda)
+- update all python scripts...

@@ -46,6 +46,8 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 	private DecimalFormat format;
 	
 	SL logger;
+	
+	public boolean logToConsole = false;
 
 	public FinalMaxActionUtil(int[] dimSizes, int noActions, FinalQMatrix<E> q, String filename){
 		this.dimSizes = dimSizes.clone();
@@ -160,7 +162,8 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 				break;
 		}
 
-		System.out.println(out+"\n");
+		if(this.logToConsole)
+			System.out.println(out+"\n");
 
 		//logger.printToFile(false);
 

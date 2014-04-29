@@ -69,8 +69,8 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		// action values available now
 		Double[] newActions  = q.getActionValsInState(newState);	
 		// value of the best available action now
-		//double maxNewActionVal = newActions[this.maxInd(newActions)];//naive	
-		double maxNewActionVal = newActions[newAction];//naive
+		//double maxNewActionVal = newActions[this.maxInd(newActions)];//Q-Learning	
+		double maxNewActionVal = newActions[newAction];//SARSA
 
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;

@@ -38,7 +38,6 @@ The best way how to install these nodes so far, is to use them as a part of the 
 TODO
 ----------
 
-- check Motivation = 0, is it really random ASM???
 - rename the project SARSA
 - restructuralize the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda)
 - update all python scripts...

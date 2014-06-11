@@ -8,7 +8,7 @@ import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.Imp
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.FinalModelNStepQLambda;
+import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNStepLambda;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.NStepQLambdaConfImpl;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.observer.qMatrix.visualizaiton.FinalStateSpaceVisDouble;
@@ -85,7 +85,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 	/**
 	 * RL instances
 	 */
-	public FinalModelNStepQLambda rl;			// RL algorithm
+	public AbstractFinalModelNStepLambda rl;			// RL algorithm
 	protected FinalQMatrix<Double> q;			// Q(s,a) matrix used by the RL
 	protected ActionSelectionMethod<Double> asm;// action selection methods
 
@@ -254,7 +254,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 		/**
 		 *  build the RL algorithm and obtain its Q(s,a) matrix
 		 */
-		rl = new FinalModelNStepQLambda(states, actions.getNumOfActions(), config);
+		rl = new AbstractFinalModelNStepLambda(states, actions.getNumOfActions(), config);
 		q = (FinalQMatrix<Double>)(rl.getMatrix());
 	}
 

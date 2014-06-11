@@ -42,7 +42,7 @@ TODO
 - update all python scripts...
 
 - check Motivation = 0, is it really random ASM???
-
+- add repelors (allow reward values to be < 0)
 
 
 Changelog

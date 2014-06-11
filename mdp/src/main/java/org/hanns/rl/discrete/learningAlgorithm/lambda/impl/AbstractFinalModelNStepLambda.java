@@ -30,7 +30,7 @@ import org.hanns.rl.discrete.states.FInalStateSet;
  * @author Jaroslav Vitku
  *
  */
-public class FinalModelNStepQLambda extends AbstractFinalRL{
+public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 
 	double delta;				// one step error
 
@@ -38,15 +38,14 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 
 	private NStepLambdaConfig conf;
 
-	public FinalModelNStepQLambda(FInalStateSet set, int numActions, NStepLambdaConfig conf){
+	public AbstractFinalModelNStepLambda(FInalStateSet set, int numActions, NStepLambdaConfig conf){
 		super(set, numActions);
 
 		this.conf = conf;
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());
 	}
 	
-	public FinalModelNStepQLambda(int[] stateSizes, int numActions, 
-			NStepLambdaConfig conf){
+	public AbstractFinalModelNStepLambda(int[] stateSizes, int numActions, NStepLambdaConfig conf){
 		super(stateSizes, numActions);
 
 		this.conf = conf;
@@ -67,13 +66,13 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 		// we were there and made the action
 		double prevVal = q.get(prevState, prevAction);	
 		// action values available now
-		Double[] newActions  = q.getActionValsInState(newState);	
-		// value of the best available action now
-		//double maxNewActionVal = newActions[this.maxInd(newActions)];//Q-Learning	
-		double maxNewActionVal = newActions[newAction];//SARSA
+		Double[] newActions  = q.getActionValsInState(newState);
+		
+		// add SARSA or QLearning here
+		double newActionVal = this.getNewMaxActionVal(newActions, newAction);	
 
 		// here goes the learning equation
-		delta = reward + conf.getGamma()*maxNewActionVal - prevVal;
+		delta = reward + conf.getGamma()*newActionVal - prevVal;
 		
 		trace.push(prevState,prevAction);	// store the previous state-action pair
 
@@ -114,7 +113,7 @@ public class FinalModelNStepQLambda extends AbstractFinalRL{
 	@Override
 	public void setConfig(LearningConfiguration config) {
 		if(!(config instanceof NStepLambdaConfig)){
-			System.err.println("FinalModelSarsa: ERROR: expected " +
+			System.err.println("AbstractFinalModelNStepLambda: ERROR: expected " +
 					"NStepLambdaConfig congiguration!");
 			return;
 		}

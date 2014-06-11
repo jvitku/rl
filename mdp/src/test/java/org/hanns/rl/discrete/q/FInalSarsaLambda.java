@@ -9,9 +9,9 @@ import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGre
 import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
-import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNStepLambda;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.NStepQLambdaConfImpl;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQLambda;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
 
@@ -56,7 +56,8 @@ public class FInalSarsaLambda {
 		config.setAlpha(0.5);	// learn half of the information
 		config.setGamma(0.7);	// more towards immediate reward
 
-		FinalModelLearningAlgorithm ql = new AbstractFinalModelNStepLambda(stateSizes, numActions, config);
+		// TODO package structure changed, check this
+		FinalModelLearningAlgorithm ql = new FinalModelQLambda(stateSizes, numActions, config);
 
 		/**
 		 * Configure the simulation

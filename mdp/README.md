@@ -146,7 +146,20 @@ After launching the node:
 
 * added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
 
+* refactoring
+
+	- restructuralized the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda)
+	- project SARSA renamed to MDP
+	- all unit tests work
+
+
 ## TODO
+
+* refactoring 
+
+	* update all python scripts...
+
+* add repelors (allow reward values to be < 0)
 
 * rl_sarsa node (communication??) sometimes somehow crashes and:
 	

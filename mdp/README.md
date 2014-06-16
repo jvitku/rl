@@ -158,6 +158,7 @@ After launching the node:
 * refactoring 
 
 	* update all python scripts...
+	* update launch example in the runner script
 
 * add repelors (allow reward values to be < 0)
 

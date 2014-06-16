@@ -19,12 +19,12 @@ if [ "$1" == "-h" ]; then
 	echo ""
 	exit
 fi
-
-E=1
+# Note: In order to the Eclipse-generated class files, the eclipse projects need to be (re)compiled!!
+E=0
 
 RJ=../../rosjava_core/
 
-JAR=build/install/sarsa/lib/*
+JAR=build/install/mdp/lib/*
 
 if [ $E = "1" ]; then
 	CL=bin

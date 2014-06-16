@@ -34,3 +34,14 @@ Installation
 ------------------
 
 The best way how to install these nodes so far, is to use them as a part of the NengoRos project (see: https://github.com/jvitku/nengoros )
+
+TODO
+----------
+
+- check Motivation = 0, is it really random ASM???
+
+
+Changelog
+------------------
+
+- project SARSA renamed to MDP

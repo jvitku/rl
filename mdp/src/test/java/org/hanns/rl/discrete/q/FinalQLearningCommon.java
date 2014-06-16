@@ -82,11 +82,11 @@ public class FinalQLearningCommon {
 		System.out.println(GridWorld.vis(map));
 		
 		System.out.println("Starting the navigation tests now");
-		this.navigate(q, 4, sx+sy, map, new int[]{0,0});	// corner
+		this.navigate(q, 4, sx+sy, map, new int[]{1,1});	// almost corner
 		this.navigate(q, 4, sx+sy, map, new int[]{5,5});
-		this.navigate(q, 4, sx+sy, map, new int[]{9,6});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{9,0});	// corner
-		this.navigate(q, 4, sx+sy, map, new int[]{0,6});	// corner
+		this.navigate(q, 4, sx+sy, map, new int[]{8,5});	// almost corner
+		this.navigate(q, 4, sx+sy, map, new int[]{8,1});	// almost corner
+		this.navigate(q, 4, sx+sy, map, new int[]{1,5});	// almost corner
 		this.navigate(q, 4, sx+sy, map, new int[]{7,4});	// reward pos.
 	}
 	

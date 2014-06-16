@@ -29,7 +29,7 @@ public abstract class AbstractFinalRL implements FinalModelLearningAlgorithm{
 	/**
 	 * Here is the difference between SARSA and Q-Learning.
 	 * Implement this method in order to obtain action value to be learned for 
-	 * the next step. 
+	 * the next step.
 	 *  
 	 * @param newActions array of action values available in the new state
 	 * @param selectedAction index of action that is selected to the next step

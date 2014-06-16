@@ -5,7 +5,7 @@ import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNSt
 import org.hanns.rl.discrete.states.FInalStateSet;
 
 /**
- * Q-Lambda algorithm is an improvement of Q-Learning with eligibility trace.
+ * Q-Lambda algorithm is an improvement of Q-Learning with the eligibility trace.
  * 
  * @author Jaroslav Vitku
  *

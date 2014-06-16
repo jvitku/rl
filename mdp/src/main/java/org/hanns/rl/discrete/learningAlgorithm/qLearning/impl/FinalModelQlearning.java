@@ -6,7 +6,7 @@ import org.hanns.rl.discrete.learningAlgorithm.config.LearningConfig;
 /**
  * QLearning algorithm over the model with final number of actions and state set.
  * 
- * The Q-learning algorithm learns always the best action in the new state for learning.  
+ * The Q-learning algorithm learns always the best action in the new state.  
  * 
  * @see <a href="http://www.tu-chemnitz.de/informatik/KI/scripts/ws0910/ml09_7.pdf">Eligibility Traces</a>
  * 

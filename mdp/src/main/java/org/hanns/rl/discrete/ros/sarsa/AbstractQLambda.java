@@ -11,7 +11,7 @@ import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNStepLambda;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.NStepQLambdaConfImpl;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQLambda;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.FinalModelQLambda;
 import org.hanns.rl.discrete.observer.qMatrix.visualizaiton.FinalStateSpaceVisDouble;
 import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
 import org.hanns.rl.discrete.states.impl.BasicStateVariable;

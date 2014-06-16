@@ -11,7 +11,7 @@ import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.FinalModelLearningAlgorithm;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.NStepQLambdaConfImpl;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.learningAlgorithm.qLearning.impl.FinalModelQLambda;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.FinalModelQLambda;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
 

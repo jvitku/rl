@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.learningAlgorithm.qLearning.impl;
+package org.hanns.rl.discrete.learningAlgorithm.qLearning;
 
 import org.hanns.rl.discrete.learningAlgorithm.lambda.NStepLambdaConfig;
 import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNStepLambda;

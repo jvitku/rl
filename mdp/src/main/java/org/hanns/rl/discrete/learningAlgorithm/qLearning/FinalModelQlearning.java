@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.learningAlgorithm.qLearning.impl;
+package org.hanns.rl.discrete.learningAlgorithm.qLearning;
 
 import org.hanns.rl.discrete.learningAlgorithm.AbstractFinalRL;
 import org.hanns.rl.discrete.learningAlgorithm.config.LearningConfig;

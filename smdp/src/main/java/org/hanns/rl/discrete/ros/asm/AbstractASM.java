@@ -102,7 +102,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	}
 
 	/**
-	 * Instatntiate the Observer {@link #o} to the resider one. 
+	 * Instantiate the Observer {@link #o} to the resider one. 
 	 */
 	protected abstract void registerProsperityObserver();
 

@@ -75,7 +75,6 @@ public class Greedy extends AbstractASM{
 		return send;
 	}
 
-
 	/**
 	 * nothing to configure here
 	 */

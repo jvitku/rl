@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 
@@ -12,7 +12,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * 
  * @author Jaroslav Vitku
  */
-public class BinaryCoverage extends AbsSardaProspObserver{
+public class BinaryCoverage extends AbsSarsaProspObserver{
 
 	public final String name = "BinaryCoverage";
 	public final String explanation = "Value from [0,1] telling how many" +

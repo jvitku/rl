@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.ros.sarsa.config;
+package org.hanns.rl.discrete.ros.srp.sarsa.config;
 
 import org.hanns.rl.discrete.observer.qMatrix.stats.FinalMaxActionUtilDouble;
 import org.hanns.rl.discrete.observer.qMatrix.stats.QMatrixFileWriter;

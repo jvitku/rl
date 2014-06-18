@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.observer.stats.impl;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 
 
 /**
@@ -19,7 +19,7 @@ import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
  * @author Jaroslav Vitku
  *
  */
-public class KnowledgeCoverage extends AbsSardaProspObserver{
+public class KnowledgeCoverage extends AbsSarsaProspObserver{
 
 	public final String name = "KnowledgeCoverage";
 	public final String explanation = "Value from [0,1] telling how many" +

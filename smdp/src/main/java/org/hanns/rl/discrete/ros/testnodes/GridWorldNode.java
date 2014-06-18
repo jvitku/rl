@@ -8,7 +8,7 @@ import org.hanns.rl.common.exceptions.DecoderException;
 import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.concurrent.CancellableLoop;

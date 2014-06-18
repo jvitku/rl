@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 
 
 /**
@@ -10,7 +10,7 @@ import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
  * @author Jaroslav Vitku
  *
  */
-public class MCR extends AbsSardaProspObserver{
+public class MCR extends AbsSarsaProspObserver{
 
 	public final String name = "MCR";
 	public final String explanation = "Value from [0,1] defining" +

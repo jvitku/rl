@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.observer.stats.impl;
 
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 
 
 /**
@@ -11,7 +11,7 @@ import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
  * @author Jaroslav Vitku
  *
  */
-public class UniformAverageReward extends AbsSardaProspObserver{
+public class UniformAverageReward extends AbsSarsaProspObserver{
 
 	public final String name = "BinaryAverageReward";
 	public final String explanation = "Value from [0,1] telling" +

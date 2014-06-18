@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.observer.stats.impl.KnowledgeCoverage;
 
@@ -17,7 +17,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * 
  * @see ctu.nengoros.nodes.HannsNode
  */
-public class KnowledgeCoverageReward extends AbsSardaProspObserver{
+public class KnowledgeCoverageReward extends AbsSarsaProspObserver{
 
 	public final String name = "KnowledgeCoverageReward";
 	public final String explanation = "Value from [0,1] combining" +

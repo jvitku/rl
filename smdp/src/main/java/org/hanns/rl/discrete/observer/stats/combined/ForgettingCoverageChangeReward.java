@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverageForgetting;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.observer.stats.impl.KnowledgeChange;
@@ -27,7 +27,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * @author Jaroslav Vitku
  *
  */
-public class ForgettingCoverageChangeReward extends AbsSardaProspObserver{
+public class ForgettingCoverageChangeReward extends AbsSarsaProspObserver{
 
 
 	public final String name = "ForgettingCoverageChangeReward";

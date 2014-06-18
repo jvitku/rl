@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.infrastructure;
 
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.ros.node.ConnectedNode;
 
 /**

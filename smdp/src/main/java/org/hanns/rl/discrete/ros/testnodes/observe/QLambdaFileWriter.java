@@ -6,8 +6,8 @@ import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.qMatrix.stats.FinalMaxActionUtilDouble;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
-import org.hanns.rl.discrete.ros.sarsa.AbstractQLambda;
-import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
+import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
+import org.hanns.rl.discrete.ros.learning.qLearning.AbstractQLambda;
 import org.ros.node.ConnectedNode;
 
 import ctu.nengoros.network.node.observer.Observer;
@@ -15,8 +15,8 @@ import ctu.nengoros.network.node.observer.Observer;
 /**
  * Implements QLambda algorithm in the ROS node. Used for testing fileWrite observer.
  * 
- * @see {@link org.hanns.rl.discrete.ros.sarsa.QLambda}
- * @see {@link org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivationFilter}
+ * @see {@link org.hanns.rl.discrete.ros.learning.qLearning.QLambda}
+ * @see {@link org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivationFilter}
  * 
  * @author Jaroslav Vitku
  *

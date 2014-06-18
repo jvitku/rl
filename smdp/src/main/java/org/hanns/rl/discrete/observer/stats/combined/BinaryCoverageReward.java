@@ -1,6 +1,6 @@
 package org.hanns.rl.discrete.observer.stats.combined;
 
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 import org.hanns.rl.discrete.observer.SarsaProsperityObserver;
 import org.hanns.rl.discrete.observer.stats.impl.BinaryCoverage;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
@@ -18,7 +18,7 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
  * @author Jaroslav Vitku
  * @see ctu.nengoros.nodes.HannsNode
  */
-public class BinaryCoverageReward extends AbsSardaProspObserver{
+public class BinaryCoverageReward extends AbsSarsaProspObserver{
 
 	public final String name = "BinaryCoverageReward";
 	public final String me = "["+name+"] ";

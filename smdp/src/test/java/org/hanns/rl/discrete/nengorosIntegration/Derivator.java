@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.nengorosIntegration;
 
 import static org.junit.Assert.*;
 
-import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
+import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
 import org.junit.Test;
 
 public class Derivator {

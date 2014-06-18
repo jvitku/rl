@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.ros.testnodes;
 
 import org.apache.commons.logging.Log;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;

@@ -1,7 +1,7 @@
-package org.hanns.rl.discrete.ros.sarsa.config;
+package org.hanns.rl.discrete.ros.srp.sarsa.config;
 
 import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 
 /**
  * Publishes: {composed prosperity, BinaryCoverageForgetting, MCR}

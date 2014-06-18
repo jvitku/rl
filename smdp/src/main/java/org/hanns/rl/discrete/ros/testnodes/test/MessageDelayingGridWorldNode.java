@@ -1,7 +1,7 @@
 package org.hanns.rl.discrete.ros.testnodes.test;
 
 import org.hanns.rl.common.exceptions.DecoderException;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;

@@ -2,7 +2,7 @@ package org.hanns.rl.discrete.observer;
 
 import ctu.nengoros.network.node.observer.stats.AbsProsperityObserver;
 
-public abstract class AbsSardaProspObserver extends AbsProsperityObserver implements SarsaProsperityObserver{
+public abstract class AbsSarsaProspObserver extends AbsProsperityObserver implements SarsaProsperityObserver{
 
 	/**
 	 * @see SarsaObserver

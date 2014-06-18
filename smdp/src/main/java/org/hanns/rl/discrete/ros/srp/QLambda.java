@@ -1,17 +1,46 @@
-package org.hanns.rl.discrete.ros.testnodes;
+package org.hanns.rl.discrete.ros.srp;
+
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
-import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
+import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
 import org.hanns.rl.discrete.ros.learning.qLearning.AbstractQLambda;
 import org.ros.node.ConnectedNode;
 
-import ctu.nengoros.util.SL;
-
-public class QLambdaCommunicationTest extends AbstractQLambda{
-
+/**
+ * Implements QLambda algorithm in the ROS node. This algorithm uses:
+ * <ul>
+ * <li>Q(lambda) discrete RL Q-learning algorithm with eligibility trace of given length.</li>
+ * <li>ASM (action selection method) is modified epsilon-greedy, where the epsilon is 
+ * affected by the value of importance, if action importance is high, epsilon gets small.</li>
+ * <li>ROS actions are encoded by the 1ofN encoding (one value 1 on the output vector means 
+ * a particular action)</li>
+ * <li>ROS input is evaluated as follows: first value is reward received, the rest of values
+ * determines the current state of the environment (states are encoded on the specified interval
+ * ([0,1] by default) with given number of samples. Number of samples determines number of
+ * values of given variable, therefore also size of the resulting state space.</li>
+ * <li>In addition, this algorithm uses {@link #filter} on input data, see below.</li>
+ * </ul>
+ * 
+ * 
+ * The filtering of input data is made in the following way:
+ * <ul>
+ * <li>Only state changes are registered as new state (that is e.g. response from the GridWorld)</li>
+ * <li>There is specified maximum numbed of steps without response (to executed action). 
+ * This defines the maximum length of closed loop where the RL is (max. delay between 
+ * action->new state)</li>
+ * <li>If the response is not received in the predefined number of steps, the situation 
+ * is evaluated as the following case: the action executed did not have effect, RL&ASM: continue.</li>
+ * </ul>
+ * 
+ * @see {@link org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivationFilter}
+ * 
+ * @author Jaroslav Vitku
+ *
+ */
+public class QLambda extends AbstractQLambda{
 
 	public MessageDerivator filter;
 	public static final String filterConf = "filterLength";
@@ -33,8 +62,6 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 			std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
 			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
 			dataPublisher.publish(fl);
-			
-			logg("NOOP");
 			return;
 		}
 
@@ -45,7 +72,6 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 		for(int i=0; i<state.length; i++){
 			state[i] = data[i+1];
 		}
-		logg("state reward is: "+SL.toStr(data));
 		// perform the SARSA step
 		performSARSAstep(reward, state);		
 	}
@@ -68,7 +94,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 
 	/**
 	 * Instantiate the ProsperityObserver
-	 *
+	 */
 	@Override
 	protected void registerProsperityObserver(){
 		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
@@ -77,7 +103,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 		o = new MCR();
 
 		observers.add(o);
-	}*/
+	}
 
 	/**
 	 * Select action, perform learning step, return selected action.
@@ -134,7 +160,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 	public void hardReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-
+			
 		System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
@@ -149,7 +175,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 	public void softReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-
+		
 		System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);
@@ -159,21 +185,7 @@ public class QLambdaCommunicationTest extends AbstractQLambda{
 		}
 		o.softReset(randomize);
 	}
-	
-
-	/**
-	 * Instantiate the ProsperityObserver
-	 */
-	@Override
-	protected void registerProsperityObserver(){
-		//o = new BinaryCoverageReward(this.states.getDimensionsSizes());
-		o = new KnowledgeCoverageReward(this.states.getDimensionsSizes(), q);
-		
-		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
-		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
-		observers.add(o);
-	}
-	
 }
+
 
 

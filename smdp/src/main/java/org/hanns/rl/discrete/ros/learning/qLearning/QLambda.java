@@ -1,11 +1,11 @@
-package org.hanns.rl.discrete.ros.sarsa;
+package org.hanns.rl.discrete.ros.learning.qLearning;
 
 
 import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
-import org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivator;
+import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
 import org.ros.node.ConnectedNode;
 
 /**
@@ -34,7 +34,7 @@ import org.ros.node.ConnectedNode;
  * is evaluated as the following case: the action executed did not have effect, RL&ASM: continue.</li>
  * </ul>
  * 
- * @see {@link org.hanns.rl.discrete.ros.sarsa.ioHelper.MessageDerivationFilter}
+ * @see {@link org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivationFilter}
  * 
  * @author Jaroslav Vitku
  *

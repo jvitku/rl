@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.observer.stats.impl;
 import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.dataStructure.impl.PreAllocatedMultiDimension;
-import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
+import org.hanns.rl.discrete.observer.AbsSarsaProspObserver;
 
 /**
  * <p>Value from [0,1] which is one minus knowledge change for step.
@@ -18,7 +18,7 @@ import org.hanns.rl.discrete.observer.AbsSardaProspObserver;
  * @author Jaroslav Vitku
  *
  */
-public class KnowledgeChange extends AbsSardaProspObserver{
+public class KnowledgeChange extends AbsSarsaProspObserver{
 
 	public final String name = "KnowledgeChange";
 	public final String explanation = "Value from [0,1] telling how many" +

@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.ros.sarsa;
+package org.hanns.rl.discrete.ros.srp;
 
 
 import java.util.LinkedList;

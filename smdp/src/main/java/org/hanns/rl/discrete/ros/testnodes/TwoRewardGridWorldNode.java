@@ -4,7 +4,7 @@ package org.hanns.rl.discrete.ros.testnodes;
 import java.util.LinkedList;
 
 import org.hanns.rl.common.exceptions.DecoderException;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;

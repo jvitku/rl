@@ -3,7 +3,7 @@ package org.hanns.rl.discrete.ros;
 import static org.junit.Assert.*;
 
 import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-import org.hanns.rl.discrete.ros.sarsa.QLambda;
+import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
 import org.hanns.rl.discrete.ros.testnodes.GridWorldNode;
 import org.hanns.rl.discrete.ros.testnodes.worlds.GridWorld;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import ctu.nengoros.network.node.testsuit.RosCommunicationTest;
  */
 public class NengorosMessageFilter extends RosCommunicationTest{
 
-	public static final String RL = "org.hanns.rl.discrete.ros.sarsa.QLambda";
+	public static final String RL = "org.hanns.rl.discrete.ros.learning.sarsa.QLambda";
 	public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
 	
 	//public static final String RLPARAMS = "_importance:=0 _noOutputsConf:=4 _noInputsConf:=4";

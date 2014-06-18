@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.ros.sarsa.ioHelper;
+package org.hanns.rl.discrete.ros.common.ioHelper;
 
 import ctu.nengoros.network.common.Resettable;
 

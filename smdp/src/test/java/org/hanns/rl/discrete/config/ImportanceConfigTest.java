@@ -31,7 +31,6 @@ public class ImportanceConfigTest {
 	public void importanceBug(){
 		ImportanceBasedConfig ibc = new ImportanceBasedConfig();
 
-
 		double sampling = 0.1;
 		double boundary = 100;
 		
@@ -40,7 +39,6 @@ public class ImportanceConfigTest {
 		while(pos<boundary){
 			
 			ibc.setImportance((float)pos);
-
 
 			assertTrue(ibc.getImportance()<=1 && ibc.getImportance()>=0);
 			assertTrue(ibc.getEpsilon()>=ibc.getMinEpsilon() && ibc.getEpsilon()<=1);

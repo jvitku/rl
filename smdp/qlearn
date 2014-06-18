@@ -27,7 +27,7 @@ E=0 # use Eclipse?
 
 RJ=../../rosjava_core/
 
-JAR=build/install/mdp/lib/*
+JAR=build/install/smdp/lib/*
 
 if [ $E = "1" ]; then
 	CL=bin
@@ -42,4 +42,4 @@ ROSJAVA=$RJ/rosjava/$CL/:$RJ/apache_xmlrpc_client/$CL/:$RJ/apache_xmlrpc_common/
 
 #java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun org.hanns.demonodes.time.pubsub.Sub $0 $1 $2 $3 $4
 
-java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun "org.hanns.rl.discrete.ros.sarsa.QLambda" $1 $2 $3 $4 $5
+java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun "org.hanns.rl.discrete.ros.srp.QLambda" $1 $2 $3 $4 $5

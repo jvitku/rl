@@ -25,7 +25,7 @@ E=0
 
 RJ=../../rosjava_core/
 
-JAR=build/install/mdp/lib/*
+JAR=build/install/smdp/lib/*
 
 if [ $E = "1" ]; then
 	CL=bin

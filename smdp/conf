@@ -24,7 +24,7 @@ E=1
 
 RJ=../../rosjava_core/
 
-JAR=build/install/sarsa/lib/*
+JAR=build/install/smdp/lib/*
 
 if [ $E = "1" ]; then
 	CL=bin

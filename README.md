@@ -44,4 +44,4 @@ TODO
 Changelog
 ------------------
 
-- project SARSA renamed to MDP
+- project SARSA renamed to SMDP

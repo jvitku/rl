@@ -62,13 +62,13 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		System.out.println(me+"initializing ROS Node IO");
 
 		this.registerSimulatorCommunication(connectedNode); // listen to hard/soft resets etc..
-		//this.buildProsperityPublisher(connectedNode);//TODO
+		this.buildProsperityPublisher(connectedNode);		// output for Prosperity value(s)
 		this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
 
 		super.fullName = super.getFullName(connectedNode);
-
 		System.out.println(me+"Node configured and ready now!");
+
 	}
 
 	/**
@@ -80,7 +80,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		this.registerProsperityObserver();
 
 		/*
-		 * //TODO: implement some file logging
+		 * //TODO: implement some file logging in the observer.asm.stats/visualization
 		 *  
 		// initialize the visualizer
 		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
@@ -150,7 +150,6 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		// this forces the agent to use only greedy ASM when importance is 1 
 		//((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(0);
 	}
-
 
 	/**
 	 * This method is called by the dataSubscriber when a new ROS 

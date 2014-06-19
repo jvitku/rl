@@ -1,11 +1,13 @@
-package org.hanns.rl.discrete.ros.asm;
+package org.hanns.rl.discrete.ros.asm.impl;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
+import org.hanns.rl.discrete.ros.asm.AbstractASM;
+import org.hanns.rl.discrete.ros.asm.AbstractASMDouble;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 
-public class ImportanceBased extends AbstractASM{
+public class ImportanceBased extends AbstractASMDouble{
 
 	public static final String name = "ImportanceBasedASM";
 
@@ -45,6 +47,23 @@ public class ImportanceBased extends AbstractASM{
 				}
 			}
 		});
+	}
+
+	
+	@Override
+	public boolean isStarted(){
+		if(!super.isStarted())
+			return false;
+		if(config==null)
+			return false;
+		return true;
+	}
+
+
+	@Override
+	protected void registerProsperityObserver() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

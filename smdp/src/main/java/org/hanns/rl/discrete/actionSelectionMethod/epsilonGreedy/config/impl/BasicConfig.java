@@ -18,9 +18,9 @@ public class BasicConfig extends AbstractASMConfig implements BasicEpsilonGeedyC
 	// even in case of maximum importance, the randomization should occur  
 	public static final double DEF_MINEPSILON = 0.1;
 
-
 	private double epsilon = DEF_EPSILON;
 	private boolean explorationEnabled = true;
+	
 	@Override
 	public void setExplorationEnabled(boolean enable) { this.explorationEnabled = enable; }
 

@@ -3,8 +3,6 @@ package org.hanns.rl.discrete.ros.asm;
 import java.util.LinkedList;
 
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
 import org.ros.message.MessageListener;
@@ -124,7 +122,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 
 		System.out.println(me+"parsing parameters");
 
-		// dimensionality of the RL task 
+		// noActions 
 		int noActions = r.getMyInteger(noOutputsConf, DEF_NOOUTPUTS);
 
 		System.out.println(me+"Creating data structures.");
@@ -138,18 +136,13 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		actions = new BasicFinalActionSet(names);
 		actionEncoder = new OneOfNEncoder(actions);
 
-		// TODO check this
-		initializeASM(/*epsilon*/);
+		initializeASM();
 	}
 
-	protected void initializeASM(/*double epsilon*/){
-		ImportanceBasedConfig asmConf = new ImportanceBasedConfig();
-		asm = new ImportanceEpsGreedyDouble(actions, asmConf);
-		asm.getConfig().setExplorationEnabled(true);
-
-		// this forces the agent to use only greedy ASM when importance is 1 
-		//((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(0);
-	}
+	/**
+	 * Create data structures for the ASM, such as ASM and it's configuration.
+	 */
+	protected abstract void initializeASM();
 
 	/**
 	 * This method is called by the dataSubscriber when a new ROS 
@@ -198,11 +191,9 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	 */
 	public void sendAction(float[] data){
 		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
-		//fl.setData(actionEncoder.encode(which));
 		fl.setData(data);
 		dataPublisher.publish(fl);
 	}
-	
 
 	/**
 	 * Register subscribers for the RL configuration (alpha & gamma)

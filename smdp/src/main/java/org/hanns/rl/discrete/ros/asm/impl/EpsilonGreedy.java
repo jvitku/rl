@@ -2,17 +2,11 @@ package org.hanns.rl.discrete.ros.asm.impl;
 
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.BasicEpsilonGeedyConf;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.BasicConfig;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
 import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.EpsilonGreedyDouble;
-import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
-import org.hanns.rl.discrete.actionSelectionMethod.greedy.GreedyDouble;
-import org.hanns.rl.discrete.actions.ActionSetInt;
 import org.hanns.rl.discrete.ros.asm.AbstractASMDouble;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
-
-import ctu.nengoros.util.SL;
 
 /**
  * Implementation of the Epsilon-Greedy ASM as a ROS node.
@@ -25,28 +19,33 @@ public class EpsilonGreedy extends AbstractASMDouble{
 	/**
 	 * Importance based Epsilon-greedy ASM configuration
 	 */
-	public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
+	public static final String epsilonConf="epsilon"; // TODO change minEpsilon too
 	public static final String topicEpsilon = conf+epsilonConf;
 	public static final double DEF_EPSILON=0.6;
 
 	public static final String name = "EpsilonGreedyASM";
 
-	private ImportanceBasedConfig config;
-	
+	private BasicEpsilonGeedyConf config;
+
+	/**
+	 * Initialize this ASM structures
+	 */
 	@Override
-	public void onStart(ConnectedNode connectedNode){
-		super.onStart(connectedNode);
-
-	}
-
-	protected void initializeASM(/*double epsilon*/){
-		config = new ImportanceBasedConfig();
-		asm = new ImportanceEpsGreedyDouble(actions, config);
+	protected void initializeASM(){
+		
+		config = new BasicConfig();
+		asm = new EpsilonGreedyDouble(actions, config);
 		asm.getConfig().setExplorationEnabled(true);
+		
 		// this forces the agent to use only greedy ASM when importance is 1 
 		//((ImportanceEpsGreedyDouble)asm).getConfig().setMinEpsilon(0);
 	}
 
+	@Override
+	protected void registerParameters(){
+		super.registerParameters();
+		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomization in the ASM");
+	}
 	
 	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode) {
@@ -71,21 +70,6 @@ public class EpsilonGreedy extends AbstractASMDouble{
 		});
 	}
 
-	/**
-	 * Instantiate the ProsperityObserver
-	 * //TODO the prosperity
-	@Override
-	protected void registerProsperityObserver(){
-		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
-		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
-		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
-		o = new MCR();
-
-		observers.add(o);
-	}*/
-
-
-	
 	@Override
 	public boolean isStarted(){
 		if(!super.isStarted())
@@ -94,21 +78,6 @@ public class EpsilonGreedy extends AbstractASMDouble{
 			return false;
 		return true;
 	}
-
-
-	@Override
-	protected void registerParameters(){
-		super.registerParameters();
-		paramList.addParam(filterConf, ""+MessageDerivator.DEF_MAXLOOP, "The maximum" +
-				" length (in sim. steps) of the closed loop: action->newState");
-	}
-
-
-	@Override
-	protected void registerProsperityObserver() {
-		// TODO prosperity of the ASM?
-	}
-
 }
 
 

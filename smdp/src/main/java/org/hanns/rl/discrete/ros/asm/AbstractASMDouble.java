@@ -13,15 +13,6 @@ public abstract class AbstractASMDouble extends AbstractASM{
 	protected Double[] tmpData;
 	
 	@Override
-	public boolean isStarted(){
-		if(!super.isStarted())
-			return false;
-		if(asm == null)
-			return false;
-		return true;
-	}
-
-	@Override
 	protected float[] selectActionAndEncode(float[] data) {
 
 		tmpData = new Double[data.length];
@@ -34,5 +25,18 @@ public abstract class AbstractASMDouble extends AbstractASM{
 		float[] send = actionEncoder.encode(selected); 
 		log.info("Encoding this vector: "+SL.toStr(data)+" into this vector: "+send);
 		return send;
+	}
+	
+	/**
+	 * Instantiate the ProsperityObserver
+	 *///TODO the prosperity
+	@Override
+	protected void registerProsperityObserver(){
+		//o = new BinaryCoverageForgettingReward(this.states.getDimensionsSizes());
+		//o = new KnowledgeChange(this.states.getDimensionsSizes(), q);
+		//o = new ForgettingCoverageChangeReward(this.states.getDimensionsSizes(),q);
+		//o = new MCR();
+
+		//observers.add(o);
 	}
 }

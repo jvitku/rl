@@ -148,16 +148,23 @@ After launching the node:
 
 * refactoring
 
-	- restructuralized the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda)
-	- project SARSA renamed to MDP
+	- restructuralized the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda) old SRPs should be backwards compatible (package `ros.srp.*`) 
+	- project SARSA renamed to SMDP
 	- all unit tests work
 
 
 ## TODO
 
+* separating the AMS and RL in progress
+
+	* Currently working on ASMs
+	
+		* TODO: prosperity observer
+		* unit tests
+
 * refactoring 
 
-	* update all python scripts...
+	* check all python scripts...
 	* update launch example in the runner script
 
 * add repelors (allow reward values to be < 0)

@@ -1,0 +1,44 @@
+// @author Jaroslav Vitku
+
+//task wrapper(type: Wrapper) {
+//	gradleVersion      = '1.7'
+//}
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+mainClassName       = 'org.ros.RosRun'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+// This configures the project to search for Maven libraries (rosjava: bootstrap.. and their dependencies)
+repositories {
+	mavenCentral()
+	mavenLocal()
+
+	maven {
+		url 'http://robotbrains.hideho.org/nexus/content/groups/ros-public'
+		//		url 'http://repo1.maven.org/maven2/'
+	}
+}
+
+// Define the version and name of my stack (ROS convention)
+version             = '0.0.5-SNAPSHOT'
+group               = 'ctu.hanns.rl'
+
+// This project depends on compilation of rosjava_core
+dependencies {
+    
+    compile fileTree(dir: 'lib', include: '**/*.jar')
+ 	runtime fileTree(dir: 'lib', include: '**/*.jar')
+ 	testCompile fileTree(dir: 'lib', include: '**/*.jar')
+ 	
+	compile 'ros.rosjava_core:rosjava:0.0.0-SNAPSHOT'
+	testCompile 'junit:junit:4.10'
+	
+	compile 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT' 
+	runtime 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT' 
+    testCompile 'ctu.nengoros:jroscore:0.0.11-SNAPSHOT'
+}
+

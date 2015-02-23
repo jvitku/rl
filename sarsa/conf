@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# The same as installed script, starts the org.ros.RosRun [nodeName], but this one links everything from source.
+#
+# Requirements:
+#   -relative path to rosjava_core is: ../../ so script can be launched only from here for now
+#   -run ./gradlew installApp from here
+#       this ensures that all required jar files (other than rosjava and this project) will be in build/install..... directory
+#   -pass max 5 command line arguments, where the first one is name of your ROS node
+#   
+# author Jaroslav Vitku [vitkujar@fel.cvut.cz]
+#
+# 
+# E: choose between gradle:0 and eclipse:1
+
+if [ "$1" == "-h" ]; then
+	echo ""
+	echo "This script starts ROS node which publishes configuraiton of RL Q(lambda) RL Node"
+	echo ""
+	exit
+fi
+
+E=1
+
+RJ=../../rosjava_core/
+
+JAR=build/install/sarsa/lib/*
+
+if [ $E = "1" ]; then
+	CL=bin
+else
+	CL=build/classes
+fi
+
+
+ROSJAVA=$RJ/rosjava/$CL/:$RJ/apache_xmlrpc_client/$CL/:$RJ/apache_xmlrpc_common/$CL/:$RJ/apache_xmlrpc_server/$CL/:$RJ/rosjava_bootstrap/$CL/:$RJ/rosjava_geometry/$CL/:$RJ/rosjava_messages/$CL/
+
+
+#echo $CL:$ROSJAVA:$JAR
+
+#java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun org.hanns.demonodes.time.pubsub.Sub $0 $1 $2 $3 $4
+
+java -cp $CL:$ROSJAVA:$JAR org.ros.RosRun "org.hanns.rl.discrete.ros.testnodes.QLambdaConfigurator"

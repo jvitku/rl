@@ -1,4 +1,4 @@
-package org.hanns.rl.discrete.ros.srp.sarsa.config;
+package org.hanns.rl.discrete.ros.srp.config;
 
 import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
 import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;

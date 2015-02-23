@@ -144,7 +144,7 @@ After launching the node:
 
 ## Changelog
 
-* new branch `feature-separate-asm`, now main of the code is copied into the `smdp` project, but the `sarsa` project will stay unchanged for backwards compatibility 
+* new branch `feature-separate-asm`, now main of the code is copied into the `smdp` project, the old sources remain in the `mdp` project for backwards compatibility 
 
 * added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
 

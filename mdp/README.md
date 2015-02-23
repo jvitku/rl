@@ -157,6 +157,8 @@ After launching the node:
 
 ## TODO
 
+* the command `./runner org.hanns.rl.discrete.ros.sarsa.QLambda __name:=nodeName /use_sim_time:=true _sampleCount:=5` throws exception (caused by the absolute `/use_sim_time` parameter)!
+
 * refactoring 
 
 	* update all python scripts...

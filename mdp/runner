@@ -17,8 +17,10 @@ if [ "$#" -eq 0 ]; then
 	echo ""
 	echo "This script starts ROS node from class files produced by Eclipse (rosjava_core & nodes are from class files)"
 	echo "To start ROS node manually, run e.g.:\n\tjava -cp bin/:../../nengo/lib-rosjava/* org.ros.RosRun org.hanns.demonodes.time.pubsub.Sub [opt.args]\n"
-	echo "Example script usage 1:\n\t./runner org.hanns.demonodes.time.pubsub.Pub"
-	echo "Example script usage 2:\n\t./runner org.hanns.demonodes.time.pubsub.Pub __name:=nodeName /use_sim_time:=true"
+	echo "Example script usage 1:\n\t./runner org.hanns.rl.discrete.ros.testnodes.GridWorldNode"
+	echo "Example script usage 2:\n\t./runner org.hanns.rl.discrete.ros.sarsa.QLambda __name:=nodeName use_sim_time:=true _sampleCount:=5"
+	echo ""
+	echo "For list of all parameters, run a given node, parameters should be printed into the command line"
 	echo ""
 	exit
 fi

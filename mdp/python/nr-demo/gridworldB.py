@@ -18,7 +18,7 @@ import gridworld
 net=nef.Network('Demo of SARSA RL module interacting with the simulator of discrete 2D world with obstacles and rewards')
 net.add_to_nengo()  
 
-rl = rl_sarsa.qlambdaASMConfigured("RL",net, 2 ,4, 30)   # 2 state variables, 4 actions, xsize=30
+rl = rl_sarsa.qlambdaASMConfigured("RL",net, noStateVars=2, noActions=4, noValues=30)   # 2 state variables, 4 actions, xsize=30
 
 # TODO this seems not to work now..
 world = gridworld.benchmarkA("map_30x30","BenchmarkGridWorldNodeB");

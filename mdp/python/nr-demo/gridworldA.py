@@ -21,7 +21,7 @@ net.add_to_nengo()
 #RosUtils.setAutorun(False)     # Do we want to autorun roscore and rxgraph? (tru by default)
 #RosUtils.prefferJroscore(True)  # preffer jroscore before the roscore? 
 
-rl = rl_sarsa.qlambdaASMConfigured("RL",net, 2 ,4, 30)   # 2 state variables, 4 actions, xsize=30
+rl = rl_sarsa.qlambdaASMConfigured("RL",net, noStateVars=2, noActions=4, noValues=30)   # 2 state variables, 4 actions, xsize=30
 
 world = gridworld.benchmarkA("map_30x30","BenchmarkGridWorldNodeA");
 net.add(world)

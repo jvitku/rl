@@ -40,7 +40,7 @@ public class BasicFinalStateSet implements FInalStateSet{
 			}
 		}
 	}
-
+	
 	@Override
 	public int getNumVariables() { return vars.length; }
 

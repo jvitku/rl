@@ -62,7 +62,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward", prospL
 	module.createEncoder(QLambda.topicImportance,"float",1);					# default value is 0
 
 	# QLambdaCoverageReward classname => float[]{prosperity, coverage, reward/step}
-	module.createDecoder(QLambda.topicProsperity,"float", prospLen);			
+	module.createDecoder(QLambda.topicProsperity, "float", prospLen);			
 
 	# create data IO
 	module.createDecoder(QLambda.topicDataOut, "float", noActions)  	# decode actions
@@ -90,7 +90,7 @@ classname="org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward", prospL
 	:returns: NeuralModule that is added into the net, the node represents the QLambda ROS node
 	"""
 	# build the node
-	mod = qlambdaASM(name, noStateVars, noActions, noValues, logPeriod, maxDelay, classname, synchronous)
+	mod = qlambdaASM(name, noStateVars, noActions, noValues, logPeriod, maxDelay, classname, prospLen, synchronous)
 	net.add(mod)
 
 	# define the configuration inputs

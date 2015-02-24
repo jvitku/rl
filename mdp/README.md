@@ -157,6 +157,8 @@ After launching the node:
 
 ## TODO
 
+* sending the `NOOP` action to the `nengo` simulator causes that the node is not ready (after disabling the `NOOP` all is OK)
+
 * the command `./runner org.hanns.rl.discrete.ros.sarsa.QLambda __name:=nodeName /use_sim_time:=true _sampleCount:=5` throws exception (caused by the absolute `/use_sim_time` parameter)!
 
 * refactoring 

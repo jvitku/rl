@@ -55,11 +55,14 @@ public class QLambda extends AbstractQLambda{
 		// check whether the message should be passed through
 		boolean shouldPass = filter.newMessageShouldBePassed(data);
 
+		
 		// if the message should not be processed, send NOOP and wait for new state
+		// TODO the node is not ready after sending the NOOP for the Nengo simulator!
 		if(!shouldPass){
 			// publish the NOOP 
 			std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
-			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
+			fl.setData(actionEncoder.encode(ActionSet.NOOP));
+			System.out.println("NOOP");
 			dataPublisher.publish(fl);
 			return;
 		}
@@ -71,6 +74,7 @@ public class QLambda extends AbstractQLambda{
 		for(int i=0; i<state.length; i++){
 			state[i] = data[i+1];
 		}
+		System.out.println("SARSA step!");
 		// perform the SARSA step
 		performSARSAstep(reward, state);		
 	}

@@ -144,6 +144,10 @@ After launching the node:
 
 ## Changelog
 
+* fixed bug in the synchronization in the simulator, sync problems should be gone
+
+* all python scripts updated, including the GUI template
+	
 * sending the `NOOP` action to the `nengo` simulator caused that the node is not ready (now the node publishes prosperity also during the `NOOP`)
 
 * new branch `feature-separate-asm`, now main of the code is copied into the `smdp` project, the old sources remain in the `mdp` project for backwards compatibility 
@@ -159,14 +163,7 @@ After launching the node:
 
 ## TODO
 
-
-
 * the command `./runner org.hanns.rl.discrete.ros.sarsa.QLambda __name:=nodeName /use_sim_time:=true _sampleCount:=5` throws exception (caused by the absolute `/use_sim_time` parameter)!
-
-* refactoring 
-
-	* update all python scripts...
-	* update launch example in the runner script
 
 * add repelors (allow reward values to be < 0)
 
@@ -174,7 +171,6 @@ After launching the node:
 	
 		* it the node sends mostly only one action (sometimes action is changed or two actions periodically change)
 		
-* rl_sarsa does not work in the synchronous mode! Some component is not ready at all. Also: e.g. on Macbook two models have problems with synchronization, while on stronger computer everything is OK !!! 
 * Add the config input (to the QLambda) specifying sample size (0,1] for sampling state variables
 * Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda
 * Reinforcement and the state description (data inputs to the RL module) should be in one message (potentially asynchronous comm.) but these could be splited in the Nengo interface into two inputs (also on other places)
@@ -184,5 +180,3 @@ After launching the node:
 * Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)
-
-

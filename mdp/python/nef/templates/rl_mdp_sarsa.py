@@ -24,6 +24,11 @@ icon='rl_sarsa.png'
 # parameters for initializing the node
 params=[
 ('name','Select name for the RL SARSA',str),
+('noStateVars','No. of state variables',int),
+('sampleCount','Samplling: no. of values of state variables - all the same',int),
+('noActions','No. of allowed acitons',int),
+('logPeriod','Log info each n-th step',int),
+('maxDelay','Max length of the action-state loop in steps',int),
 ('independent','Can be group pndependent? (pushed into namespace?) select true',bool)
 ]
 
@@ -37,21 +42,28 @@ def test_params(net,p):
 
 
 def make(net,name='NeuralModule which implements RL SARSA algorithm', 
-independent=True, useQuick=True):
+independent=True, useQuick=True, prospLen=3, noStateVars=2, noActions=4, sampleCount=30,logPeriod=100, maxDelay=1, synchronous=True):
 
-    prospLen = 3;
-    command = [classname];
-
-    # create group with a name
-    g = NodeGroup(name, independent);    	# create independent group called..
-    g.addNode(command, "rl_sarsa", "java"); # start java node
-    module = NeuralModule(name+'_QLambda', g);
+    # full name of the reosjava node to be started
+    classname = "org.hanns.rl.discrete.ros.sarsa.config.QlambdaCoverageReward";
+    
+    #command to launch and configure the RL rosjava node
+    command = [classname, '_'+QLambda.noInputsConf+ ':=' + str(noStateVars),
+    '_'+QLambda.noOutputsConf+':='+str(noActions),
+    '_'+QLambda.sampleCountConf+':='+str(sampleCount),
+    '_'+QLambda.logPeriodConf+':='+str(logPeriod),
+    '_'+QLambda.filterConf+':='+str(maxDelay)];
+	
+    # create a group with a given name
+    g = NodeGroup(name, independent);    	
+    g.addNode(command, "rl_sarsa", "java");     # start and configure the rosjava node
+    module = NeuralModule(name+'_QLambda', g);  # create the neural module representing the node
     
     # create config IO
     module.createConfigEncoder(QLambda.topicAlpha,"float",QLambda.DEF_ALPHA); 	# alpha config input, def. value is DEF_ALPHA
     module.createConfigEncoder(QLambda.topicGamma,"float",QLambda.DEF_GAMMA);
     module.createConfigEncoder(QLambda.topicLambda,"float",QLambda.DEF_LAMBDA);
-    module.createEncoder(QLambda.topicImportance,"float",1);					# default value is 0
+    module.createEncoder(QLambda.topicImportance,"float", 1);					# default value is 0
     
     # QLambdaCoverageReward classname => float[]{prosperity, coverage, reward/step}
     module.createDecoder(QLambda.topicProsperity, "float", prospLen);			

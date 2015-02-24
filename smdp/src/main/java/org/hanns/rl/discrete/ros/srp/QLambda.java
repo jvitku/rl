@@ -62,6 +62,7 @@ public class QLambda extends AbstractQLambda{
 			std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
 			fl.setData(actionEncoder.encode(ActionSet.NOOP));								
 			dataPublisher.publish(fl);
+			this.publishProsperity();	// bug fix
 			return;
 		}
 

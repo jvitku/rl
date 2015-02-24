@@ -144,6 +144,8 @@ After launching the node:
 
 ## Changelog
 
+* sending the `NOOP` action to the `nengo` simulator caused that the node is not ready (now the node publishes prosperity also during the `NOOP`)
+
 * new branch `feature-separate-asm`, now main of the code is copied into the `smdp` project, the old sources remain in the `mdp` project for backwards compatibility 
 
 * added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
@@ -157,7 +159,7 @@ After launching the node:
 
 ## TODO
 
-* sending the `NOOP` action to the `nengo` simulator causes that the node is not ready (after disabling the `NOOP` all is OK)
+
 
 * the command `./runner org.hanns.rl.discrete.ros.sarsa.QLambda __name:=nodeName /use_sim_time:=true _sampleCount:=5` throws exception (caused by the absolute `/use_sim_time` parameter)!
 

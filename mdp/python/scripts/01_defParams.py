@@ -39,7 +39,7 @@ def buildSimulation(alpha, gamma, lambdaa, importance, expName='test0'):
 	net.add_to_nengo()  
 
 	rl = rl_sarsa.qlambdaASM("RL", noStateVars=2, noActions=4, noValues=20, logPeriod=2000,
-	classname="org.hanns.rl.discrete.ros.sarsa.QLambda", prospLen=1, maxDelay=12)
+	classname="org.hanns.rl.discrete.ros.sarsa.QLambda", prospLen=1)
 	world = gridworld.benchmarkA("map_20x20","BenchmarkGridWorldNodeC",10000);
 	net.add(rl)									    # place them into the network
 	net.add(world)

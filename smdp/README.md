@@ -53,6 +53,8 @@ The start scripts are prepared in the `rl/sarsa` folder which simplify launching
 
 The following should be started from the `rl/sarsa` folder for successful running the demo:
 
+TODO the GridWorld moved to the project environments/gridworld
+
 	jroscore
 	./conf 		# RL algorithm configuration
 	./map		# simple grid world simulator
@@ -144,14 +146,15 @@ After launching the node:
 
 ## Changelog
 
-* added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
+* deleted all old GridWorld and benchmark files, `GridWorldNode` is now in the project `environments/gridworld`
+
+* added on Observer which logs qMatrix into file @see `org.hanns.rl.discrete.observer.qMatrix.stats`
 
 * refactoring
 
 	- restructuralized the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda) old SRPs should be backwards compatible (package `ros.srp.*`) 
 	- project SARSA renamed to SMDP
 	- all unit tests work
-
 
 ## TODO
 
@@ -166,8 +169,6 @@ After launching the node:
 
 	* check all python scripts...
 	* update launch example in the runner script
-
-* add repelors (allow reward values to be < 0)
 
 * rl_sarsa node (communication??) sometimes somehow crashes and:
 	

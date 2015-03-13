@@ -174,13 +174,10 @@ After launching the node:
 	
 		* it the node sends mostly only one action (sometimes action is changed or two actions periodically change)
 		
-* rl_sarsa does not work in the synchronous mode! Some component is not ready at all. Also: e.g. on Macbook two models have problems with synchronization, while on stronger computer everything is OK !!! 
-* Add the config input (to the QLambda) specifying sample size (0,1] for sampling state variables
 * Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda
 * Reinforcement and the state description (data inputs to the RL module) should be in one message (potentially asynchronous comm.) but these could be splited in the Nengo interface into two inputs (also on other places)
 * Make some generally usable way how to add observer (e.g. writer) to a ROS node
 * Define the Observer interface for the GridWorldNode, call observers.observe() each step..
-* Implement read/save of the GridWorldMap (currently, each map has own class..)
 * Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)

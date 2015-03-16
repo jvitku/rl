@@ -53,6 +53,8 @@ The start scripts are prepared in the `rl/sarsa` folder which simplify launching
 
 The following should be started from the `rl/sarsa` folder for successful running the demo:
 
+TODO the GridWorld moved to the project environments/gridworld
+
 	jroscore
 	./conf 		# RL algorithm configuration
 	./map		# simple grid world simulator
@@ -144,14 +146,15 @@ After launching the node:
 
 ## Changelog
 
-* added on Observer which logs qMatrix into file @see org.hanns.rl.discrete.observer.qMatrix.stats
+* deleted all old GridWorld and benchmark files, `GridWorldNode` is now in the project `environments/gridworld`
+
+* added on Observer which logs qMatrix into file @see `org.hanns.rl.discrete.observer.qMatrix.stats`
 
 * refactoring
 
 	- restructuralized the package hierarchy (SARSA vs Q-Learning vs SARSA-Lambda vs Q-Lambda) old SRPs should be backwards compatible (package `ros.srp.*`) 
 	- project SARSA renamed to SMDP
 	- all unit tests work
-
 
 ## TODO
 
@@ -167,19 +170,14 @@ After launching the node:
 	* check all python scripts...
 	* update launch example in the runner script
 
-* add repelors (allow reward values to be < 0)
-
 * rl_sarsa node (communication??) sometimes somehow crashes and:
 	
 		* it the node sends mostly only one action (sometimes action is changed or two actions periodically change)
 		
-* rl_sarsa does not work in the synchronous mode! Some component is not ready at all. Also: e.g. on Macbook two models have problems with synchronization, while on stronger computer everything is OK !!! 
-* Add the config input (to the QLambda) specifying sample size (0,1] for sampling state variables
 * Add the ability to dynamically add Prosperity observer from jython, thus ditch the need of subclassing of QLambda
 * Reinforcement and the state description (data inputs to the RL module) should be in one message (potentially asynchronous comm.) but these could be splited in the Nengo interface into two inputs (also on other places)
 * Make some generally usable way how to add observer (e.g. writer) to a ROS node
 * Define the Observer interface for the GridWorldNode, call observers.observe() each step..
-* Implement read/save of the GridWorldMap (currently, each map has own class..)
 * Unit tests: fail after predefined time? If one of tested nodes ends with an exception, the other waits indefinitely.
 * Implement Q-matrix which is dynamically allocated
 * Add also the NOOP action everywhere (index is -1)

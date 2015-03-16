@@ -29,6 +29,12 @@ group               = 'ctu.hanns.rl'
 
 // This project depends on compilation of rosjava_core
 dependencies {
+
+    // statesactions project defines states and action definitions used by the environments
+	compile project(':environments:statesactions')
+	runtime project(':environments:statesactions')
+    testCompile project(':environments:statesactions')
+
     
     compile fileTree(dir: 'lib', include: '**/*.jar')
  	runtime fileTree(dir: 'lib', include: '**/*.jar')

@@ -44,4 +44,6 @@ TODO
 Changelog
 ------------------
 
-- project SARSA renamed to SMDP
+- new project SMDP will hold RL algorithm and action selection method as separated nodes (some synchronization challenges)
+- project SARSA renamed to MDP
+

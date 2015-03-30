@@ -146,7 +146,7 @@ After launching the node:
 
 ## Changelog
 
-* working on test asm/AsmRosCommunicationTests.java, TODO: the communication does not work now.
+* Greedy and EpsilonGreedy tested, TODO: test the ImportanceBased ones
 
 * several test files renamed so that they have not java type and do not cause errors, TODO use them for testing QLearning
 

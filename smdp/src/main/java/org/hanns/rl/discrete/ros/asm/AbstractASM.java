@@ -65,7 +65,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		this.buildDataIO(connectedNode);
 
 		super.fullName = super.getFullName(connectedNode);
-		System.out.println(me+"Node configured and ready now!");
+		System.out.println(me+"Node configured and ready now! Running: "+this.isStarted());
 
 	}
 

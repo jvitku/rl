@@ -3,20 +3,19 @@ package org.hanns.rl.discrete.ros.testnodes;
 import java.util.LinkedList;
 import java.util.Random;
 
-import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
-import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
+import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
-
 import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
 import ctu.nengoros.network.node.observer.Observer;
 import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
+
 
 /**
  * Should test all the 3 ASM nodes. TODO implement this.
@@ -28,16 +27,12 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 
 	public static final String name = "AsmTestNode";
 
-	protected ActionSelectionMethod<Double> asm;// action selection methods
-
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
 
-	protected BasicFinalStateSet states;		// state variables (each has encoder)
-
 	protected int step = 0;
 
-	protected ProsperityObserver o;						// observes the prosperity of node
+	protected ProsperityObserver o;				// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
 
 	protected final String randomizationConf = "Randomize";
@@ -48,6 +43,7 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	public int noCorrect, noIncorrect;
 	private int bestPrevActionInd;
 	public boolean dataErrorFound = false; 
+	private boolean dataExchanged = false;
 	
 	private boolean simulationPaused = false;
 	
@@ -75,7 +71,25 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 		noIncorrect=0;
 		this.bestPrevActionInd = 0;
 		
-		System.out.println(me+"Node configured and ready now!");
+		System.out.println(me+"Node configured and ready now! Running: "+this.isStarted());
+
+		this.waitForConnections(connectedNode);
+	}
+	
+	protected void waitForConnections(ConnectedNode connectedNode){
+		connectedNode.executeCancellableLoop(new CancellableLoop() {
+			@Override
+			protected void setup() {}
+			@Override
+			protected void loop() throws InterruptedException {
+				
+				Thread.sleep(1000);
+				if(!dataExchanged){	
+					log.info(me+"No ASM node responded, publishing random action utilities of length "+noActions);
+					generateUtilsAndSend();
+				}
+			}
+		});
 	}
 
 	/**
@@ -124,6 +138,8 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	 * Check the performance of the node
 	 */
 	protected void onNewDataReceived(float[] data){
+		
+		this.dataExchanged = true;
 	
 		// check the response from the ASM
 		int selected = this.getSelectedActionInd(data);
@@ -190,10 +206,10 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	 */
 	protected void buildDataIO(ConnectedNode connectedNode){
 		// publish vector of action utilities 
-		dataPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
+		dataPublisher =connectedNode.newPublisher(topicDataIn, std_msgs.Float32MultiArray._TYPE);
 
 		Subscriber<std_msgs.Float32MultiArray> dataSub = 
-				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
+				connectedNode.newSubscriber(topicDataOut, std_msgs.Float32MultiArray._TYPE);
 
 		// check the 1ofN response, either randomized or returning the index of max action
 		dataSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
@@ -205,8 +221,9 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 				}
 				
 				float[] data = message.getData();
+				
 				if(data.length != actions.getNumOfActions())
-					log.error(me+":"+topicDataIn+": Received vector of actions of " +
+					log.error(me+":"+topicDataOut+": Received vector of actions of " +
 							"unexpected length of"+data.length+"! Expected: "+
 							(actions.getNumOfActions()));
 				else{
@@ -240,13 +257,9 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 
 	@Override
 	public boolean isStarted() {
-		if(log==null)
-			return false;
 		if(dataPublisher==null)
 			return false;
-		if(asm==null)
-			return false;
-		if(observers==null)
+		if(log==null)
 			return false;
 		return true;
 	}

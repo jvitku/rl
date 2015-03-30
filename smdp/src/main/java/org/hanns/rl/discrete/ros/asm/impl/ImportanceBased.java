@@ -10,16 +10,14 @@ import org.ros.node.topic.Subscriber;
 public class ImportanceBased extends AbstractASMDouble{
 
 	public static final String name = "ImportanceBasedASM";
-
 	private ImportanceBasedConfig config;
 
 	/**
-	 * Epsilon..
+	 * Min epsilon
 	 */
-	// TODO: determine what is with the Min Epsilon here!
-	//public static final String epsilonConf="epsilon"; // TOOD change minEpsilon
-	//public static final String topicEpsilon = conf+epsilonConf;
-	//public static final double DEF_EPSILON=0.6;
+	public static final String minEpsilonConf="minEpsilon"; 
+	public static final String topicMinEpsilon = conf+minEpsilonConf;
+	public static final double DEF_MIN_EPSILON=0.1;
 
 	/**
 	 * Importance affects the current value of epsilon: higher action importance, smaller eps.
@@ -47,13 +45,25 @@ public class ImportanceBased extends AbstractASMDouble{
 		super.registerParameters();
 		paramList.addParam(importanceConf, ""+DEF_IMPORTANCE,"The higher importance, "
 				+ "the lower the randomization");
+		paramList.addParam(minEpsilonConf, ""+DEF_MIN_EPSILON,"Minimum probability of randomization, "
+				+ "in case that importance=1");
 	}
+	
+	@Override
+	protected void parseParameters(ConnectedNode cn){
+		super.parseParameters(cn);
+		
+		float minEpsilon = r.getMyDouble(minEpsilonConf, DEF_MIN_EPSILON).floatValue();
+		((ImportanceBasedConfig)config).setMinEpsilon(minEpsilon);
+	}
+	
 
 	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode){
 		/**
 		 * Importance parameter
 		 */
+		
 		Subscriber<std_msgs.Float32MultiArray> importenceSub = 
 				connectedNode.newSubscriber(topicImportance, std_msgs.Float32MultiArray._TYPE);
 
@@ -69,6 +79,7 @@ public class ImportanceBased extends AbstractASMDouble{
 							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
 
 					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
+					System.out.println("------------ importance changed to the: "+data[0]);
 				}
 			}
 		});

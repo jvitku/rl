@@ -48,6 +48,7 @@ public class EpsilonGreedy extends AbstractASMDouble{
 		paramList.addParam(epsilonConf, ""+DEF_EPSILON,"Probability of randomization in the ASM");
 	}
 	
+
 	@Override
 	protected void buildASMSumbscribers(ConnectedNode connectedNode) {
 

@@ -146,7 +146,7 @@ After launching the node:
 
 ## Changelog
 
-* Greedy and EpsilonGreedy tested, TODO: test the ImportanceBased ones
+* Greedy, EpsilonGreedy and ImportanceBased ROS-ASMs tested
 
 * several test files renamed so that they have not java type and do not cause errors, TODO use them for testing QLearning
 
@@ -166,8 +166,7 @@ After launching the node:
 
 	* Currently working on ASMs
 	
-		* TODO: prosperity observer
-		* unit tests
+		* TODO: prosperity observer for ASMs?
 
 * refactoring 
 

@@ -5,11 +5,15 @@ import java.util.Random;
 
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
+import org.hanns.rl.discrete.ros.asm.impl.ImportanceBased;
 import org.ros.concurrent.CancellableLoop;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
+
+import std_msgs.Float32MultiArray;
 import ctu.nengoros.network.node.AbstractConfigurableHannsNode;
 import ctu.nengoros.network.node.infrastructure.rosparam.impl.PrivateRosparam;
 import ctu.nengoros.network.node.infrastructure.rosparam.manager.ParamList;
@@ -47,6 +51,9 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	
 	private boolean simulationPaused = false;
 	
+	private Publisher <std_msgs.Float32MultiArray> importancePublisher;	// publishes the current value of importance
+	
+	
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
@@ -64,6 +71,7 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 
 		this.registerSimulatorCommunication(connectedNode);
 		this.buildDataIO(connectedNode);
+		this.buildConfigSubscribers(connectedNode);
 
 		super.fullName = super.getFullName(connectedNode);
 		
@@ -240,7 +248,18 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	 * @param connectedNode
 	 */
 	@Override
-	protected void buildConfigSubscribers(ConnectedNode connectedNode){}
+	protected void buildConfigSubscribers(ConnectedNode connectedNode){
+		System.out.println("Tester: building the config publisher to the topoic: "+ImportanceBased.topicImportance);
+		importancePublisher =connectedNode.newPublisher(ImportanceBased.topicImportance, std_msgs.Float32MultiArray._TYPE);
+	}
+	
+	public void setImportance(float importance){
+		float data[] = new float[]{importance};
+		
+		Float32MultiArray f = importancePublisher.newMessage();
+		f.setData(data);
+		importancePublisher.publish(f);
+	}
 
 
 	/**
@@ -260,6 +279,8 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 		if(dataPublisher==null)
 			return false;
 		if(log==null)
+			return false;
+		if(importancePublisher==null)
 			return false;
 		return true;
 	}
@@ -283,10 +304,17 @@ public class AsmTestNode extends AbstractConfigurableHannsNode{
 	}
 
 	@Override
-	public void hardReset(boolean arg0) {}
+	public void hardReset(boolean arg0){
+		this.softReset(arg0);
+	}
 
 	@Override
-	public void softReset(boolean arg0) {}
+	public void softReset(boolean arg0) {
+		noIncorrect = 0;
+		noCorrect = 0;
+		dataExchanged = false;
+		dataErrorFound = false;
+	}
 
 	@Override
 	public float getProsperity() { return 0; }

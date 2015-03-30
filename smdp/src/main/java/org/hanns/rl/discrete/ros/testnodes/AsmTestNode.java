@@ -1,10 +1,26 @@
-package org.hanns.rl.discrete.ros.asm;
+package org.hanns.rl.discrete.ros.testnodes;
 
 import java.util.LinkedList;
 
+import org.hanns.rl.common.exceptions.MessageFormatException;
 import org.hanns.rl.discrete.actionSelectionMethod.ActionSelectionMethod;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.config.impl.ImportanceBasedConfig;
+import org.hanns.rl.discrete.actionSelectionMethod.epsilonGreedy.impl.ImportanceEpsGreedyDouble;
+import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.actions.impl.BasicFinalActionSet;
 import org.hanns.rl.discrete.actions.impl.OneOfNEncoder;
+import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.AbstractFinalModelNStepLambda;
+import org.hanns.rl.discrete.learningAlgorithm.lambda.impl.NStepQLambdaConfImpl;
+import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
+import org.hanns.rl.discrete.learningAlgorithm.qLearning.FinalModelQLambda;
+import org.hanns.rl.discrete.observer.SarsaObserver;
+import org.hanns.rl.discrete.observer.qMatrix.visualizaiton.FinalStateSpaceVisDouble;
+import org.hanns.rl.discrete.observer.stats.combined.KnowledgeCoverageReward;
+import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
+import org.hanns.rl.discrete.ros.learning.qLearning.AbstractQLambda;
+import org.hanns.rl.discrete.states.impl.BasicFinalStateSet;
+import org.hanns.rl.discrete.states.impl.BasicStateVariable;
+import org.hanns.rl.discrete.states.impl.BasicVariableEncoder;
 import org.ros.message.MessageListener;
 import org.ros.namespace.GraphName;
 import org.ros.node.ConnectedNode;
@@ -18,55 +34,62 @@ import ctu.nengoros.network.node.observer.stats.ProsperityObserver;
 import ctu.nengoros.util.SL;
 
 /**
- * Abstract ROS Node implementing the Action Selection Method (ASM). The ASM typically selects one action based on its utilities.
- * The ASM node typically sums utility values for particular actions from more sources. The computation of this node is as follows:  
- * <ul> 
- * <li>Utilities of actions are received as vector of real-valued scalars (each scalar represents one action utility).</li>
- * <li>The result of ASM computation is represented as transformation of this vector to another one.</li>
- * <li>Typically, the result of transformation will be the 1ofN code, representing one selected action with the scalar value of 1.</ul>
- * <li>The transformation is computed at each change of input values</ul>
- * </ul>
+ * Should test all the 3 ASM nodes. TODO implement this.
  * 
  * @author Jaroslav Vitku
  *
  */
-public abstract class AbstractASM extends AbstractConfigurableHannsNode{
+public class AsmTestNode  extends AbstractConfigurableHannsNode{
 
-	public static final String name = "AbstractASM";
+	public static final String name = "AsmTestNode";
 
 	protected ActionSelectionMethod<Double> asm;// action selection methods
 
 	protected OneOfNEncoder actionEncoder;		// encode actions to ROS
 	protected BasicFinalActionSet actions;		// set of agents actions
 
+	protected BasicFinalStateSet states;		// state variables (each has encoder)
+
 	protected int step = 0;
 
 	protected ProsperityObserver o;						// observes the prosperity of node
 	protected LinkedList<Observer> observers;	// logging, visualization & observing data
 
+	protected final String randomizationConf = "Randomize";
+	protected final boolean DEF_RANDOMIZATION = false;
+	protected boolean rand = DEF_RANDOMIZATION;
+	
+	
+	private int noCorrect, noIncorrect;
+	private int bestPrevActionInd;
+	
 	@Override
 	public GraphName getDefaultNodeName() { return GraphName.of(name); }
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
 		log = connectedNode.getLog();
-		log.info(me+"started, parsing parameters");
 
+		log.info(me+"started, parsing parameters");
 		this.registerParameters();
 		paramList.printParams();
 		this.parseParameters(connectedNode);
-		//this.registerObservers(); // TODO
+		this.registerObservers();
 
 		System.out.println(me+"initializing ROS Node IO");
 
-		this.registerSimulatorCommunication(connectedNode); // listen to hard/soft resets etc..
-		this.buildProsperityPublisher(connectedNode);		// output for Prosperity value(s)
-		this.buildConfigSubscribers(connectedNode);
+		this.registerSimulatorCommunication(connectedNode);
+		//this.buildProsperityPublisher(connectedNode);
+		//this.buildConfigSubscribers(connectedNode);
 		this.buildDataIO(connectedNode);
 
 		super.fullName = super.getFullName(connectedNode);
+		
+		noCorrect=0;
+		noIncorrect=0;
+		this.bestPrevActionInd = 0;
+		
 		System.out.println(me+"Node configured and ready now!");
-
 	}
 
 	/**
@@ -76,11 +99,8 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		observers = new LinkedList<Observer>();
 
 		this.registerProsperityObserver();
-
+		
 		/*
-		 * //TODO: implement some file logging in the observer.asm.stats/visualization
-		 *  
-		// initialize the visualizer
 		FinalStateSpaceVisDouble visualization = new FinalStateSpaceVisDouble(
 				states.getDimensionsSizes(), actions.getNumOfActions(), q);
 
@@ -89,42 +109,56 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		visualization.setActionRemapping(new String[]{"<",">","^","v"});
 
 		observers.add(visualization);
+
 		// configure observers to log/visualize in as selected in the node
 		for(int i=0; i<observers.size(); i++){
 			System.out.println("willLogToFile "+this.logToFile+ " period: "+this.logPeriod+
 					" "+observers.get(i).getName());
 			observers.get(i).setShouldVis(this.logPeriod>=0);
 			observers.get(i).setVisPeriod(this.logPeriod);
-		}
-		 */
+		}*/
 	}
+	
+	/**
+	 * Instatntiate the Observer {@link #o} to the resider one. 
+	 */
+	protected void registerProsperityObserver(){}
 
 	/**
-	 * Instantiate the Observer {@link #o} to the resider one. 
+	 * Execute action selected by the ASM and publish over the ROS network
+	 * 
+	 * @param action index of selected action, this action is encoded and sent
 	 */
-	protected abstract void registerProsperityObserver();
+	protected void executeAction(int action){
+		if((step++) % logPeriod==0) 
+			log.info(me+"Step: "+step+"-> responding with the following action: "
+					+SL.toStr(actionEncoder.encode(action)));
+
+		// publish action selected by the ASM
+		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
+		fl.setData(actionEncoder.encode(action));								
+		dataPublisher.publish(fl);
+		this.publishProsperity();
+	}
 
 	@Override
 	protected void registerParameters(){
 		paramList = new ParamList();
-		paramList.addParam(noInputsConf, ""+DEF_NOINPUTS,"Number of acitons to select from");
-
-		paramList.addParam(logToFileConf, ""+DEF_LTF, "Enables logging into file");
-		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
+		paramList.addParam(noInputsConf, ""+DEF_NOINPUTS,"Number of state variables");
+		paramList.addParam(randomizationConf, ""+DEF_RANDOMIZATION, "Does the tested node implement a randomization?");
+		
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void parseParameters(ConnectedNode connectedNode){
 		r = new PrivateRosparam(connectedNode);
-		logToFile = r.getMyBoolean(logToFileConf, DEF_LTF);
-		logPeriod = r.getMyInteger(logPeriodConf, DEF_LOGPERIOD);
-
 		System.out.println(me+"parsing parameters");
 
-		// noActions 
+		// dimensionality of the RL task 
 		int noActions = r.getMyInteger(noInputsConf, DEF_NOINPUTS);
-
-		System.out.println(me+"Creating data structures.");
+		
+		rand = r.getMyBoolean(randomizationConf, DEF_RANDOMIZATION);
 
 		/**
 		 * Build the action set & action encoder
@@ -135,20 +169,63 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 		actions = new BasicFinalActionSet(names);
 		actionEncoder = new OneOfNEncoder(actions);
 
-		initializeASM();
 	}
 
 	/**
-	 * Create data structures for the ASM, such as ASM and it's configuration.
+	 * Check the performance of the node
 	 */
-	protected abstract void initializeASM();
+	protected void onNewDataReceived(float[] data){
+	
+		int selected = this.getSelectedActionInd(data);
+		if(selected != bestPrevActionInd){
+			noIncorrect++;
+		}else{
+			noCorrect++;
+		}
+		
+	}
 
-	/**
-	 * This method is called by the dataSubscriber when a new ROS 
-	 * message with list of utility values is received
-	 */
-	protected abstract float[] selectActionAndEncode(float[] data);
-
+	private void evaluateCorrectness(){
+		if(this.rand){
+			if(this.step>100){
+				
+			}
+		}else{
+			if(noIncorrect>0){
+				//TODO call fail here
+			}
+		}
+	}
+	
+	private int getSelectedActionInd(float[] data){
+		int selected = -1;
+		boolean found = false;
+		
+		for(int i=0; i<data.length; i++){
+			if(data[i]==1){
+				if(found){
+					// TODO call fail here
+					return 0;
+				}else{
+					found = true;
+					selected = i;
+				}
+			}else if(data[i]!=0){
+				// TODO call fail here
+				return 0;
+			}
+		}
+		if(!found){
+			// TODO call fail here
+			return -0;
+		}
+		return selected;
+	}
+	
+	private void generateUtilsAndSend(){
+		
+	}
+	
 	/**
 	 * Register the {@link #actionPublisher} for publishing actions 
 	 * and the state subscriber for receiving state+reward data.
@@ -156,42 +233,27 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	 * @param connectedNode
 	 */
 	protected void buildDataIO(ConnectedNode connectedNode){
+		// publish vector of action utilities 
 		dataPublisher =connectedNode.newPublisher(topicDataOut, std_msgs.Float32MultiArray._TYPE);
 
 		Subscriber<std_msgs.Float32MultiArray> dataSub = 
 				connectedNode.newSubscriber(topicDataIn, std_msgs.Float32MultiArray._TYPE);
 
+		// check the 1ofN response, either randomized or returning the index of max action
 		dataSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
 				if(data.length != actions.getNumOfActions())
-					log.error(me+":"+topicDataIn+": Received array of actions of" +
-							"unexpected length of"+data.length+"! Expected was: "+
+					log.error(me+":"+topicDataIn+": Received vector of actions of " +
+							"unexpected length of"+data.length+"! Expected: "+
 							(actions.getNumOfActions()));
 				else{
-					// here, the state description is decoded and one SARSA step executed
-					if(step % logPeriod==0)
-						System.out.println(me+"<-"+topicDataIn+" Received new list of actions" +
-								SL.toStr(data));
-
-					// implement this in order to implement the ASM
-					sendAction(selectActionAndEncode(data));
+					// implement this
+					onNewDataReceived(data);
 				}
 			}
 		});
-	}
-	
-	/**
-	 * Vector of real values will be published. Typically 1ofN code, where 1 means
-	 * the selected action. 
-	 * 
-	 * @param vector of float values to be published
-	 */
-	public void sendAction(float[] data){
-		std_msgs.Float32MultiArray fl = dataPublisher.newMessage();	
-		fl.setData(data);
-		dataPublisher.publish(fl);
 	}
 
 	/**
@@ -199,16 +261,9 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	 * @param connectedNode
 	 */
 	@Override
-	protected void buildConfigSubscribers(ConnectedNode connectedNode){
-		this.buildASMSumbscribers(connectedNode);
-	}
+	protected void buildConfigSubscribers(ConnectedNode connectedNode){}
 
-	/**
-	 * Different AMSs can be used here, here subscribe e.g. for importance & epsilon
-	 * 
-	 * @param connectedNode ROS connectedNode 
-	 */
-	protected abstract void buildASMSumbscribers(ConnectedNode connectedNode);
+
 
 	/**
 	 * If the prosperity observer has no childs, publish its value. 
@@ -217,51 +272,6 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	 */
 	@Override
 	public void publishProsperity(){
-
-		// TODO call this method each step somewhere
-
-		float[] data;
-		std_msgs.Float32MultiArray fl = prospPublisher.newMessage();
-
-		if(o.getChilds() == null){
-			data = new float[]{o.getProsperity()};
-		}else{
-			ProsperityObserver[] childs = o.getChilds();	
-			data = new float[childs.length+1];
-			data[0] = o.getProsperity();
-
-			for(int i=0; i<childs.length; i++){
-				data[i+1] = childs[i].getProsperity();
-			}
-		}
-		fl.setData(data);
-		prospPublisher.publish(fl);
-	}
-	
-	@Override
-	public float getProsperity() { return o.getProsperity(); }
-
-	@Override
-	public String listParams() { return this.paramList.listParams(); }
-	
-	@Override
-	public void hardReset(boolean randomize) {
-			
-		System.out.println(me+"hardReset called, discarding all data");
-		for(int i=0; i<observers.size(); i++){
-			observers.get(i).hardReset(randomize);
-		}
-		o.hardReset(randomize);
-	}
-
-	@Override
-	public void softReset(boolean randomize) {
-		
-		System.out.println(me+"softReset called, returning to the initial state.");
-		for(int i=0; i<observers.size(); i++){
-			observers.get(i).softReset(randomize);
-		}
-		o.softReset(randomize);
 	}
 
 	@Override
@@ -271,33 +281,41 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	public boolean isStarted() {
 		if(log==null)
 			return false;
-		/*
-		if(prospPublisher==null)
-			return false;
-		 *///TODO
 		if(dataPublisher==null)
 			return false;
 		if(asm==null)
 			return false;
-		/*
 		if(observers==null)
 			return false;
-		 *///TODO
 		return true;
 	}
-
+	
 	@Override
 	public String getFullName() { return this.fullName; }
 
 	@Override
 	public LinkedList<Observer> getObservers() { return observers; }
-
+	
+	
 	private boolean lg = false;
-
 	public void logg(String what) {
 		if(lg)
 			System.out.println(" ------- "+what);		
 	}
+
+	@Override
+	public String listParams() {
+		return null;
+	}
+
+	@Override
+	public void hardReset(boolean arg0) {}
+
+	@Override
+	public void softReset(boolean arg0) {}
+
+	@Override
+	public float getProsperity() { return 0; }
 }
 
 

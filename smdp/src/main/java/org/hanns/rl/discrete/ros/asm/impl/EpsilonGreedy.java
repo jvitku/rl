@@ -10,6 +10,7 @@ import org.ros.node.topic.Subscriber;
 
 /**
  * Implementation of the Epsilon-Greedy ASM as a ROS node.
+ * Compared to the Greedy node, this receives also epsilon.
  *  
  * @author Jaroslav Vitku
  *

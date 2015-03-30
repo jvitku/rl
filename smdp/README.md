@@ -146,6 +146,10 @@ After launching the node:
 
 ## Changelog
 
+* working on test asm/AsmRosCommunicationTests.java, TODO: the communication does not work now.
+
+* several test files renamed so that they have not java type and do not cause errors, TODO use them for testing QLearning
+
 * deleted all old GridWorld and benchmark files, `GridWorldNode` is now in the project `environments/gridworld`
 
 * added on Observer which logs qMatrix into file @see `org.hanns.rl.discrete.observer.qMatrix.stats`

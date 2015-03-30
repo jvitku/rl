@@ -2,25 +2,29 @@ package org.hanns.rl.discrete.asm;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.hanns.rl.discrete.learningAlgorithm.models.qMatrix.FinalQMatrix;
-
-import org.hanns.rl.discrete.ros.learning.qLearning.QLambda;
+import org.hanns.rl.discrete.ros.asm.impl.Greedy;
+import org.hanns.rl.discrete.ros.testnodes.AsmTestNode;
 import org.junit.Test;
-
 import ctu.nengoros.RosRunner;
 import ctu.nengoros.network.node.testsuit.RosCommunicationTest;
 
 public class AsmRosCommunicationTests extends RosCommunicationTest{
 
 	public static final String RL = "org.hanns.rl.discrete.ros.learning.sarsa.QLambda";
-	public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
+	public static final String TESTER = "org.hanns.rl.discrete.ros.testnodes.AsmTestNode";
+	
+	public static final String GREEDY = "org.hanns.rl.discrete.ros.asm.impl.Greedy";
+	
+	//public static final String MAP = "org.hanns.rl.discrete.ros.testnodes.GridWorldNode";
 	
 	//public static final String RLPARAMS = "_importance:=0 _noOutputsConf:=4 _noInputsConf:=4";
 	public static final String RLPARAMS = "_importance:=0 _importance:=0";//_noOutputsConf:=4";// _noInputsConf:=4";
 	
-	public static final String[] rl = new String[]{
-		RL,"_importance:=0","_noOutputs:=4","_noInputs:=2","_sampleCount:=10"};
+	
+	//public static final String[] rl = new String[]{ RL,"_importance:=0","_noOutputs:=4","_noInputs:=2","_sampleCount:=10"};
+	public static final String[] greedy = new String[]{GREEDY,"_noActions:=2"};
+	
+	public static final String[] greedy_tester = new String[]{TESTER, "_randomization:=false", "_noInputs:=2"};
 	
 	/**
 	 * The tests does the following:
@@ -31,38 +35,33 @@ public class AsmRosCommunicationTests extends RosCommunicationTest{
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void runMapAndRL(){
-		RosRunner rlr = super.runNode(rl);		// run the RL
+	public void greedyAsmTest(){
+		RosRunner rlr = super.runNode(greedy_tester);		
 		assertTrue(rlr.isRunning());
 		
-		RosRunner mapr = super.runNode(MAP);	// run the map
+		RosRunner mapr = super.runNode(greedy);	
 		assertTrue(mapr.isRunning());
 		
-		assertTrue(mapr.getNode() instanceof GridWorldNode);
-		GridWorldNode map = (GridWorldNode)mapr.getNode();
+		assertTrue(mapr.getNode() instanceof Greedy);
+		Greedy asm = (Greedy)mapr.getNode();
 		
-		assertTrue(rlr.getNode() instanceof QLambda);
-		QLambda rl = (QLambda) rlr.getNode();
+		assertTrue(rlr.getNode() instanceof AsmTestNode);
+		AsmTestNode tester = (AsmTestNode) rlr.getNode();
 		
 		// simulate 2000 steps
-		while(map.getStep() < 10000){
-			sleep(100);
+		while(tester.getStep() < 10000){
+			//sleep(100);
 		}
 		
-		map.setSimPaused(true);
+		tester.pauseSimulation(true);
 		
-		// prosperity is measured here 50/50 of:
-		// binary coverage: how many tales of the map agent visited (has to be 1.0)
-		// binary reward per step: typically something like 0.0115
-		System.out.println("prosperity "+rl.getProsperityObserver().getProsperity());
-		assertTrue(rl.getProsperityObserver().getProsperity()>0.1);
-		
-		System.out.println(GridWorld.visqm((FinalQMatrix<Double>)rl.rl.getMatrix(), 0));
+		assertTrue(tester.noIncorrect==0);		// testing is here
 		
 		rlr.stop();								// stop everything
 		mapr.stop();
 		assertFalse(rlr.isRunning());
 		assertFalse(mapr.isRunning());
+		System.out.println("all done");
 	}
 	
 }

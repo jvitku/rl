@@ -38,18 +38,18 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 	// learning rate
 	public static final String alphaConf = "alpha";
 	public static final String topicAlpha= conf+alphaConf;
-	public static final double DEF_ALPHA = 0.5;
+	public static final double DEF_ALPHA = 0.6;
 	// Decay factor
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = conf+gammaConf;
-	public static final double DEF_GAMMA = 0.3;
+	public static final double DEF_GAMMA = 0.7;
 	// Trace decay factor
 	public static final String lambdaConf = "lambda";
 	public static final String topicLambda = conf+lambdaConf;
 	// Length of eligibility trace
-	public static final double DEF_LAMBDA = 0.04;
+	public static final double DEF_LAMBDA = 0.4;
 	public static final String traceLenConf = "traceLenConf";
-	public static final int DEF_TRACELEN = 10;
+	public static final int DEF_TRACELEN = 30;
 
 	/**
 	 * Importance based Epsilon-greedy ASM configuration

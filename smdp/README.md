@@ -146,6 +146,10 @@ After launching the node:
 
 ## Changelog
 
+* reward scale added to the value 10000, TODO make it settable
+
+* default learning parameters are set higher
+
 * Greedy, EpsilonGreedy and ImportanceBased ROS-ASMs tested
 
 * several test files renamed so that they have not java type and do not cause errors, TODO use them for testing QLearning

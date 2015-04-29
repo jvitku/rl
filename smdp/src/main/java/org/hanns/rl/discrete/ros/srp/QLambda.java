@@ -68,7 +68,7 @@ public class QLambda extends AbstractQLambda{
 
 		// decode data (first value is reinforcement..
 		// ..the rest are values of state variables
-		float reward = data[0];
+		float reward = data[0] * 10000;
 		float[] state = new float[data.length-1];
 		for(int i=0; i<state.length; i++){
 			state[i] = data[i+1];

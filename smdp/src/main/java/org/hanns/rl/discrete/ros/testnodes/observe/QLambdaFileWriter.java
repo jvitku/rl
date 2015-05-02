@@ -151,7 +151,7 @@ public class QLambdaFileWriter extends AbstractQLambda{
 		if(!this.randomizeAllowed)
 			randomize = false;
 			
-		System.out.println(me+"hardReset called, discarding all data");
+		//System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
 		asm.hardReset(randomize);
@@ -166,7 +166,7 @@ public class QLambdaFileWriter extends AbstractQLambda{
 		if(!this.randomizeAllowed)
 			randomize = false;
 		
-		System.out.println(me+"softReset called, returning to the initial state.");
+		//System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);
 		asm.softReset(randomize);

@@ -87,6 +87,9 @@ public abstract class FinalMaxActionUtil<E> implements QMatrixFileWriter {
 		if( step++ % visPeriod != 0 )
 			return;
 
+		if(step <=1)
+			return;
+		
 		this.write();
 
 		//System.out.println(me+"step no: "+step+"\n"+this.visualize());

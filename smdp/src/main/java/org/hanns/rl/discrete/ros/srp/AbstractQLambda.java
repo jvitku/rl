@@ -298,7 +298,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 							(states.getNumVariables()+1));
 				else{
 					// here, the state description is decoded and one SARSA step executed
-					if(step % logPeriod==0)
+					if(step % logPeriod==0  && step >0)
 						System.out.println(me+"<-"+topicDataIn+" Received new reinforcement &" +
 								" state description "+SL.toStr(data));
 

@@ -146,6 +146,8 @@ After launching the node:
 
 ## Changelog
 
+* some minor cleanup of console printouts
+
 * reward scale added to the value 10000, TODO make it settable
 
 * default learning parameters are set higher

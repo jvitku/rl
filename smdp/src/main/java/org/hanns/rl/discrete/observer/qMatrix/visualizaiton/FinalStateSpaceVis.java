@@ -72,7 +72,10 @@ public abstract class FinalStateSpaceVis<E> implements QMatrixVisualizer{
 		if( this.visPeriod < 0 || !this.shouldVis)
 			return;
 		
-		if( step++ % visPeriod != 0 )
+		if( step++ % visPeriod != 0)
+			return;
+		
+		if(step <= 1)
 			return;
 
 		System.out.println(me+"step no: "+step+"\n"+this.visualize());

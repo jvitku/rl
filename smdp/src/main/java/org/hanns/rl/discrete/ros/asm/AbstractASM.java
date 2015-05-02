@@ -247,7 +247,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	@Override
 	public void hardReset(boolean randomize) {
 			
-		System.out.println(me+"hardReset called, discarding all data");
+		//System.out.println(me+"hardReset called, discarding all data");
 		for(int i=0; i<observers.size(); i++){
 			observers.get(i).hardReset(randomize);
 		}
@@ -257,7 +257,7 @@ public abstract class AbstractASM extends AbstractConfigurableHannsNode{
 	@Override
 	public void softReset(boolean randomize) {
 		
-		System.out.println(me+"softReset called, returning to the initial state.");
+		//System.out.println(me+"softReset called, returning to the initial state.");
 		for(int i=0; i<observers.size(); i++){
 			observers.get(i).softReset(randomize);
 		}

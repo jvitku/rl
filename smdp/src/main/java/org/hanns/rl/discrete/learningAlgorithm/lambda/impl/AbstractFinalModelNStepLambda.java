@@ -86,6 +86,11 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 			for(int i=0; i<trace.size(); i++){
 				//System.out.println("value in the q is "+q.get(trace.get(i))+" trace: "+SL.toStr(trace.get(i)));
 
+				// ugly hack to avoid the error
+				if(trace.get(i) == null){
+					continue;
+				}
+				
 				// apply the eligibility trace to n previously visited state-action pairs
 				value = q.get(trace.get(i)) + conf.getdecays()[i]*delta*conf.getAlpha();
 				// add to old value

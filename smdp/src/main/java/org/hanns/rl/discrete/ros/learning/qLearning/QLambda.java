@@ -77,6 +77,12 @@ public class QLambda extends AbstractQLambda{
 
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
+
+		if(states == null){
+			this.executeAction(0);
+			return;
+		}
+
 		int action = this.learn(reward);
 		this.executeAction(action);
 	}
@@ -159,7 +165,7 @@ public class QLambda extends AbstractQLambda{
 	public void hardReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-			
+
 		//System.out.println(me+"hardReset called, discarding all data");
 		filter.hardReset(randomize);
 		rl.hardReset(randomize);
@@ -174,7 +180,7 @@ public class QLambda extends AbstractQLambda{
 	public void softReset(boolean randomize) {
 		if(!this.randomizeAllowed)
 			randomize = false;
-		
+
 		//System.out.println(me+"softReset called, returning to the initial state.");
 		filter.softReset(randomize);
 		rl.softReset(randomize);

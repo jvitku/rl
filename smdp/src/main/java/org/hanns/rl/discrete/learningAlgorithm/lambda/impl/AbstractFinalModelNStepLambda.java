@@ -57,6 +57,9 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 		if(!this.conf.getLearningEnabled())
 			return;
 
+		if(newState == null)	// sometimes state is empty.. bug..
+			return;
+		
 		if(this.prevState == null)
 			this.prevState = newState.clone();
 

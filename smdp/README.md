@@ -146,6 +146,8 @@ After launching the node:
 
 ## Changelog
 
+* catching the null pointer in the `at org.hanns.rl.discrete.learningAlgorithm.lambda.impl.StateTraceImpl.buildCoords(StateTraceImpl.java:32)`
+
 * some minor cleanup of console printouts
 
 * reward scale added to the value 10000, TODO make it settable

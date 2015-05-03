@@ -25,6 +25,9 @@ public class StateTraceImpl implements StateTrace{
 		if(states.size()==n){
 			states.remove(states.size()-1);	// drop the last one if necessary
 		}
+		if(state == null){
+			return;
+		}
 		states.push(this.buildCoords(state, action));			// push the new one
 	}
 	

@@ -22,11 +22,11 @@ public class StateTraceImpl implements StateTrace{
 
 	@Override
 	public void push(int[] state, int action){
-		if(states.size()==n){
-			states.remove(states.size()-1);	// drop the last one if necessary
-		}
 		if(state == null){
 			return;
+		}
+		if(states.size()==n){
+			states.remove(states.size()-1);	// drop the last one if necessary
 		}
 		states.push(this.buildCoords(state, action));			// push the new one
 	}

@@ -122,6 +122,5 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 
 	//@Override
 	public NStepLambdaConfig getConfig() { return this.conf; }
-
-
+	
 }

@@ -40,12 +40,12 @@ public class StateTraceImpl implements StateTrace{
 	}
 
 	@Override
-	public void softReset(boolean randomize) {
+	public synchronized void softReset(boolean randomize) {
 		states = new LinkedList<int[]>();
 	}
 
 	@Override
-	public void hardReset(boolean randomize) {
+	public synchronized void hardReset(boolean randomize) {
 		states = new LinkedList<int[]>();
 	}
 
@@ -68,6 +68,11 @@ public class StateTraceImpl implements StateTrace{
 	@Override
 	public void setCapacity(int n) { this.n = n; }
 
-
-
+	@SuppressWarnings("unchecked")
+	@Override
+	public StateTrace clone(){
+		StateTraceImpl out = new StateTraceImpl(this.n);
+		out.states = (LinkedList<int[]>) this.states.clone();
+		return out;
+	}
 }

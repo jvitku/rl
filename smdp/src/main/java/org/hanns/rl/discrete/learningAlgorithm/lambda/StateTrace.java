@@ -10,7 +10,7 @@ import ctu.nengoros.network.common.Resettable;
  * @author Jaroslav Vitku
  *
  */
-public interface StateTrace extends Resettable{
+public interface StateTrace extends Resettable, Cloneable{
 	
 	/**
 	 * Remember new state, if memory exceeded, delete the 
@@ -47,4 +47,6 @@ public interface StateTrace extends Resettable{
 	 */
 	public int[] get(int i); 
 
+	
+	public StateTrace clone();
 }

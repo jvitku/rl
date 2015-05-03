@@ -81,6 +81,8 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 
 		double value;
 
+		StateTraceImpl trace = (StateTraceImpl) this.trace.clone();
+		
 		if(trace.size() > 0){
 			// apply knowledge update to all states stored in the trace 
 			for(int i=0; i<trace.size(); i++){

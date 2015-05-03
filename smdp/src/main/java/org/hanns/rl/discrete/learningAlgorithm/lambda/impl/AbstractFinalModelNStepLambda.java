@@ -44,7 +44,7 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 		this.conf = conf;
 		trace = new StateTraceImpl(this.conf.getEligibilityLength());
 	}
-	
+
 	public AbstractFinalModelNStepLambda(int[] stateSizes, int numActions, NStepLambdaConfig conf){
 		super(stateSizes, numActions);
 
@@ -59,36 +59,38 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 
 		if(newState == null)	// sometimes state is empty.. bug..
 			return;
-		
+
 		if(this.prevState == null)
 			this.prevState = newState.clone();
 
 		if(reward<0)	
 			reward=0;
-		
+
 		// we were there and made the action
 		double prevVal = q.get(prevState, prevAction);	
 		// action values available now
 		Double[] newActions  = q.getActionValsInState(newState);
-		
+
 		// add SARSA or QLearning here
 		double newActionVal = this.getNewMaxActionVal(newActions, newAction);	
 
 		// here goes the learning equation
 		delta = reward + conf.getGamma()*newActionVal - prevVal;
-		
+
 		trace.push(prevState,prevAction);	// store the previous state-action pair
 
 		double value;
 
-		// apply knowledge update to all states stored in the trace 
-		for(int i=0; i<trace.size(); i++){
-			//System.out.println("value in the q is "+q.get(trace.get(i))+" trace: "+SL.toStr(trace.get(i)));
-			
-			// apply the eligibility trace to n previously visited state-action pairs
-			value = q.get(trace.get(i)) + conf.getdecays()[i]*delta*conf.getAlpha();
-			// add to old value
-			q.set(trace.get(i), value);
+		if(trace.size() > 0){
+			// apply knowledge update to all states stored in the trace 
+			for(int i=0; i<trace.size(); i++){
+				//System.out.println("value in the q is "+q.get(trace.get(i))+" trace: "+SL.toStr(trace.get(i)));
+
+				// apply the eligibility trace to n previously visited state-action pairs
+				value = q.get(trace.get(i)) + conf.getdecays()[i]*delta*conf.getAlpha();
+				// add to old value
+				q.set(trace.get(i), value);
+			}
 		}
 		prevState = newState.clone();		// update last state and action
 	}
@@ -125,5 +127,5 @@ public abstract class AbstractFinalModelNStepLambda extends AbstractFinalRL{
 
 	//@Override
 	public NStepLambdaConfig getConfig() { return this.conf; }
-	
+
 }

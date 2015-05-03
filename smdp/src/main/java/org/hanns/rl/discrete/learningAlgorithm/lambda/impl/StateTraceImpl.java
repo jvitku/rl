@@ -57,7 +57,7 @@ public class StateTraceImpl implements StateTrace{
 		if(i>=states.size()){
 			System.err.println("StateTraceImpl: ERROR: size of the trace is " +
 					"only "+states.size()+" currently_!");
-			//return null;
+			return null;
 		}
 		return states.get(i);
 	}

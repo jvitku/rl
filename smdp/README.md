@@ -170,6 +170,8 @@ After launching the node:
 
 ## TODO
 
+* message derivation filter: QLambda makes only half steps !!
+
 * separating the AMS and RL in progress
 
 	* Currently working on ASMs

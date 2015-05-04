@@ -78,11 +78,12 @@ public class QLambda extends AbstractQLambda{
 	protected void performSARSAstep(float reward, float[] state){
 		this.decodeState(state);
 
+		/*
 		if(states == null || states.getValues() == null){
 			this.executeAction(0);
 			return;
 		}
-
+		 */
 		int action = this.learn(reward);
 		this.executeAction(action);
 	}

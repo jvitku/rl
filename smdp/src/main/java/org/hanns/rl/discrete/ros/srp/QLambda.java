@@ -6,7 +6,6 @@ import org.hanns.rl.discrete.actions.ActionSet;
 import org.hanns.rl.discrete.observer.SarsaObserver;
 import org.hanns.rl.discrete.observer.stats.impl.MCR;
 import org.hanns.rl.discrete.ros.common.ioHelper.MessageDerivator;
-import org.hanns.rl.discrete.ros.learning.qLearning.AbstractQLambda;
 import org.ros.node.ConnectedNode;
 
 /**
@@ -113,7 +112,9 @@ public class QLambda extends AbstractQLambda{
 	 * @return selected action
 	 */
 	protected int learn(float reward){
-
+		
+		//System.err.println("asm importance is: "+asm.getConfig().getImportance());
+		
 		int action = asm.selectAction(q.getActionValsInState(states.getValues()));
 		rl.performLearningStep(prevAction, reward, states.getValues(), action);
 

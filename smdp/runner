@@ -24,7 +24,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # Note: In order to the Eclipse-generated class files, the eclipse projects need to be (re)compiled!!
-E=0
+E=1
 
 RJ=../../rosjava_core/
 

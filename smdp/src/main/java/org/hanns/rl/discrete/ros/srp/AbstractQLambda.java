@@ -38,16 +38,20 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 	// learning rate
 	public static final String alphaConf = "alpha";
 	public static final String topicAlpha= conf+alphaConf;
-	public static final double DEF_ALPHA = 0.6;
+	//public static final double DEF_ALPHA = 0.6;
+	public static final double DEF_ALPHA = 0.4;
+	
 	// Decay factor
 	public static final String gammaConf = "gamma";
 	public static final String topicGamma = conf+gammaConf;
-	public static final double DEF_GAMMA = 0.7;
+//	public static final double DEF_GAMMA = 0.7;
+	public static final double DEF_GAMMA = 0.4;
+	
 	// Trace decay factor
 	public static final String lambdaConf = "lambda";
 	public static final String topicLambda = conf+lambdaConf;
 	// Length of eligibility trace
-	public static final double DEF_LAMBDA = 0.4;
+	public static final double DEF_LAMBDA = 0.04;
 	public static final String traceLenConf = "traceLenConf";
 	public static final int DEF_TRACELEN = 30;
 
@@ -107,6 +111,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
+		
 		log = connectedNode.getLog();
 
 		log.info(me+"started, parsing parameters");
@@ -190,6 +195,7 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 		paramList.addParam(logToFileConf, ""+DEF_LTF, "Enables logging into file");
 		paramList.addParam(logPeriodConf, ""+DEF_LOGPERIOD, "How often to log?");
 		paramList.addParam(alphaConf, ""+DEF_ALPHA, "Learning rate");
+		
 		paramList.addParam(gammaConf, ""+DEF_GAMMA, "Decay rate");
 		paramList.addParam(lambdaConf, ""+DEF_LAMBDA, "Trace decay rate");
 		paramList.addParam(traceLenConf, ""+DEF_TRACELEN, "Length of eligibility trace");
@@ -292,6 +298,8 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
 				float[] data = message.getData();
+				//System.err.println("RECEIVED data of value.. "+SL.toStr(data));
+
 				if(data.length != states.getNumVariables()+1)
 					log.error(me+":"+topicDataIn+": Received state description has" +
 							"unexpected length of"+data.length+"! Expected: "+
@@ -433,15 +441,18 @@ public abstract class AbstractQLambda extends AbstractConfigurableHannsNode{
 		importenceSub.addMessageListener(new MessageListener<std_msgs.Float32MultiArray>() {
 			@Override
 			public void onNewMessage(std_msgs.Float32MultiArray message) {
+				
 				float[] data = message.getData();
 				if(data.length != 1)
 					log.error("Importance input: Received message has " +
 							"unexpected length of"+data.length+"!");
 				else{
+					
 					logParamChange("RECEIVED chage of value IMPORTANCE",
 							((ImportanceBasedConfig)asm.getConfig()).getImportance(), data[0]);
 
 					((ImportanceBasedConfig)asm.getConfig()).setImportance(data[0]);
+				
 				}
 			}
 		});

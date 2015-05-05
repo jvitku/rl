@@ -23,7 +23,7 @@ if [ "$1" == "-h" ]; then
 fi
 
 # Note: In order to the Eclipse-generated class files, the eclipse projects need to be (re)compiled!!
-E=0 # use Eclipse? 
+E=1 # use Eclipse? 
 
 RJ=../../rosjava_core/
 
